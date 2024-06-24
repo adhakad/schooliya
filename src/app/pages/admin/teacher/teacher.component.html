@@ -1,0 +1,158 @@
+<app-header-navbar></app-header-navbar>
+<div class="container-fluid dashboard-container">
+  <div class="row">
+    <div class="col-12 col-lg-2">
+      <app-side-navbar></app-side-navbar>
+    </div>
+    <div class="col-12 col-lg-10">
+      <div class="row">
+        <div class="col-12 big-container">
+          <div class="col-lg-12 offset-lg-0">
+            <div class="main-card">
+              <div class="row mt-4 mb-2">
+                <div class="col-8 col-lg-5">
+                  <input type="text" class="form-control" placeholder="Teacher Search..." id="searchText"
+                    name="searchText" #searchText="ngModel" [(ngModel)]="filters.searchText"
+                    (keyup)="getTeacher({page : 1, limit : 0})">
+                </div>
+                <div class="col-4 col-lg-2 offset-lg-5">
+                  <button class="submit-button" mat-raised-button (click)="addTeacherModel()"><mat-icon
+                      style="font-size: 20px;">add</mat-icon>Create</button>
+                </div>
+              </div>
+              <table class="table table-hover align-middle mt-2 mb-1 bg-white">
+                <thead class="bg-light">
+                  <tr class="text-muted">
+                    <th>No.</th>
+                    <th>Name</th>
+                    <th>Teacher Education</th>
+                    <th>Teacher User Id</th>
+                    <th>Otp</th>
+                    <th>Status</th>
+                    <th>Remove</th>
+                  </tr>
+                </thead>
+                <tbody *ngIf="teacherInfo && teacherInfo.length>0">
+                  <tr *ngFor="let teacher of teacherInfo,let i=index">
+                    <td>
+                      <p class="mb-0">{{number*10+i+1-10}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{teacher.name}}</p>
+                    </td>
+                    <td>
+                      <p class="fw-normal mb-1">{{teacher.education}}</p>
+                    </td>
+                    <td>
+                      <p class="fw-normal mb-1">{{teacher.teacherUserId}}</p>
+                    </td>
+                    <td>
+                      <p class="fw-normal mb-1">{{teacher.otp}}</p>
+                    </td>
+                    <td>
+                      <a href="javascript:void(0)" class="mb-0 status-active" (click)="changeStatus(teacher._id,0)"
+                        *ngIf="teacher.status == 'Active'">{{teacher.status}}&nbsp;&nbsp;</a>
+                      <a href="javascript:void(0)" class="mb-0 status-inactive" (click)="changeStatus(teacher._id,1)"
+                        *ngIf="teacher.status == 'Inactive'">{{teacher.status}}</a>
+                    </td>
+                    <td class="mb-0">
+                      <!-- <mat-icon (click)="updateTeacherModel(teacher)">edit</mat-icon> -->
+                      <mat-icon (click)="deleteTeacherModel(teacher._id)">delete</mat-icon>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="pagination">
+                <app-pagination [paginationValues]="paginationValues" (onChange)="getTeacher($event)">
+                </app-pagination>
+              </div>
+              <div class="modal fade show" [class.show]="showModal">
+                <div class="modal-dialog modal-dialog-top" role="document">
+                  <div class="modal-content" *ngIf="successMsg">
+                    <div class="modal-header">
+                      <h5 class="modal-title" style="color: transparent;">Class</h5>
+                    </div>
+                    <div class="modal-body">
+                      <p class="success-message">{{successMsg}}</p>
+                    </div>
+                    <div class="modal-footer">
+                      <mat-icon></mat-icon>
+                    </div>
+                  </div>
+                  <div class="modal-content" *ngIf="!successMsg">
+                    <div class="modal-header">
+                      <h5 class="modal-title">{{updateMode?'Update': deleteMode ? 'Delete':'Create New'}} Teacher</h5>
+                      <mat-icon matRipple (click)="closeModal()">close</mat-icon>
+                    </div>
+
+                    <form [formGroup]="teacherForm" (ngSubmit)="teacherAddUpdate()" *ngIf="!deleteMode">
+                      <div class="modal-body">
+                        <div *ngIf="errorCheck">
+                          <p class="error-message">{{errorMsg}}</p>
+                        </div>
+
+                        <mat-form-field appearance="outline">
+                          <mat-label>Name</mat-label>
+                          <input matInput type="text" formControlName="name">
+                          <mat-error
+                            *ngIf="teacherForm.get('name')?.hasError('required') && teacherForm.get('name')?.touched">
+                            Name is required
+                          </mat-error>
+                          <mat-error
+                            *ngIf="teacherForm.get('name')?.hasError('pattern') && teacherForm.get('name')?.touched">
+                            Please enter a valid Name (only letters and spaces are allowed)
+                          </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline">
+                          <mat-label>Teacher User Id</mat-label>
+                          <input matInput type="number" formControlName="teacherUserId">
+                          <mat-error
+                              *ngIf="teacherForm.get('teacherUserId')?.hasError('required') && teacherForm.get('teacherUserId')?.touched"
+                              class="form-text text-danger">Teacher user id is required.</mat-error>
+                          <mat-error *ngIf="teacherForm.get('teacherUserId')?.hasError('pattern')"
+                              class="form-text text-danger">
+                              Teacher user id must be a 6-digit & should contain only numbers.
+                          </mat-error>
+                      </mat-form-field>
+
+                        <mat-form-field appearance="outline">
+                          <mat-label>Education</mat-label>
+                          <input matInput type="text" formControlName="education">
+                          <mat-error
+                            *ngIf="teacherForm.get('education')?.hasError('required') && teacherForm.get('education')?.touched">
+                            Education is required
+                          </mat-error>
+                          <mat-error
+                            *ngIf="teacherForm.get('education')?.hasError('pattern') && teacherForm.get('education')?.touched">
+                            Please enter a valid education (only letters and spaces and dot(.) are allowed)
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="submit" mat-raised-button [disabled]="!teacherForm.valid"
+                          class="submit-button">Submit</button>
+                      </div>
+                    </form>
+                    <div *ngIf="deleteMode">
+                      <h4>To delete teacher detail, click ok to confirm.</h4>
+                      <div class="modal-footer">
+                        <button class="delete-button" mat-raised-button type="button"
+                          (click)="teacherDelete(deleteById)">Ok</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="spinner-container" *ngIf="loader">
+  <div class="spinner-overlay" *ngIf="loader">
+      <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate" strokeWidth="3"></mat-progress-spinner>
+  </div>
+</div>

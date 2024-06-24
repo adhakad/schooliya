@@ -1,0 +1,130 @@
+<app-header></app-header>
+<div class="login">
+  <div class="row">
+    <div class="col-12 col-lg-5 offset-lg-3 login-card" *ngIf="formType=='Varify'">
+      <div class="row">
+        <div class="col-12 col-lg-10 offset-lg-1">
+          <h3>Student Varification</h3>
+          <div class="col-12">
+            <h2>{{errorMsg}}</h2>
+            <form [formGroup]="varifyForm" (ngSubmit)="studentVarify()" *ngIf="formType=='Varify'">
+              <mat-form-field appearance="outline">
+                <mat-label>Select class name</mat-label>
+                <mat-select formControlName="class">
+                  <div *ngFor="let classInfo of classInfo">
+                    <mat-option [value]="classInfo.class">{{ classInfo.class | classSuffix
+                      }}</mat-option>
+                  </div>
+                </mat-select>
+                <mat-hint *ngIf="varifyForm.get('class')?.hasError('required') && varifyForm.get('class')?.touched"
+                  class="form-text text-danger">Class is required.</mat-hint>
+                <mat-hint *ngIf="varifyForm.get('class')?.hasError('pattern')" class="form-text text-danger">
+                  Class must be a numeric value.
+                </mat-hint>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Roll number</mat-label>
+                <input matInput type="number" formControlName="rollNumber">
+                <mat-hint
+                  *ngIf="varifyForm.get('rollNumber')?.hasError('required') && varifyForm.get('rollNumber')?.touched"
+                  class="form-text text-danger">Roll number is required.</mat-hint>
+                <mat-hint *ngIf="varifyForm.get('rollNumber')?.hasError('maxlength')" class="form-text text-danger">
+                  Roll number can't be more than 8 characters long.
+                </mat-hint>
+                <mat-hint *ngIf="varifyForm.get('rollNumber')?.hasError('pattern')" class="form-text text-danger">
+                  Roll number should contain only numbers.
+                </mat-hint>
+              </mat-form-field>
+
+              <button type="submit" mat-raised-button [disabled]="!varifyForm.valid"
+                class="submit-button">Varify</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-5 offset-lg-3 login-card" *ngIf="formType=='Otp'">
+      <div class="row">
+        <div class="col-12 col-lg-10 offset-lg-1">
+          <h3>OTP Varification</h3>
+          <div class="col-12">
+            <h2>{{errorMsg}}</h2>
+            <form [formGroup]="otpForm" (ngSubmit)="otpVarify()" *ngIf="formType=='Otp'">
+              <mat-form-field appearance="outline">
+                <mat-label>OTP</mat-label>
+                <input matInput type="number" formControlName="otp">
+                <mat-hint
+                    *ngIf="otpForm.get('otp')?.hasError('required') && otpForm.get('otp')?.touched"
+                    class="form-text text-danger">OTP is required.</mat-hint>
+                <mat-hint *ngIf="otpForm.get('otp')?.hasError('pattern')"
+                    class="form-text text-danger">
+                    OTP must be a 6-digit number.
+                </mat-hint>
+                <mat-hint *ngIf="otpForm.get('otp')?.hasError('pattern')" class="form-text text-danger">
+                  OTP should contain only numbers.
+                </mat-hint>
+            </mat-form-field>
+
+
+              <button type="submit" mat-raised-button [disabled]="!otpForm.valid" class="submit-button">Varify</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-5 offset-lg-3 login-card" *ngIf="formType=='Reset'">
+      <div class="row">
+        <div class="col-12 col-lg-10 offset-lg-1">
+          <h3>Student Username or Password Reset</h3>
+          <div class="col-12">
+            <h2>{{errorMsg}}</h2>
+            <form [formGroup]="resetForm" (ngSubmit)="usernamePasswordReset()">
+              <mat-form-field appearance="outline">
+                <mat-label>Username</mat-label>
+                <input matInput type="text" formControlName="email">
+                <mat-hint *ngIf="resetForm.get('email')?.hasError('required') && resetForm.get('email')?.touched"
+                  class="form-text text-danger">Username is required.</mat-hint>
+                <mat-hint *ngIf="resetForm.get('email')?.hasError('minlength')" class="form-text text-danger">
+                  Username must be at least 3 characters long.
+                </mat-hint>
+                <mat-hint *ngIf="resetForm.get('email')?.hasError('maxlength')" class="form-text text-danger">
+                  Username can't be more than 20 characters long.
+                </mat-hint>
+                <mat-hint *ngIf="resetForm.get('email')?.hasError('pattern')" class="form-text text-danger">
+                  Only alphanumeric characters and underscore are allowed.
+                </mat-hint>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Reset Password</mat-label>
+                <input matInput type="password" formControlName="password">
+                <mat-hint *ngIf="resetForm.get('password')?.hasError('required') && resetForm.get('password')?.touched"
+                  class="form-text text-danger">Password is required.</mat-hint>
+                <mat-hint *ngIf="resetForm.get('password')?.hasError('minlength')" class="form-text text-danger">
+                  Password must be at least 6 characters long.
+                </mat-hint>
+                <mat-hint *ngIf="resetForm.get('password')?.hasError('maxlength')" class="form-text text-danger">
+                  Password can't be more than 30 characters long.
+                </mat-hint>
+              </mat-form-field>
+
+              <button type="submit" mat-raised-button [disabled]="!resetForm.valid" class="submit-button">Reset</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-5 offset-lg-3 login-card" *ngIf="formType=='ResetSuccsess'">
+      <div class="row">
+        <div class="col-12 col-lg-10 offset-lg-1">
+          <p class="success-message">{{successMsg}}</p>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</div>

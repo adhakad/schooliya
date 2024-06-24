@@ -1,0 +1,64 @@
+<app-header></app-header>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12 col-lg-8 offset-lg-2 big-container">
+      <div class="col-lg-10 offset-lg-1">
+        <div class="main-card">
+          <h3 style="text-align: center;margin-bottom: 10vh;">About school</h3>
+          <ng-container *ngIf="schoolInfo">
+            <p>Inspiring Minds, Shaping Futures</p>
+            <h3>Introduction</h3>
+            <p>Welcome to {{schoolInfo?.schoolName}}, a distinguished institution with a rich legacy of educational
+              excellence that has been serving the community since its inception in
+              {{schoolInfo?.foundedYear}}. Our journey in education is guided by a steadfast commitment to providing an
+              exceptional
+              learning environment where every student is empowered to thrive academically, socially, and morally.</p>
+              <h3>Schooling Medium - {{schoolInfo?.medium | titlecase}} Medium</h3>
+              <p>{{schoolInfo?.schoolName}} is proud to offer education in {{schoolInfo?.medium | titlecase}} medium, recognizing the diverse linguistic needs of our students. Our commitment to excellence extends to both sections, ensuring a comprehensive and inclusive learning experience for all.</p>
+            <h3>Our Vision</h3>
+            <p>Our vision at {{schoolInfo?.schoolName}} is deeply rooted in our aspiration to empower young minds and
+              mold them into responsible global citizens. Drawing inspiration from various educational philosophies, we
+              are dedicated to creating an educational space that fosters intellectual curiosity, nurtures creativity,
+              and instills values that transcend the classroom.</p>
+            <h3>Why Choose {{schoolInfo?.schoolName}}?</h3>
+            <p>Our pursuit of academic excellence is underpinned by a curriculum that seamlessly blends traditional
+              wisdom with contemporary pedagogical approaches. Our accomplished faculty members, many of whom hold
+              advanced degrees from renowned institutions, are committed to providing an intellectually stimulating
+              atmosphere. Education extends beyond textbooks, and we offer a wide spectrum of co-curricular activities,
+              sports, and counseling services designed to cultivate well-rounded individuals who are equipped to face
+              life's challenges. Our educational philosophy is deeply influenced by the ideals of integrity, empathy,
+              and respect for diversity. Our aim is to nurture students who not only excel academically but also embody
+              these principles in their daily lives. Our campus boasts state-of-the-art facilities, reflecting our
+              commitment to providing students with a conducive learning environment. From well-equipped classrooms to
+              advanced laboratories, expansive libraries, and modern recreational areas, every aspect of our campus is
+              designed to enhance the learning experience. In an increasingly interconnected world, we prepare our
+              students for global citizenship through cultural exchange programs and exposure to diverse perspectives,
+              cultivating an international outlook.
+            </p>
+            <h3>Our Core Values</h3>
+            <p>We uphold the ideals of relentless pursuit of excellence, integrity, mutual respect among individuals,
+              and innovation in teaching and learning. Our students are encouraged to think critically, adapt to change,
+              and embrace creativity as they prepare to navigate an ever-evolving world. {{schoolInfo?.schoolName}} is
+              not merely an educational institution; it is a close-knit community of learners. Parents, teachers, and
+              students collaborate harmoniously to create a supportive and nurturing environment.
+            </p>
+            <h3>Join the {{schoolInfo?.schoolName}} Family</h3>
+            <p>We cordially invite you and your child to become part of the {{schoolInfo?.schoolName}} family. Together,
+              we embark on an enriching educational journey. Explore our website to delve deeper into our programs,
+              admission procedures, and the vibrant life at {{schoolInfo?.schoolName}}.</p>
+            <p>Thank you for considering {{schoolInfo?.schoolName}} as your partner in your child's educational journey.
+              We eagerly anticipate the privilege of providing your child with a transformative and empowering
+              education.</p>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>
+<div class="spinner-container" *ngIf="loader">
+  <div class="spinner-overlay" *ngIf="loader">
+    <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate"
+      strokeWidth="3"></mat-progress-spinner>
+  </div>
+</div>

@@ -1,0 +1,207 @@
+<app-header-navbar></app-header-navbar>
+<div class="container-fluid dashboard-container">
+  <div class="row">
+    <div class="col-12 col-lg-2">
+      <app-side-navbar></app-side-navbar>
+    </div>
+    <div class="col-12 col-lg-10">
+      <div class="row">
+        <div class="col-12 big-container">
+          <div class="col-lg-12 offset-lg-0">
+            <div class="main-card">
+              <div class="row mt-4 mb-2">
+                <div class="col-12 col-lg-5">
+                  <input type="text" class="form-control" placeholder="Teacher Permission Search..." id="searchText"
+                    name="searchText" #searchText="ngModel" [(ngModel)]="filters.searchText"
+                    (keyup)="getTeacher({page : 1, limit : 0})">
+                </div>
+              </div>
+              <table class="table table-hover align-middle mt-2 mb-1 bg-white">
+                <thead class="bg-light">
+                  <tr class="text-muted">
+                    <th>No.</th>
+                    <th>Name</th>
+                    <th>Teacher User Id</th>
+                    <th>Result Permissions</th>
+                    <th>Admit Card Permissions</th>
+                    <th>Student Permissions</th>
+                    <th>Admission Permissions</th>
+                    <th>Fee Collection Permissions</th>
+                    <th>Status</th>
+                    <th>Set Permissions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                <tbody *ngIf="teacherInfo && teacherInfo.length>0">
+                  <tr *ngFor="let teacher of teacherInfo,let i=index">
+                    <td>
+                      <p class="mb-0">{{number*10+i+1-10}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{teacher.name}}</p>
+                    </td>
+                    <td>
+                      <p class="fw-normal mb-1">{{teacher.teacherUserId}}</p>
+                    </td>
+                    <td>
+                      <ng-container *ngIf="teacher.resultPermission.status==true && teacher.resultPermission.classes[0]!==0">
+                        <ng-container *ngFor="let cls of teacher.resultPermission.classes ;let i = index;">
+                          <p class="fw-normal mb-1" style="color: #8d6dff;">{{cls | classSuffix}}&nbsp;&nbsp; </p>
+                        </ng-container>
+                      </ng-container>
+                      <ng-container
+                        *ngIf="teacher.resultPermission.status==false">
+                        <p class="fw-normal mb-1">Not Allowed </p>
+                      </ng-container>
+                    </td>
+                    <td>
+                      <ng-container *ngIf="teacher.admitCardPermission.status==true && teacher.admitCardPermission.classes[0]!==0">
+                        <ng-container *ngFor="let cls of teacher.admitCardPermission.classes;let i = index;">
+                          <p class="fw-normal mb-1" style="color: #8d6dff;">{{cls | classSuffix}}&nbsp;&nbsp; </p>
+                        </ng-container>
+                      </ng-container>
+                      <ng-container
+                        *ngIf="teacher.admitCardPermission.status==false">
+                        <p class="fw-normal mb-1">Not Allowed </p>
+                      </ng-container>
+                    </td>
+                    <td>
+                      <ng-container *ngIf="teacher.studentPermission.status==true && teacher.studentPermission.classes[0]!==0">
+                        <ng-container *ngFor="let cls of teacher.studentPermission.classes;let i = index;">
+                          <p class="fw-normal mb-1" style="color: #8d6dff;">{{cls | classSuffix}}&nbsp;&nbsp; </p>
+                        </ng-container>
+                      </ng-container>
+                      <ng-container
+                        *ngIf="teacher.studentPermission.status==false">
+                        <p class="fw-normal mb-1">Not Allowed </p>
+                      </ng-container>
+                    </td>
+                    <td>
+                      <ng-container *ngIf="teacher.admissionPermission.status==true && teacher.admissionPermission.classes[0]!==0">
+                        <ng-container *ngFor="let cls of teacher.admissionPermission.classes;let i = index;">
+                          <p class="fw-normal mb-1" style="color: #8d6dff;">{{cls | classSuffix}}&nbsp;&nbsp; </p>
+                        </ng-container>
+                      </ng-container>
+                      <ng-container
+                        *ngIf="teacher.admissionPermission.status==false">
+                        <p class="fw-normal mb-1">Not Allowed </p>
+                      </ng-container>
+                    </td>
+                    <td>
+                      <ng-container *ngIf="teacher.feeCollectionPermission.status==true && teacher.feeCollectionPermission.classes[0]!==0">
+                        <ng-container *ngFor="let cls of teacher.feeCollectionPermission.classes;let i = index;">
+                          <p class="fw-normal mb-1" style="color: #8d6dff;">{{cls | classSuffix}}&nbsp;&nbsp; </p>
+                        </ng-container>
+                      </ng-container>
+                      <ng-container
+                        *ngIf="teacher.feeCollectionPermission.status==false">
+                        <p class="fw-normal mb-1">Not Allowed </p>
+                      </ng-container>
+                    </td>
+                    <td>
+                      <a href="javascript:void(0)" class="mb-0 status-active" (click)="changeStatus(teacher._id,0)"
+                        *ngIf="teacher.status == 'Active'">{{teacher.status}}&nbsp;&nbsp;</a>
+                      <a href="javascript:void(0)" class="mb-0 status-inactive" (click)="changeStatus(teacher._id,1)"
+                        *ngIf="teacher.status == 'Inactive'">{{teacher.status}}</a>
+                    </td>
+                    <td>
+                      <mat-icon style="cursor: pointer;" (click)="addTeacherPermissionModel(teacher)">launch</mat-icon>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="pagination">
+                <app-pagination [paginationValues]="paginationValues" (onChange)="getTeacher($event)">
+                </app-pagination>
+              </div>
+              <div class="modal fade show" [class.show]="showModal">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content" *ngIf="successMsg">
+                    <div class="modal-header">
+                      <h5 class="modal-title" style="color: transparent;">&nbsp;</h5>
+                    </div>
+                    <div class="modal-body">
+                      <p class="success-message">{{successMsg}}</p>
+                    </div>
+                    <div class="modal-footer">
+                      <mat-icon></mat-icon>
+                    </div>
+                  </div>
+                  <div class="modal-content" *ngIf="!successMsg">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Teacher Permissions</h5>
+                      <mat-icon matRipple (click)="closeModal()">close</mat-icon>
+                    </div>
+                    <form [formGroup]="teacherPermissionForm" (ngSubmit)="teacherPermissionAdd()">
+                      <div class="modal-body">
+                        <div *ngIf="errorCheck">
+                          <p class="error-message">{{errorMsg}}</p>
+                        </div>
+                        <ng-container>
+                          <h3>Result Permissions</h3>
+                        </ng-container>
+                        <section class="example-section mb-3">
+                          <div class="row">
+                            <div class="col-4" *ngFor="let class of classInfo,let i=index;">
+                              <mat-checkbox class="example-margin" (click)="resultPermission(class)">{{class | classSuffix}}</mat-checkbox>
+                            </div>
+                          </div>
+                        </section>
+                        <ng-container>
+                          <h3>Admit Card Permissions</h3>
+                        </ng-container>
+                        <section class="example-section mb-3">
+                          <div class="row">
+                            <div class="col-4" *ngFor="let class of classInfo,let i=index;">
+                              <mat-checkbox class="example-margin" (click)="admitCardPermission(class)">{{class | classSuffix}}</mat-checkbox>
+                            </div>
+                          </div>
+                        </section>
+                        <ng-container>
+                          <h3>Student Create Permissions</h3>
+                        </ng-container>
+                        <section class="example-section mb-3">
+                          <div class="row">
+                            <div class="col-4" *ngFor="let class of classInfo,let i=index;">
+                              <mat-checkbox class="example-margin" (click)="studentPermission(class)">{{class | classSuffix}}</mat-checkbox>
+                            </div>
+                          </div>
+                        </section>
+                        <ng-container>
+                          <h3>Admission Permissions</h3>
+                        </ng-container>
+                        <section class="example-section mb-3">
+                          <div class="row">
+                            <div class="col-4" *ngFor="let class of classInfo,let i=index;">
+                              <mat-checkbox class="example-margin" (click)="admissionPermission(class)">{{class | classSuffix}}</mat-checkbox>
+                            </div>
+                          </div>
+                        </section>
+                        <ng-container>
+                          <h3>Fee Collection Permissions</h3>
+                        </ng-container>
+                        <section class="example-section mb-3">
+                          <div class="row">
+                            <div class="col-4" *ngFor="let class of classInfo,let i=index;">
+                              <mat-checkbox class="example-margin" (click)="feeCollectionPermission(class)">{{class | classSuffix}}</mat-checkbox>
+                            </div>
+                          </div>
+                        </section>
+                      </div>
+                      <div class="modal-footer">
+                        <button class="submit-button" mat-raised-button type="submit">Submit</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="spinner-container" *ngIf="loader">
+      <div class="spinner-overlay" *ngIf="loader">
+        <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate" strokeWidth="3"></mat-progress-spinner>
+      </div>
+    </div>

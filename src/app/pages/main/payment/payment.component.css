@@ -1,0 +1,178 @@
+.card-title h2 {
+  color: #000;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: .5px;
+  text-align: center;
+}
+
+.card-detail-title h2 {
+  color: #000;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: .5px;
+  text-align: left;
+}
+
+.card-title p {
+  color: #000;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: .5px;
+  text-align: center;
+}
+
+.card-title p span {
+  color: #000;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: .5px;
+  text-align: center;
+}
+
+.success-message {
+  color: #16b978;
+  font-size: 20px;
+}
+
+.error-msg h2 {
+  color: rgb(228, 64, 154);
+  font-size: 16px;
+  letter-spacing: .5px;
+}
+
+.submit-button {
+  height: 50px;
+  background: #804beb;
+  color: #FFF;
+  box-shadow: none !important;
+}
+
+.submit-button.mat-button-disabled:not([class*=mat-elevation-z]) {
+  background: #9f79eb;
+  color: #f5f3fb;
+  cursor: not-allowed;
+}
+
+
+.otp-input {
+  display: flex;
+  justify-content: center;
+}
+
+.otp-input input {
+  width: 38px;
+  height: 38px;
+  font-size: 20px;
+  text-align: center;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-bottom: 30px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.otp-input input:focus {
+  outline: none;
+  border-color: #804beb;
+  box-shadow: 0 0 5px #804beb78;
+}
+
+.otp-input input[type=number]::-webkit-inner-spin-button,
+.otp-input input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.cards {
+  background-color: #fff;
+  height: auto;
+  margin-top: 30px;
+  padding: 40px 30px 40px 30px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 3px 8px;
+  border-radius: 5px;
+}
+
+.cards img {
+  height: 32px;
+}
+
+.cards-second {
+  background-color: #fff;
+  height: auto;
+  margin-top: 30px;
+  padding: 40px 40px 40px 40px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 3px 8px;
+  border-radius: 5px;
+}
+
+.cards-second img {
+  height: 32px;
+}
+
+.title {
+  color: #382066;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: .5px;
+}
+
+
+@media (min-width: 992px) {
+  .error-msg h2 {
+    color: rgb(228, 64, 154);
+    font-size: 16px;
+    letter-spacing: .5px;
+  }
+
+  .submit-button {
+    height: 50px;
+    background: #804beb;
+    color: #FFF;
+    box-shadow: none !important;
+  }
+
+  .submit-button.mat-button-disabled:not([class*=mat-elevation-z]) {
+    background: #9f79eb;
+    color: #f5f3fb;
+    cursor: not-allowed;
+  }
+
+  .otp-input input {
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+    text-align: center;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .otp-input input:focus {
+    outline: none;
+    border-color: #804beb;
+    box-shadow: 0 0 5px #804beb78;
+  }
+
+  .cards img {
+    height: 35px;
+  }
+
+  .cards-second {
+    padding: 60px 60px 60px 60px;
+  }
+
+  .cards-second img {
+    height: 32px;
+  }
+
+  .title {
+    color: #382066;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: .5px;
+  }
+
+}

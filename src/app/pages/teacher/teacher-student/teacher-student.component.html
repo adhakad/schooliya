@@ -1,0 +1,822 @@
+<app-header-nav></app-header-nav>
+<div class="container-fluid dashboard-container">
+  <div class="row">
+    <div class="col-12 col-lg-2">
+      <app-side-nav></app-side-nav>
+    </div>
+    <div class="col-12 col-lg-10">
+      <div class="row">
+        <div class="col-12 big-container">
+          <div class="col-lg-12 offset-lg-0">
+            <div class="main-card">
+              <div class="row mt-4 mb-2">
+                <div class="col-12 radio-btn-mobile mb-3">
+                  <mat-radio-group (change)="onChange($event)">
+                    <mat-radio-button [value]="0" [checked]="selectedValue==0">Single Create</mat-radio-button>
+                    <mat-radio-button [value]="1" [checked]="selectedValue==1">Bulk Import</mat-radio-button>
+                    <mat-radio-button [value]="2" [checked]="selectedValue==2">Bulk Export</mat-radio-button>
+                  </mat-radio-group>
+                </div>
+                <div class="col-8 col-lg-5 mb-2">
+                  <input type="text" class="form-control" placeholder="{{className | classSuffix}} Student Search..."
+                    id="searchText" name="searchText" #searchText="ngModel" [(ngModel)]="filters.searchText"
+                    (keyup)="getStudents({page : 1, limit : 0})">
+                </div>
+                <div class="col-9 col-lg-5 radio-btn-desktop mt-2">
+                  <mat-radio-group (change)="onChange($event)">
+                    <mat-radio-button [value]="0" [checked]="selectedValue==0">Single Create</mat-radio-button>
+                    <mat-radio-button [value]="1" [checked]="selectedValue==1">Bulk Import</mat-radio-button>
+                    <mat-radio-button [value]="2" [checked]="selectedValue==2">Bulk Export</mat-radio-button>
+                  </mat-radio-group>
+                </div>
+                <div class="col-4 col-lg-2">
+                  <button *ngIf="selectedValue==0" class="submit-button" mat-raised-button
+                    (click)="addStudentModel()"><mat-icon>add</mat-icon>Create</button>
+                  <button *ngIf="selectedValue==1" class="submit-button" mat-raised-button
+                    (click)="addBulkStudentImportModel()"><mat-icon>cloud_upload</mat-icon> Import</button>
+                  <button *ngIf="selectedValue==2" class="submit-button" mat-raised-button
+                    (click)="addBulkStudentExportModel()"><mat-icon>cloud_download</mat-icon> Export</button>
+                </div>
+              </div>
+              <table class="table table-hover align-middle mb-1 bg-white">
+                <thead class="bg-light">
+                  <tr class="text-muted">
+                    <th>No.</th>
+                    <th>Student</th>
+                    <th>Class</th>
+                    <th>Admission No.</th>
+                    <th>Roll Number</th>
+                    <th>Otp</th>
+                    <th>Session</th>
+                    <th>Status</th>
+                    <!-- <th>Class Promote</th> -->
+                    <th>View</th>
+                    <th>Created By</th>
+                  </tr>
+                </thead>
+                <tbody *ngIf="studentInfo && studentInfo.length>0">
+                  <tr *ngFor="let students of studentInfo,let i=index">
+                    <td>
+                      <p class="mb-0">{{number*10+i+1-10}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{students.name}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{students.class | classSuffix}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{students.admissionNo}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{students.rollNumber}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{students.otp}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{students.session}}</p>
+                    </td>
+                    <td>
+                      <a class="mb-0 status-active" (click)="changeStatus(students._id,0)"
+                        *ngIf="students.status == 'Active'"
+                        href="javascript:void(0)">{{students.status}}&nbsp;&nbsp;</a>
+                      <a class="mb-0 status-inactive" (click)="changeStatus(students._id,1)"
+                        *ngIf="students.status == 'Inactive'" href="javascript:void(0)">{{students.status}}</a>
+                    </td>
+                    <!-- <td>
+                      <button style="background-color: transparent;color: #8d6dff;border: 1px solid #8d6dff;"
+                        class="submit-button" (click)="addStudentClassPromoteModel(students)"
+                        mat-raised-button>Promote</button>
+                    </td> -->
+                    <td class="mb-0">
+                      <mat-icon (click)="addStudentInfoViewModel(students)">visibility</mat-icon>
+                    </td>
+                    <td>
+                      <p class="mb-0" *ngIf="students.createdBy == createdBy">{{students.createdBy}}</p>
+                      <p class="mb-0" *ngIf="students.createdBy !== createdBy">Other</p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="pagination">
+                <app-pagination [paginationValues]="paginationValues" (onChange)="getStudents($event)">
+                </app-pagination>
+              </div>
+
+              <div class="modal fade show" [class.show]="showModal">
+                <div class="modal-dialog modal-dialog-scrollable" [class.modal-lg]="!deleteMode && !successMsg">
+                  <div class="modal-content" *ngIf="successMsg">
+                    <div class="modal-header">
+                      <h5 class="modal-title" style="color: transparent;">&nbsp;</h5>
+                    </div>
+                    <div class="modal-body">
+                      <p class="success-message">{{successMsg}}</p>
+                    </div>
+                    <div class="modal-footer">
+                      <mat-icon></mat-icon>
+                    </div>
+                  </div>
+                  <div class="modal-content" *ngIf="!successMsg">
+                    <div class="modal-header">
+                      <h5 class="modal-title">{{updateMode?'Update': deleteMode ? 'Delete' :'Create New'}} Student</h5>
+                      <mat-icon matRipple (click)="closeModal()">close</mat-icon>
+                    </div>
+                    <form [formGroup]="studentForm" (ngSubmit)="studentAddUpdate()">
+                      <div class="modal-body" *ngIf="!deleteMode">
+                        <div *ngIf="errorCheck">
+                          <p class="error-message">{{errorMsg}}</p>
+                        </div>
+                        <div class="container">
+                          <div class="row">
+                            <ng-container>
+                              <h3>Academic Info</h3>
+                            </ng-container>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Session</mat-label>
+                                <mat-select type="text" matInput formControlName="session">
+                                  <div *ngFor="let session of sessions">
+                                    <mat-option value="{{session.year}}">{{session.year}}</mat-option>
+                                  </div>
+                                </mat-select>
+                                <mat-error
+                                  *ngIf="studentForm.get('session')?.hasError('required') && studentForm.get('session')?.touched">
+                                  Session is required
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Last School Optional</mat-label>
+                                <input matInput type="text" formControlName="lastSchool">
+                                <mat-error
+                                  *ngIf="studentForm.get('lastSchool')?.hasError('pattern') && studentForm.get('lastSchool')?.touched">
+                                  Please enter a valid Last School (only letters and spaces are allowed)
+                                </mat-error>
+                                <mat-error
+                                  *ngIf="studentForm.get('lastSchool')?.hasError('maxlength') && studentForm.get('lastSchool')?.touched">
+                                  Maximum length exceeded (maximum 50 characters allowed)
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Class</mat-label>
+                                <mat-select matInput formControlName="class">
+                                  <div>
+                                    <mat-option [value]="className"
+                                      (click)="chooseClass(studentForm.get('class'))">
+                                      {{ className | classSuffix }}
+                                    </mat-option>
+                                  </div>
+                                </mat-select>
+                                <mat-error
+                                  *ngIf="studentForm.get('class')?.hasError('required') && studentForm.get('class')?.touched">
+                                  Class is required
+                                </mat-error>
+                                <mat-error
+                                  *ngIf="studentForm.get('class')?.hasError('pattern') && studentForm.get('class')?.touched">
+                                  Please enter a valid class (numeric characters only)
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Stream</mat-label>
+                                <mat-select type="text" matInput formControlName="stream">
+                                  <ng-container *ngIf="cls==12 || cls==11">
+                                    <div *ngFor="let subject of streamMainSubject">
+                                      <mat-option (click)="chooseStream(studentForm.get('stream'))"
+                                        value="{{subject}}">{{subject}}</mat-option>
+                                    </div>
+                                  </ng-container>
+                                  <ng-container *ngIf="cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202">
+                                    <div>
+                                      <mat-option value="{{notApplicable}}"
+                                        (click)="chooseStream(studentForm.get('stream'))">N/A</mat-option>
+                                    </div>
+                                  </ng-container>
+                                </mat-select>
+                                <mat-error
+                                  *ngIf="studentForm.get('stream')?.hasError('required') && studentForm.get('stream')?.touched">
+                                  Stream is required
+                                </mat-error>
+                                <mat-error
+                                  *ngIf="studentForm.get('stream')?.hasError('pattern') && studentForm.get('stream')?.touched">
+                                  Please enter a valid Stream (only letters are allowed)
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Admission No. Type</mat-label>
+                                <mat-select type="text" matInput formControlName="admissionType">
+                                  <div>
+                                    <mat-option value="New"
+                                      (click)="chooseAdmissionType(studentForm.get('admissionType'))">
+                                      Generate Admission No.
+                                    </mat-option>
+                                    <mat-option value="Old"
+                                      (click)="chooseAdmissionType(studentForm.get('admissionType'))">
+                                      Manual Fill Admission No.
+                                    </mat-option>
+                                  </div>
+                                </mat-select>
+                                <mat-error
+                                  *ngIf="studentForm.get('admissionType')?.hasError('required') && studentForm.get('admissionType')?.touched">
+                                  Admission type is required
+                                </mat-error>
+                                <mat-error
+                                  *ngIf="studentForm.get('admissionType')?.hasError('pattern') && studentForm.get('admissionType')?.touched">
+                                  Please enter a valid Admission type (only letters are allowed)
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6" *ngIf="admissionType !=='New' && admissionType !=='Old'">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Admission No.</mat-label>
+                                <input matInput readonly>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6" *ngIf="admissionType === 'New' || admissionType === 'Old'">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Admission No.</mat-label>
+                                <input matInput type="number" formControlName="admissionNo">
+                                <mat-error
+                                  *ngIf="studentForm.get('admissionNo')?.hasError('required') && studentForm.get('admissionNo')?.touched">
+                                  Admission no. is required
+                                </mat-error>
+                                <mat-error
+                                  *ngIf="studentForm.get('admissionNo')?.hasError('pattern') && studentForm.get('admissionNo')?.touched">
+                                  Please enter a valid Admission no. (numeric characters only)
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <ng-container>
+                              <h3>Student Info</h3>
+                            </ng-container>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Name</mat-label>
+                                <input matInput type="text" formControlName="name">
+                                <mat-error
+                                  *ngIf="studentForm.get('name')?.hasError('required') && studentForm.get('name')?.touched">
+                                  Name is required
+                                </mat-error>
+                                <mat-error
+                                  *ngIf="studentForm.get('name')?.hasError('pattern') && studentForm.get('name')?.touched">
+                                  Please enter a valid Name (only letters and spaces are allowed)
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Roll Number</mat-label>
+                                <input matInput type="number" formControlName="rollNumber">
+                                <mat-error
+                                  *ngIf="studentForm.get('rollNumber')?.hasError('required') && studentForm.get('rollNumber')?.touched">
+                                  Roll number is required
+                                </mat-error>
+                                <mat-error
+                                  *ngIf="studentForm.get('rollNumber')?.hasError('maxlength') && studentForm.get('rollNumber')?.touched">
+                                  Maximum length exceeded (maximum 8 characters allowed)
+                                </mat-error>
+                                <mat-error
+                                  *ngIf="studentForm.get('rollNumber')?.hasError('pattern') && studentForm.get('rollNumber')?.touched">
+                                  Please enter a valid Roll number (numeric characters only)
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Aadhar Card Number</mat-label>
+                                <input matInput type="number" formControlName="aadharNumber">
+                                <mat-error
+                                  *ngIf="studentForm.get('aadharNumber')?.hasError('required') && studentForm.get('aadharNumber')?.touched">
+                                  Aadhar card number is required
+                                </mat-error>
+                                <mat-error
+                                  *ngIf="studentForm.get('aadharNumber')?.hasError('pattern') && studentForm.get('aadharNumber')?.touched">
+                                  Aadhar number must be a 12-digit number
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Samagra Id</mat-label>
+                                <input matInput type="number" formControlName="samagraId">
+                                <mat-error
+                                  *ngIf="studentForm.get('samagraId')?.hasError('required') && studentForm.get('samagraId')?.touched">
+                                  Samagra id is required
+                                </mat-error>
+                                <mat-error
+                                  *ngIf="studentForm.get('samagraId')?.hasError('pattern') && studentForm.get('samagraId')?.touched">
+                                  Samagra id must be a 9-digit number
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Date of Birth</mat-label>
+                                <input matInput readonly [matDatepicker]="picker" formControlName="dob" />
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                                <mat-error
+                                  *ngIf="studentForm.get('dob')?.hasError('required') && studentForm.get('dob')?.touched">
+                                  Date of Birth is required
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Gender</mat-label>
+                                <mat-select type="text" matInput formControlName="gender">
+                                  <div>
+                                    <mat-option value="Male">Male</mat-option>
+                                    <mat-option value="Female">Female</mat-option>
+                                    <mat-option value="Other">Other</mat-option>
+                                  </div>
+                                </mat-select>
+                                <mat-error
+                                  *ngIf="studentForm.get('gender')?.hasError('required') && studentForm.get('gender')?.touched">
+                                  Gender is required
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Category</mat-label>
+                                <mat-select type="text" matInput formControlName="category">
+                                  <div *ngFor="let category of categorys">
+                                    <mat-option value="{{category.category}}">{{category.category}}</mat-option>
+                                  </div>
+                                </mat-select>
+                                <mat-error
+                                  *ngIf="studentForm.get('category')?.hasError('required') && studentForm.get('category')?.touched">
+                                  Category is required
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Religion</mat-label>
+                                <mat-select type="text" matInput formControlName="religion">
+                                  <div *ngFor="let religion of religions">
+                                    <mat-option value="{{religion.religion}}">{{religion.religion}}</mat-option>
+                                  </div>
+                                </mat-select>
+                                <mat-error
+                                  *ngIf="studentForm.get('religion')?.hasError('required') && studentForm.get('religion')?.touched">
+                                  Religion is required
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Nationality</mat-label>
+                                <mat-select type="text" matInput formControlName="nationality">
+                                  <div>
+                                    <mat-option value="Indian">Indian</mat-option>
+                                    <mat-option value="Other">Other</mat-option>
+                                  </div>
+                                </mat-select>
+                                <mat-error
+                                  *ngIf="studentForm.get('nationality')?.hasError('required') && studentForm.get('nationality')?.touched">
+                                  Nationality is required
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Contact</mat-label>
+                                <input matInput type="number" formControlName="contact">
+                                <mat-error
+                                  *ngIf="studentForm.get('contact')?.hasError('required') && studentForm.get('contact')?.touched">
+                                  Contact is required
+                                </mat-error>
+                                <mat-error
+                                  *ngIf="studentForm.get('contact')?.hasError('pattern') && studentForm.get('contact')?.touched">
+                                  Please enter a valid Contact (10-digit phone number starting with 6, 7, 8, or 9)
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Address</mat-label>
+                                <input matInput type="text" formControlName="address">
+                                <mat-error
+                                  *ngIf="studentForm.get('address')?.hasError('required') && studentForm.get('address')?.touched">
+                                  Address is required
+                                </mat-error>
+                                <mat-error
+                                  *ngIf="studentForm.get('address')?.hasError('pattern') && studentForm.get('address')?.touched">
+                                  Please enter a valid Address (only letters and spaces are allowed)
+                                </mat-error>
+                                <mat-error
+                                  *ngIf="studentForm.get('address')?.hasError('maxlength') && studentForm.get('address')?.touched">
+                                  Maximum length exceeded (maximum 50 characters allowed)
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <ng-container>
+                              <h3>Parent's Info</h3>
+                            </ng-container>
+                            <div class="co-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Father Name</mat-label>
+                                <input matInput type="text" formControlName="fatherName">
+                                <mat-error
+                                  *ngIf="studentForm.get('fatherName')?.hasError('required') && studentForm.get('fatherName')?.touched">
+                                  Father name is required
+                                </mat-error>
+                                <mat-error
+                                  *ngIf="studentForm.get('fatherName')?.hasError('pattern') && studentForm.get('fatherName')?.touched">
+                                  Please enter a valid Father name (only letters and spaces are allowed)
+                                </mat-error>
+                              </mat-form-field>
+                              <mat-form-field appearance="outline">
+                                <mat-label>Father Qualification</mat-label>
+                                <mat-select type="text" matInput formControlName="fatherQualification">
+                                  <div *ngFor="let qualification of qualifications">
+                                    <mat-option
+                                      value="{{qualification.qualification}}">{{qualification.qualification}}</mat-option>
+                                  </div>
+                                </mat-select>
+                                <mat-error
+                                  *ngIf="studentForm.get('fatherQualification')?.hasError('required') && studentForm.get('fatherQualification')?.touched">
+                                  Father qualification is required
+                                </mat-error>
+                              </mat-form-field>
+                              <mat-form-field appearance="outline">
+                                <mat-label>Father Occupation</mat-label>
+                                <mat-select type="text" matInput formControlName="fatherOccupation">
+                                  <div *ngFor="let occupation of occupations">
+                                    <mat-option value="{{occupation.occupation}}">{{occupation.occupation}}</mat-option>
+                                  </div>
+                                </mat-select>
+                                <mat-error
+                                  *ngIf="studentForm.get('fatherOccupation')?.hasError('required') && studentForm.get('fatherOccupation')?.touched">
+                                  Father occupation is required
+                                </mat-error>
+                              </mat-form-field>
+                              <mat-form-field appearance="outline">
+                                <mat-label>Father Contact</mat-label>
+                                <input matInput type="number" formControlName="fatherContact">
+                                <mat-error
+                                  *ngIf="studentForm.get('fatherContact')?.hasError('required') && studentForm.get('fatherContact')?.touched">
+                                  Father contact is required
+                                </mat-error>
+                                <mat-error
+                                  *ngIf="studentForm.get('fatherContact')?.hasError('pattern') && studentForm.get('fatherContact')?.touched">
+                                  Please enter a valid Contact (10-digit phone number starting with 6, 7, 8, or 9)
+                                </mat-error>
+                              </mat-form-field>
+                              <mat-form-field appearance="outline">
+                                <mat-label>Father Annual Income</mat-label>
+                                <input matInput type="number" formControlName="fatherAnnualIncome">
+                                <mat-error
+                                  *ngIf="studentForm.get('fatherAnnualIncome')?.hasError('required') && studentForm.get('fatherAnnualIncome')?.touched">
+                                  Father annual income is required
+                                </mat-error>
+                                <mat-error
+                                  *ngIf="studentForm.get('fatherAnnualIncome')?.hasError('pattern') && studentForm.get('fatherAnnualIncome')?.touched">
+                                  Please enter a valid Annual Income (numeric characters only)
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="co-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Mother Name</mat-label>
+                                <input matInput type="text" formControlName="motherName">
+                                <mat-error
+                                  *ngIf="studentForm.get('motherName')?.hasError('required') && studentForm.get('motherName')?.touched">
+                                  Mother name is required
+                                </mat-error>
+                                <mat-error
+                                  *ngIf="studentForm.get('motherName')?.hasError('pattern') && studentForm.get('motherName')?.touched">
+                                  Please enter a valid Mother name (only letters and spaces are allowed)
+                                </mat-error>
+                              </mat-form-field>
+                              <mat-form-field appearance="outline">
+                                <mat-label>Mother Qualification</mat-label>
+                                <mat-select type="text" matInput formControlName="motherQualification">
+                                  <div *ngFor="let qualification of qualifications">
+                                    <mat-option
+                                      value="{{qualification.qualification}}">{{qualification.qualification}}</mat-option>
+                                  </div>
+                                </mat-select>
+                                <mat-error
+                                  *ngIf="studentForm.get('motherQualification')?.hasError('required') && studentForm.get('motherQualification')?.touched">
+                                  Mother qualification is required
+                                </mat-error>
+                              </mat-form-field>
+                              <mat-form-field appearance="outline">
+                                <mat-label>Mother Occupation</mat-label>
+                                <mat-select type="text" matInput formControlName="motherOccupation">
+                                  <div *ngFor="let occupation of occupations">
+                                    <mat-option value="{{occupation.occupation}}">{{occupation.occupation}}</mat-option>
+                                  </div>
+                                </mat-select>
+                                <mat-error
+                                  *ngIf="studentForm.get('motherOccupation')?.hasError('required') && studentForm.get('motherOccupation')?.touched">
+                                  Mother occupation is required
+                                </mat-error>
+                              </mat-form-field>
+                              <mat-form-field appearance="outline">
+                                <mat-label>Mother Contact</mat-label>
+                                <input matInput type="number" formControlName="motherContact">
+                                <mat-error
+                                  *ngIf="studentForm.get('motherContact')?.hasError('required') && studentForm.get('motherContact')?.touched">
+                                  Mother contact is required
+                                </mat-error>
+                                <mat-error
+                                  *ngIf="studentForm.get('motherContact')?.hasError('pattern') && studentForm.get('motherContact')?.touched">
+                                  Please enter a valid Contact (10-digit phone number starting with 6, 7, 8, or 9)
+                                </mat-error>
+                              </mat-form-field>
+                              <mat-form-field appearance="outline">
+                                <mat-label>Mother Annual Income</mat-label>
+                                <input matInput type="number" formControlName="motherAnnualIncome">
+                                <mat-error
+                                  *ngIf="studentForm.get('motherAnnualIncome')?.hasError('required') && studentForm.get('motherAnnualIncome')?.touched">
+                                  Mother annual income is required
+                                </mat-error>
+                                <mat-error
+                                  *ngIf="studentForm.get('motherAnnualIncome')?.hasError('pattern') && studentForm.get('motherAnnualIncome')?.touched">
+                                  Please enter a valid Annual Income (numeric characters only)
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer" *ngIf="!deleteMode">
+                        <button class="submit-button" mat-raised-button type="submit"
+                          [disabled]="!studentForm.valid">Submit</button>
+                      </div>
+                      <div *ngIf="deleteMode">
+                        <div class="modal-body">
+                          <h3>Note : When deleting student details, all related data such as login information, fee records, student details, admit cards, results, etc., will be removed.</h3>
+                        </div>
+                        <div class="modal-footer">
+                          <button class="delete-button" mat-raised-button type="button"
+                            (click)="studentDelete(deleteById)">Ok</button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="modal fade show" [class.show]="showBulkImportModal">
+                <div class="modal-dialog modal-dialog-top" role="document">
+                  <div class="modal-content" *ngIf="successMsg">
+                    <div class="modal-header">
+                      <h5 class="modal-title" style="color: transparent;">&nbsp;</h5>
+                    </div>
+                    <div class="modal-body">
+                      <p class="success-message">{{successMsg}}</p>
+                    </div>
+                    <div class="modal-footer">
+                      <mat-icon></mat-icon>
+                    </div>
+                  </div>
+                  <div class="modal-content" *ngIf="!successMsg">
+                    <div class="modal-header">
+                      <h6 class="modal-title">Import Excel File
+                      </h6>
+                      <mat-icon matRipple (click)="closeModal()" style="cursor: pointer;">close</mat-icon>
+                    </div>
+                    <div class="modal-body">
+                      <div *ngIf="errorCheck">
+                        <p class="error-message">{{errorMsg}}</p>
+                      </div>
+                      <main>
+                        <div class="row mb-2 mt-5">
+                          <div class="custom-file">
+                            <input type="file" name="file" class="form-control file-input" id="inputGroupFile" required
+                              (change)="handleImport($event)"
+                              accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                          </div>
+                        </div>
+                      </main>
+                    </div>
+                    <div class="modal-footer">
+                      <button [disabled]="!fileChoose" (click)="addBulkStudentRecord()" class="submit-button"
+                        mat-raised-button>
+                        Import
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal fade show" [class.show]="showBulkExportModal">
+                <div class="modal-dialog modal-dialog-top" role="document">
+                  <div class="modal-content" *ngIf="successMsg">
+                    <div class="modal-header">
+                      <h5 class="modal-title" style="color: transparent;">&nbsp;</h5>
+                    </div>
+                    <div class="modal-body">
+                      <p class="success-message">{{successMsg}}</p>
+                    </div>
+                    <div class="modal-footer">
+                      <mat-icon></mat-icon>
+                    </div>
+                  </div>
+                  <div class="modal-content" *ngIf="!successMsg">
+                    <div class="modal-header">
+                      <h6 class="modal-title">Export Excel File
+                      </h6>
+                      <mat-icon matRipple (click)="closeModal()" style="cursor: pointer;">close</mat-icon>
+                    </div>
+                    <div class="modal-body">
+                      <div *ngIf="errorCheck">
+                        <p class="error-message">{{errorMsg}}</p>
+                      </div>
+                      <main>
+                        <div class="row">
+                          <div class="col-12">
+                            <ng-container>
+                              <h3>All Student Class - {{className | classSuffix}}</h3>
+                            </ng-container>
+                            <table class="table">
+                              <thead>
+                                <tr>
+                                  <th scope="col">Id</th>
+                                  <th scope="col">Name</th>
+                                  <th scope="col">Admission Number</th>
+                                  <th scope="col">Roll Number</th>
+                                </tr>
+                              </thead>
+                              <tbody *ngIf="studentInfoByClass && studentInfoByClass.length>0">
+                                <tr *ngFor="let students of studentInfoByClass,let i=index">
+                                  <td>
+                                    <p class="mb-0">{{number*10+i+1-10}}</p>
+                                  </td>
+                                  <td>
+                                    <p class="mb-0">{{students.name}}</p>
+                                  </td>
+                                  <td>
+                                    <p class="mb-0">{{students.admissionNo}}</p>
+                                  </td>
+                                  <td>
+                                    <p class="mb-0">{{students.rollNumber}}</p>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </main>
+                    </div>
+                    <div class="modal-footer">
+                      <button class="submit-button" (click)="exportToExcel()" mat-raised-button>
+                        Export
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal fade show" [class.show]="showClassPromoteModal">
+                <div class="modal-dialog modal-dialog-scrollable" [class.modal-lg]="!successMsg">
+                  <div class="modal-content" *ngIf="successMsg">
+                    <div class="modal-header">
+                      <h5 class="modal-title" style="color: transparent;">&nbsp;</h5>
+                    </div>
+                    <div class="modal-body">
+                      <p class="success-message" *ngIf="promotedClass">{{successMsg}} {{promotedClass | classSuffix}}
+                      </p>
+                      <p class="success-message" *ngIf="!promotedClass">{{successMsg}}</p>
+                    </div>
+                    <div class="modal-footer">
+                      <mat-icon></mat-icon>
+                    </div>
+                  </div>
+                  <div class="modal-content" *ngIf="!successMsg">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Student Class Promote</h5>
+                      <mat-icon matRipple (click)="closeModal()">close</mat-icon>
+                    </div>
+                    <form [formGroup]="studentClassPromoteForm" (ngSubmit)="studentClassPromote()">
+                      <div class="modal-body">
+                        <div *ngIf="errorCheck">
+                          <p class="error-message" *ngIf="promotedClass">{{errorMsg}} {{promotedClass | classSuffix}}
+                          </p>
+                          <p class="error-message" *ngIf="!promotedClass">{{errorMsg}}</p>
+                        </div>
+                        <div class="container">
+                          <div class="row">
+                            <ng-container>
+                              <p>Admission No. - {{singleStudentInfo?.admissionNo}}</p>
+                              <p>Name - {{singleStudentInfo?.name | titlecase}}</p>
+                              <p>Father Name - {{singleStudentInfo?.fatherName | titlecase}}</p>
+                              <p>Class - {{singleStudentInfo?.class | classSuffix}}</p>
+                            </ng-container>
+                            <div class="mb-5"></div>
+                            <input matInput type="hidden" formControlName="admissionNo" readonly>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Session</mat-label>
+                                <mat-select type="text" matInput formControlName="session">
+                                  <div *ngFor="let session of sessions">
+                                    <mat-option value="{{session.year}}">{{session.year}}</mat-option>
+                                  </div>
+                                </mat-select>
+                                <mat-error
+                                  *ngIf="studentForm.get('session')?.hasError('required') && studentForm.get('session')?.touched">
+                                  Session is required
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Roll Number</mat-label>
+                                <input matInput type="number" formControlName="rollNumber">
+                                <mat-hint
+                                  *ngIf="!studentClassPromoteForm.get('rollNumber')?.valid && studentClassPromoteForm.get('rollNumber')?.touched"
+                                  class="form-text text-danger">Roll number is required</mat-hint>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button class="submit-button" [disabled]="!studentClassPromoteForm.valid" mat-raised-button
+                          type="submit">Submit</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+
+
+              <div class="modal fade show" [class.show]="showStudentInfoViewModal">
+                <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Student Academic Detail</h5>
+                      <mat-icon matRipple (click)="closeModal()">close</mat-icon>
+                    </div>
+                    
+                      <div class="modal-body">
+                        <div class="container">
+                          <div class="row">
+                            <ng-container *ngIf="singleStudentInfo">
+                              <ng-container><h3 style="color: #8d6dff;">Academic Info</h3></ng-container>
+                              <div class="col-12 col-lg-6"><p>Academic Session - {{singleStudentInfo.session}}</p></div>
+                              <div class="col-12 col-lg-6"><p>Last School - <span *ngIf="singleStudentInfo.lastSchool">{{singleStudentInfo.lastSchool| titlecase}}</span><span *ngIf="!singleStudentInfo.lastSchool">N/A</span></p></div>
+                              <div class="col-12 col-lg-6"><p>Admission No. - {{singleStudentInfo.admissionNo}}</p></div>
+                              <div class="col-12 col-lg-6"><p>Admission Date - {{singleStudentInfo?.doa}}</p></div>
+                              <div class="col-12 col-lg-6"><p>Roll Number - {{singleStudentInfo.rollNumber}}</p></div>
+                              <div class="col-12 col-lg-6"><p>Stream - {{singleStudentInfo.stream}}</p></div>
+                              <ng-container><h3 style="color: #8d6dff;">Student Info</h3></ng-container>
+                              <div class="col-12 col-lg-6"><p>Name - {{singleStudentInfo.name | titlecase}}</p></div>
+                              <div class="col-12 col-lg-6"><p>Date Of Birth - {{singleStudentInfo?.dob}}</p></div>
+                              <div class="col-12 col-lg-6"><p>Aadhar Number - {{singleStudentInfo.aadharNumber}}</p></div>
+                              <div class="col-12 col-lg-6"><p>Samagra Id - {{singleStudentInfo.samagraId}}</p></div>
+                              <div class="col-12 col-lg-6"><p>Gender - {{singleStudentInfo.gender | titlecase}}</p></div>
+                              <div class="col-12 col-lg-6"><p>Category - {{singleStudentInfo.category | titlecase}}</p></div>
+                              <div class="col-12 col-lg-6"><p>Religion - {{singleStudentInfo.religion | titlecase}}</p></div>
+                              <div class="col-12 col-lg-6"><p>Nationality - {{singleStudentInfo.nationality | titlecase}}</p></div>
+                              <div class="col-12 col-lg-6"><p>Contact - {{singleStudentInfo.contact}}</p></div>
+                              <div class="col-12 col-lg-6"><p>Address - {{singleStudentInfo.address | titlecase}}</p></div>
+                              <ng-container><h3 style="color: #8d6dff;">Parent's Info</h3></ng-container>
+                              <div class="col-12 col-lg-6">
+                                <p>Father Name - {{singleStudentInfo.fatherName | titlecase}}</p>
+                                <p>Father Qualification - {{singleStudentInfo.fatherQualification | titlecase}}</p>
+                                <p>Father Occupation - {{singleStudentInfo.fatherOccupation | titlecase}}</p>
+                                <p>Father Contact - {{singleStudentInfo.fatherContact}}</p>
+                                <p>Father AnnualIncome - {{singleStudentInfo.fatherAnnualIncome}}</p>
+                              </div>
+                              <div class="col-12 col-lg-6">
+                                <p>Mother Name - {{singleStudentInfo.motherName | titlecase}}</p>
+                                <p>Mother Qualification - {{singleStudentInfo.motherQualification | titlecase}}</p>
+                                <p>Mother Occupation - {{singleStudentInfo.motherOccupation | titlecase}}</p>
+                                <p>Mother Contact - {{singleStudentInfo.motherContact}}</p>
+                                <p>Mother AnnualIncome - {{singleStudentInfo.motherAnnualIncome}}</p>
+                              </div>                            
+                            </ng-container>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button style="background-color: transparent;" class="submit-button" mat-raised-button
+                          type="submit"></button>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="spinner-container" *ngIf="loader">
+  <div class="spinner-overlay" *ngIf="loader">
+    <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate" strokeWidth="3"></mat-progress-spinner>
+  </div>
+</div>

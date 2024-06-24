@@ -1,0 +1,24 @@
+@import'../../../../styles.css';
+.file-input {
+    height: 50px;
+    color: #4e4caacd;
+    border: 1px solid #4e4caacd;
+    border-radius: 5px;
+  }
+.radio-btn-mobile {
+    display: inline;
+}
+
+.radio-btn-desktop {
+    display: none;
+}
+
+@media (min-width: 992px) {
+    .radio-btn-mobile {
+        display: none;
+    }
+
+    .radio-btn-desktop {
+        display: inline;
+    }
+}

@@ -1,0 +1,194 @@
+@import'../../../../styles.css';
+@import'../admin-student-fees/admin-student-fees.component.css';
+/* @import'../../../../assets/logo.png'; */
+.custom-container {
+  font-family: Arial, sans-serif;
+  overflow: auto;
+}
+.table-container {
+  background-color: #fff;
+  border: none;
+  padding: 25px;
+  margin-top: 2vh;
+}
+.logo-table {
+  width: 800px;
+  border: none;
+  font-size: 1.3em;
+  margin-top: 2vh;
+  margin-bottom: 5vh;
+  letter-spacing: .5px;
+  display: inline-table;
+}
+.logo-table td {height: 40px;
+  border: none;
+  text-align: center;
+}
+.info-table {
+  width: 800px;
+  border: none;
+  font-size: 1em;
+  letter-spacing: .25px;
+  margin-bottom: 5vh;
+  display: inline-table;
+}
+img{
+  height: 35px;
+}
+.table th,.table td {
+  height: 42px;
+}
+.info-table th,
+.info-table td {
+  height: 40px;
+  border: none;
+}
+.custom-table {
+  width: 800px;
+  font-size: 1em;
+  letter-spacing: .25px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  display: inline-table;
+}
+.custom-table th,
+.custom-table td {
+  height: 40px;
+  border: 1px solid rgb(218, 218, 222);
+  text-align: center;
+}
+.receipt-table{
+  width: 800px;
+  font-size: 1em;
+  letter-spacing: .25px;
+  margin-bottom: 20px;
+  border: 1px solid rgb(218, 218, 222);
+  display: inline-table;
+}
+.receipt-table th,
+.receipt-table td {
+  height: 40px;
+}
+.receipt-table .receipt-row td {
+  height: 5px;
+  padding-top: 5px;
+}
+.text-right {
+  text-align: right;
+}
+.border{
+  border:1px solid #ccc;
+}
+.text-center {
+  text-align: center;
+}
+.text-bold{
+  font-weight: bold;
+}
+.print-pdf {
+  display: none;
+}
+@media (min-width: 576px) and (max-width:991.98px) {
+  .table-container {
+    margin-top: 1vh;
+    border: 1px solid #ccc;
+  }
+  .logo-table {
+    width: 100%;
+  }
+  .info-table{
+    width: 100%;
+  }
+  .custom-table {
+    width: 100%;
+    font-size: 10px;
+  }
+  .receipt-table {
+    width: 100%;
+    font-size: 10px;
+  }
+  .print-pdf {
+    display: inline-block;
+  }
+}
+@media (min-width: 992px) {
+  .table-container {
+    margin-top: 1vh;
+    margin-bottom: 2vh;
+    border-radius: 5px;
+    /* border: 1px solid #ccc; */
+  }
+  .logo-table {
+    width: 100%;
+  }
+  .info-table{
+    width: 100%;
+  }
+  .custom-container {
+    font-family: Arial, sans-serif;
+    overflow: auto;
+  }
+  .custom-table {
+    width: 100%;
+  }
+  .receipt-table {
+    width: 100%;
+  }
+  .print-pdf {
+    display: inline-block;
+  }
+}
+
+
+
+
+
+.logo{
+    height: 60px;display: inline;
+ }
+ .school-name h3{
+    color:#4e4caacd !important;font-size: 16px !important;display: inline;margin-left: 15px;margin-bottom: 0 !important;
+ }
+ .school-name p{
+    color: #4e4caacd !important;
+    display: block !important;margin-left: 50px !important;margin-bottom:30px !important;font-size: 12px !important;
+ }
+ .address{
+    margin-left: 30px;
+    margin-top: -20px !important;
+    color: #2e2d6aa1;
+ }
+ .address p{
+    color: #4e4caacd !important;
+    display: block !important;margin-top: -15px !important;margin-left: 50px !important;font-size: 12px !important;
+ }
+ .title-lable{
+    text-align: center;border: 1px solid #4e4caacd;border-radius: 5px;margin-top: 10px;margin-bottom: 15px;padding-top: 5px;
+ }
+ .table-container {
+    border: 1px solid #4e4caacd;border-radius: 5px;
+ }
+ .table-container .title{
+    color:#4e4caacd;text-align: center;padding-top:5px;margin-bottom: 15px;border: 1px solid #4e4caacd;border-radius: 5px;
+ }
+ .table-container .title p{
+    color: #4e4caacd !important;
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 1px;
+ }
+ .text-bold{
+    font-weight:bold;
+ }
+ .table-container p{
+    color:#4e4caacd !important;
+    font-size: 12px !important;
+ }
+ .table-container .container p{
+    color:#4e4caacd !important;
+    font-size: 12px !important;
+    margin: 5px !important;
+ }
+ .custom-container{
+    font-size: 12px;
+ }

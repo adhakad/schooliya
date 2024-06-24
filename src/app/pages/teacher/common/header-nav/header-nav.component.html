@@ -1,0 +1,57 @@
+<mat-toolbar class="header">
+  <div class="col-2 col-lg-1" class="logo">
+    <img src="../../../assets/logo.png" alt="">
+  </div>
+  <div class="col-8 col-lg-5" style="text-align: left;">
+    <span style="color: #8d6dff;word-wrap: break-word;overflow-wrap: break-word;white-space: pre-wrap;max-width: 100%;">{{schoolName}}</span>
+  </div>
+  <div class="hamburger col-2 col-lg-0">
+    <button mat-icon-button style="margin-left: 10px;">
+      <svg class="hamburger-icon" (click)="hamburgerMenu(true)" xmlns="http://www.w3.org/2000/svg" width="24"
+        height="24" viewBox="0 0 25 25">
+        <rect x="0" y="3" width="24" height="1.5" />
+        <rect x="0" y="10" width="24" height="1.5" />
+        <rect x="0" y="17" width="24" height="1.5" />
+      </svg>
+    </button>
+  </div>
+  <div class="main-menu col-lg-6" style="text-align: right;padding-right: 25px;">
+    <button mat-button *ngIf="isTeacherAuthenticated" (click)="onLogout('teacher')">
+      <mat-icon>logout</mat-icon>
+      <span>Logout</span>
+    </button>
+  </div>
+</mat-toolbar>
+<div [ngClass]="{'top-hamburger-menu' : false==nav}">
+  <mat-toolbar class="hamburger-menu">
+    <mat-icon class="close-icon" (click)="hamburgerMenu(false)">close</mat-icon>
+    <button mat-menu-item [routerLink]="['/teacher/dashboard']" routerLinkActive="active-link" (click)="hamburgerMenu(true)">
+      <mat-icon>dashboard</mat-icon>
+      <span>Dashboard</span>
+    </button>
+      <button mat-menu-item class="menu-button" [routerLink]="['/teacher/teacher/admission']" routerLinkActive="active-link">
+        <mat-icon>assignment</mat-icon>
+        <span>Admission</span>
+      </button>
+      <button mat-menu-item class="menu-button" [routerLink]="['/teacher/teacher/teacher']" routerLinkActive="active-link">
+        <mat-icon>content_paste_search</mat-icon>
+        <span>Teachers</span>
+      </button>
+      <button mat-menu-item class="menu-button" [routerLink]="['/teacher/teacher/admit-card']" routerLinkActive="active-link">
+        <mat-icon>assignment</mat-icon>
+        <span>Admit Cards</span>
+      </button>
+      <button mat-menu-item class="menu-button" [routerLink]="['/teacher/teacher/result']" routerLinkActive="active-link">
+        <mat-icon>content_paste_search</mat-icon>
+        <span>Exam Results</span>
+      </button>
+      <button mat-menu-item class="menu-button" [routerLink]="['/teacher/teacher/fees']" routerLinkActive="active-link">
+        <mat-icon>content_paste_search</mat-icon>
+        <span>Fee Management</span>
+      </button>
+      <button mat-menu-item class="menu-button" *ngIf="isTeacherAuthenticated" (click)="onLogout('teacher')">
+        <mat-icon>logout</mat-icon>
+        <span>Logout</span>
+      </button>
+  </mat-toolbar>
+</div>

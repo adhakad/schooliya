@@ -1,0 +1,20 @@
+@import'../../../pages/auth/teacher-auth/teacher-login/teacher-login.component.css';
+@import'../../admin/admin-student-fees/admin-student-fees.component.css';
+
+.info-table {
+    text-align: center;
+}
+
+@media (min-width: 992px) {
+    .container-fluid {
+        padding-top: 3vh;
+        background-color: #64748d15;
+    }
+
+    .table-container {
+        background-color: #fff;
+        border-radius: 10px;
+        border: 1px solid rgba(218, 218, 224, 0.858);
+    }
+}
+

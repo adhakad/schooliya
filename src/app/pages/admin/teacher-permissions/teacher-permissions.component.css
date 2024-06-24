@@ -1,0 +1,5 @@
+@import'../../../../styles.css';
+.table{
+    display: inline-block;
+    text-align: center;
+}

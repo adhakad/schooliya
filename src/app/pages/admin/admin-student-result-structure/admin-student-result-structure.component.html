@@ -1,0 +1,944 @@
+<app-header-navbar></app-header-navbar>
+<div class="container-fluid dashboard-container">
+    <div class="row">
+        <div class="col-12 col-lg-2">
+            <app-side-navbar></app-side-navbar>
+        </div>
+        <div class="col-12 col-lg-10">
+            <div class="row">
+                <div class="col-12 big-container">
+                    <div class="col-lg-12 offset-lg-0">
+                        <div class="main-card">
+                            <div class="row">
+                                <div class="col-12 col-lg-4 pt-2">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h3>Settings > Exam Result > Structure</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3 mb-2">
+                                <div class="col-8 col-lg-5">
+                                    <button class="submit-button" mat-raised-button
+                                        (click)="addExamResultModel()"><mat-icon>add</mat-icon>Create</button>
+                                </div>
+                            </div>
+                            <table class="table table-hover align-middle mt-2 mb-1 bg-white">
+                                <thead class="bg-light">
+                                    <tr class="text-muted">
+                                        <th>S.No.</th>
+                                        <th>Exam</th>
+                                        <th>Class</th>
+                                        <th>Stream</th>
+                                        <th>Result Structure</th>
+                                        <th>Result Publish</th>
+                                        <th>Remove</th>
+                                    </tr>
+                                </thead>
+                                <tbody *ngIf="examResultStr">
+                                    <tr *ngFor="let examResultStr of examResultStr,let i = index;">
+                                        <td>
+                                            <p class="mb-0">{{i+1}}</p>
+                                        </td>
+                                        <td>
+                                            <p class="mb-0">{{examResultStr.examType | titlecase}} Exam</p>
+                                        </td>
+                                        <td>
+                                            <p class="mb-0">{{examResultStr.class | classSuffix}}</p>
+                                        </td>
+                                        <td>
+                                            <p class="mb-0">{{examResultStr.stream}}</p>
+                                        </td>
+                                        <td class="mb-0">
+                                            <mat-icon (click)="openExamResultStructureModal(examResultStr)">launch</mat-icon>
+                                        </td>
+                                        <td>
+                                            <mat-slide-toggle [(ngModel)]="examResultStr.resultPublishStatus"
+                                                (change)="onToggleChange(examResultStr._id,examResultStr.resultPublishStatus)">
+                                            </mat-slide-toggle>
+                                        </td>
+                                        <td class="mb-0">
+                                            <mat-icon
+                                                (click)="deleteResultStructureModel(examResultStr._id)">delete</mat-icon>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                            <div class="modal fade show" [class.show]="showModal">
+                                <div class="modal-dialog modal-dialog-scrollable"
+                                    [class.modal-lg]="!deleteMode && !successMsg">
+                                    <div class="modal-content" *ngIf="successMsg">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" style="color: transparent;">&nbsp;</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="success-message">{{successMsg}}</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <mat-icon></mat-icon>
+                                        </div>
+                                    </div>
+                                    <div class="modal-content" *ngIf="!successMsg && classSubject">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">{{updateMode?'Update': deleteMode ? 'Delete' :'Exam
+                                                Result Structure'}} {{cls | classSuffix}}</h5>
+                                            <mat-icon matRipple (click)="closeModal()"
+                                                style="cursor: pointer;">close</mat-icon>
+                                        </div>
+                                        <ng-container *ngIf="marksTypeMode">
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <mat-checkbox checked="true" [disabled]="disabled">Theory
+                                                            Marks</mat-checkbox>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <mat-checkbox checked="true"
+                                                            [disabled]="disabled">Grades</mat-checkbox>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <mat-checkbox (click)="practical(practicalMarks)">Practical
+                                                            Marks</mat-checkbox>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="submit-button" mat-raised-button
+                                                    (click)="selectExamResultStructure()">Save</button>
+                                            </div>
+                                        </ng-container>
+                                        <ng-container *ngIf="marksMode">
+                                            <form [formGroup]="examResultForm" (ngSubmit)="examResultAddUpdate()">
+                                                <div class="modal-body">
+                                                    <div *ngIf="errorCheck">
+                                                        <p class="error-message">{{errorMsg}}</p>
+                                                    </div>
+                                                    <div class="container-fluid mt-3 mb-3">
+                                                        <div class="row">
+                                                            <div class="col-12 col-lg-6">
+                                                                <mat-form-field appearance="outline">
+                                                                    <mat-label>Stream</mat-label>
+                                                                    <mat-select type="text" matInput>
+                                                                        <ng-container *ngIf="cls==12 || cls==11">
+                                                                            <div
+                                                                                *ngFor="let subject of streamMainSubject">
+                                                                                <mat-option
+                                                                                    (click)="chooseStream(subject)"
+                                                                                    value="{{subject}}">{{subject}}</mat-option>
+                                                                            </div>
+                                                                        </ng-container>
+                                                                        <ng-container
+                                                                            *ngIf="cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202">
+                                                                            <div>
+                                                                                <mat-option value="notApplicable"
+                                                                                    (click)='chooseStream(notApplicable)'>N/A</mat-option>
+                                                                            </div>
+                                                                        </ng-container>
+                                                                    </mat-select>
+                                                                </mat-form-field>
+                                                            </div>
+                                                            <div class="col-12 col-lg-6">
+                                                                <mat-form-field appearance="outline">
+                                                                    <mat-label>Exam Type</mat-label>
+                                                                    <mat-select type="text" matInput
+                                                                        formControlName="examType">
+                                                                        <div *ngFor="let exam of examType">
+                                                                            <mat-option value="{{exam}}">{{exam |
+                                                                                titlecase}}
+                                                                                Exam</mat-option>
+                                                                        </div>
+                                                                    </mat-select>
+                                                                    <mat-hint
+                                                                        *ngIf="!examResultForm.get('examType')?.valid && examResultForm.get('examType')?.touched"
+                                                                        class="form-text text-danger">Exam type is
+                                                                        required</mat-hint>
+                                                                </mat-form-field>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="scroll-content">
+                                                        <div class="wide-content">
+                                                            <div class="container">
+                                                                <div class="row">
+                                                                    <ng-container *ngIf="theoryMarks && classSubject">
+                                                                        <div class="col-12 p-4 pt-0 pb-0">
+                                                                            <h3>Exam Theory Marks</h3>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <div
+                                                                                *ngFor="let subjects of classSubject; let i = index">
+                                                                                <button mat-raised-button
+                                                                                    class="pt-2 pb-2 mb-4"
+                                                                                    style="background-color: transparent;box-shadow: none;color: #7c7698fb;">{{subjects.subject}}</button>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <div formGroupName="type">
+                                                                                <div formArrayName="theoryMaxMarks">
+                                                                                    <div
+                                                                                        *ngFor="let subjects of classSubject; let i = index">
+                                                                                        <div [formGroupName]="i">
+                                                                                            <mat-form-field
+                                                                                                appearance="outline">
+                                                                                                <mat-label>Theory
+                                                                                                    Maximum
+                                                                                                    Marks</mat-label>
+                                                                                                <input type="number"
+                                                                                                    matInput
+                                                                                                    [formControlName]="subjects.subject">
+                                                                                            </mat-form-field>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <div formGroupName="type">
+                                                                                <div formArrayName="theoryPassMarks">
+                                                                                    <div
+                                                                                        *ngFor="let subjects of classSubject; let i = index">
+                                                                                        <div [formGroupName]="i">
+                                                                                            <mat-form-field
+                                                                                                appearance="outline">
+                                                                                                <mat-label>Theory
+                                                                                                    Passing
+                                                                                                    Marks</mat-label>
+                                                                                                    <input type="number"
+                                                                                                    matInput
+                                                                                                    [formControlName]="subjects.subject">
+                                                                                            </mat-form-field>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </ng-container>
+                                                                    <ng-container
+                                                                        *ngIf="theoryMarks && practicalMarks && classSubject">
+                                                                        <div class="col-12 p-4 pt-0 pb-0">
+                                                                            <h3>Exam Practical Marks</h3>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <div
+                                                                                *ngFor="let subjects of classSubject; let i = index">
+                                                                                <button mat-raised-button
+                                                                                    class="pt-2 pb-2 mb-4"
+                                                                                    style="background-color: transparent;box-shadow: none;color: #7c7698fb;">{{subjects.subject}}</button>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <div formGroupName="type">
+                                                                                <div formArrayName="practicalMaxMarks">
+                                                                                    <div
+                                                                                        *ngFor="let subjects of classSubject; let i = index">
+                                                                                        <div [formGroupName]="i">
+                                                                                            <mat-form-field
+                                                                                                appearance="outline">
+                                                                                                <mat-label>Practical
+                                                                                                    Maximum
+                                                                                                    Marks</mat-label>
+                                                                                                    <input type="number"
+                                                                                                    matInput
+                                                                                                    [formControlName]="subjects.subject">
+                                                                                            </mat-form-field>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <div formGroupName="type">
+                                                                                <div formArrayName="practicalPassMarks">
+                                                                                    <div
+                                                                                        *ngFor="let subjects of classSubject; let i = index">
+                                                                                        <div [formGroupName]="i">
+                                                                                            <mat-form-field
+                                                                                                appearance="outline">
+                                                                                                <mat-label>Practical
+                                                                                                    Passing
+                                                                                                    Marks</mat-label>
+                                                                                                    <input type="number"
+                                                                                                    matInput
+                                                                                                    [formControlName]="subjects.subject">
+                                                                                            </mat-form-field>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </ng-container>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <ng-container>
+                                                        <div class="col-6">
+                                                            <mat-checkbox (click)="periodicTest(periodicTestMarks)">Periodic Test</mat-checkbox>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <mat-checkbox (click)="noteBook(noteBookMarks)">Note Book</mat-checkbox>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <mat-checkbox (click)="subjectEnrichment(subjectEnrichmentMarks)">Subject Enrichment</mat-checkbox>
+                                                        </div>
+                                                        <div class="col-12 p-4 pt-0 pb-0">
+                                                            <h3>Exam Grades</h3>
+                                                        </div>
+                                                        <div class="row p-4 pt-0" *ngIf="gradeRange">
+                                                            <div class="col-6 col-lg-3">
+                                                                <mat-checkbox class="example-margin" checked=“true”
+                                                                    [disabled]="disabled">
+                                                                    A+ : 91% - 100%
+                                                                </mat-checkbox>
+                                                            </div>
+                                                            <div class="col-6 col-lg-3">
+                                                                <mat-checkbox class="example-margin" checked=“true”
+                                                                    [disabled]="disabled">
+                                                                    A : 81% - 90%
+                                                                </mat-checkbox>
+                                                            </div>
+                                                            <div class="col-6 col-lg-3">
+                                                                <mat-checkbox class="example-margin" checked=“true”
+                                                                    [disabled]="disabled">
+                                                                    B+ : 71% - 80%
+                                                                </mat-checkbox>
+                                                            </div>
+                                                            <div class="col-6 col-lg-3">
+                                                                <mat-checkbox class="example-margin" checked=“true”
+                                                                    [disabled]="disabled">
+                                                                    B : 61% - 70%
+                                                                </mat-checkbox>
+                                                            </div>
+                                                            <div class="col-6 col-lg-3">
+                                                                <mat-checkbox class="example-margin" checked=“true”
+                                                                    [disabled]="disabled">
+                                                                    C+ : 51% - 60%
+                                                                </mat-checkbox>
+                                                            </div>
+                                                            <div class="col-6 col-lg-3">
+                                                                <mat-checkbox class="example-margin" checked=“true”
+                                                                    [disabled]="disabled">
+                                                                    C : 41% - 50%
+                                                                </mat-checkbox>
+                                                            </div>
+                                                            <div class="col-6 col-lg-3">
+                                                                <mat-checkbox class="example-margin" checked=“true”
+                                                                    [disabled]="disabled">
+                                                                    D : 33% - 40%
+                                                                </mat-checkbox>
+                                                            </div>
+                                                            <div class="col-6 col-lg-3">
+                                                                <mat-checkbox class="example-margin" checked=“true”
+                                                                    [disabled]="disabled">
+                                                                    F : 00% - 32%
+                                                                </mat-checkbox>
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                </div>
+                                                <div class="modal-footer" *ngIf="!deleteMode">
+                                                    <button class="submit-button" mat-raised-button
+                                                        [disabled]="!examResultForm.valid || !stream"
+                                                        type="submit">Submit</button>
+                                                </div>
+
+                                            </form>
+                                        </ng-container>
+                                        <div *ngIf="deleteMode">
+                                            <div class="modal-body">
+                                                <ng-container>
+                                                    <h3 style="font-size: 16px;letter-spacing: normal;">Note : As
+                                                        soon as the exam result structure for the {{cls | classSuffix}}
+                                                        class is
+                                                        deleted, the exam result for all the students will be
+                                                        automatically deleted.</h3>
+                                                </ng-container>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="delete-button" mat-raised-button type="button"
+                                                    (click)="resultStructureDelete(deleteById)">Ok</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal fade show" [class.show]="showExamResultStructureModal">
+                                <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Class {{cls | classSuffix}}</h5>
+                                            <mat-icon matRipple (click)="closeModal()">close</mat-icon>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="custom-container">
+                                                    <div class="table-container">
+                                                        <ng-container>
+                                                            <h3>{{examResultInfo?.examType | titlecase}} Exam Result <span *ngIf="examResultInfo?.stream!=='N/A'">- {{examResultInfo?.stream}}</span></h3>
+                                                        </ng-container>
+                                                        <table class="custom-table">
+                                                            <tr>
+                                                                <th>S.No.</th>
+                                                                <th>Subject</th>
+                                                                <th>Theory Maximum Marks</th>
+                                                                <th>Theory Passing Marks</th>
+                                                            </tr>
+                                                            <ng-container
+                                                                *ngIf="processedTheoryData && processedTheoryData.length > 0">
+                                                                <tr *ngFor="let exam of processedTheoryData; let i = index">
+                                                                    <td>
+                                                                        {{ i + 1 }}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{ exam.subject | titlecase}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{ exam.theoryMaxMarks}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{ exam.theoryPassMarks}}
+                                                                    </td>
+                                                                </tr>
+                                                            </ng-container>
+                                                        </table>
+
+                                                        <table class="custom-table" *ngIf="processedPracticalData && processedPracticalData.length > 0">
+                                                            <tr>
+                                                                <th>S.No.</th>
+                                                                <th>Subject</th>
+                                                                <th>Practical Maximum Marks</th>
+                                                                <th>Practical Passing Marks</th>
+                                                            </tr>
+                                                            <ng-container>
+                                                                <tr *ngFor="let exam of processedPracticalData; let i = index">
+                                                                    <td>
+                                                                        {{ i + 1 }}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{ exam.subject | titlecase}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{ exam.practicalMaxMarks}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{ exam.practicalPassMarks}}
+                                                                    </td>
+                                                                </tr>
+                                                            </ng-container>
+                                                        </table>
+                                                        <table class="custom-table" *ngIf="processedPracticalData && processedPracticalData.length == 0">
+                                                            <tr>
+                                                                <th>Practical Marks</th>
+                                                            </tr>
+                                                            <ng-container>
+                                                                <tr>
+                                                                    <td>
+                                                                        Not Applicable
+                                                                    </td>
+                                                                </tr>
+                                                            </ng-container>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button style="background-color: transparent;" class="submit-button"
+                                                mat-raised-button type="submit"></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="spinner-container" *ngIf="loader">
+    <div class="spinner-overlay" *ngIf="loader">
+        <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate" strokeWidth="3"></mat-progress-spinner>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <app-header-navbar></app-header-navbar>
+<div class="container-fluid dashboard-container">
+    <div class="row">
+        <div class="col-12 col-lg-2">
+            <app-side-navbar></app-side-navbar>
+        </div>
+        <div class="col-12 col-lg-10">
+            <div class="row">
+                <div class="col-12 big-container">
+                    <div class="col-lg-12 offset-lg-0">
+                        <div class="main-card">
+                            <div class="row">
+                                <div class="col-12 col-lg-4 pt-2">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h3>Settings > Exam Result > Structure</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3 mb-2">
+                                <div class="col-8 col-lg-5">
+                                    <button class="submit-button" mat-raised-button
+                                        (click)="addExamResultModel()"><mat-icon>add</mat-icon>Create</button>
+                                </div>
+                            </div>
+                            <table class="table table-hover align-middle mt-2 mb-1 bg-white">
+                                <thead class="bg-light">
+                                    <tr class="text-muted">
+                                        <th>S.No.</th>
+                                        <th>Exam</th>
+                                        <th>Class</th>
+                                        <th>Stream</th>
+                                        <th>Result Structure</th>
+                                        <th>Result Publish</th>
+                                        <th>Remove</th>
+                                    </tr>
+                                </thead>
+                                <tbody *ngIf="examResultStr">
+                                    <tr *ngFor="let examResultStr of examResultStr,let i = index;">
+                                        <td>
+                                            <p class="mb-0">{{i+1}}</p>
+                                        </td>
+                                        <td>
+                                            <p class="mb-0">{{examResultStr.examType | titlecase}} Exam</p>
+                                        </td>
+                                        <td>
+                                            <p class="mb-0">{{examResultStr.class | classSuffix}}</p>
+                                        </td>
+                                        <td>
+                                            <p class="mb-0">{{examResultStr.stream}}</p>
+                                        </td>
+                                        <td class="mb-0">
+                                            <mat-icon (click)="openExamResultStructureModal(examResultStr)">launch</mat-icon>
+                                        </td>
+                                        <td>
+                                            <mat-slide-toggle [(ngModel)]="examResultStr.resultPublishStatus"
+                                                (change)="onToggleChange(examResultStr._id,examResultStr.resultPublishStatus)">
+                                            </mat-slide-toggle>
+                                        </td>
+                                        <td class="mb-0">
+                                            <mat-icon
+                                                (click)="deleteResultStructureModel(examResultStr._id)">delete</mat-icon>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                            <div class="modal fade show" [class.show]="showModal">
+                                <div class="modal-dialog modal-dialog-scrollable"
+                                    [class.modal-lg]="!deleteMode && !successMsg">
+                                    <div class="modal-content" *ngIf="successMsg">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" style="color: transparent;">&nbsp;</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="success-message">{{successMsg}}</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <mat-icon></mat-icon>
+                                        </div>
+                                    </div>
+                                    <div class="modal-content" *ngIf="!successMsg && classSubject">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">{{updateMode?'Update': deleteMode ? 'Delete' :'Exam
+                                                Result Structure'}} {{cls | classSuffix}}</h5>
+                                            <mat-icon matRipple (click)="closeModal()"
+                                                style="cursor: pointer;">close</mat-icon>
+                                        </div>
+                                        <ng-container *ngIf="marksTypeMode">
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <mat-checkbox checked="true" [disabled]="disabled">Theory
+                                                            Marks</mat-checkbox>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <mat-checkbox (click)="practical(practicalMarks)">Practical
+                                                            Marks</mat-checkbox>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <mat-checkbox checked="true"
+                                                            [disabled]="disabled">Grades</mat-checkbox>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="submit-button" mat-raised-button
+                                                    (click)="selectExamResultStructure()">Save</button>
+                                            </div>
+                                        </ng-container>
+                                        <ng-container *ngIf="marksMode">
+                                            <form [formGroup]="examResultForm" (ngSubmit)="examResultAddUpdate()">
+                                                <div class="modal-body">
+                                                    <div *ngIf="errorCheck">
+                                                        <p class="error-message">{{errorMsg}}</p>
+                                                    </div>
+                                                    <div class="container-fluid mt-3 mb-3">
+                                                        <div class="row">
+                                                            <div class="col-12 col-lg-6">
+                                                                <mat-form-field appearance="outline">
+                                                                    <mat-label>Stream</mat-label>
+                                                                    <mat-select type="text" matInput>
+                                                                        <ng-container *ngIf="cls==12 || cls==11">
+                                                                            <div
+                                                                                *ngFor="let subject of streamMainSubject">
+                                                                                <mat-option
+                                                                                    (click)="chooseStream(subject)"
+                                                                                    value="{{subject}}">{{subject}}</mat-option>
+                                                                            </div>
+                                                                        </ng-container>
+                                                                        <ng-container
+                                                                            *ngIf="cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202">
+                                                                            <div>
+                                                                                <mat-option value="notApplicable"
+                                                                                    (click)='chooseStream(notApplicable)'>N/A</mat-option>
+                                                                            </div>
+                                                                        </ng-container>
+                                                                    </mat-select>
+                                                                </mat-form-field>
+                                                            </div>
+                                                            <div class="col-12 col-lg-6">
+                                                                <mat-form-field appearance="outline">
+                                                                    <mat-label>Exam Type</mat-label>
+                                                                    <mat-select type="text" matInput
+                                                                        formControlName="examType">
+                                                                        <div *ngFor="let exam of examType">
+                                                                            <mat-option value="{{exam}}">{{exam |
+                                                                                titlecase}}
+                                                                                Exam</mat-option>
+                                                                        </div>
+                                                                    </mat-select>
+                                                                    <mat-hint
+                                                                        *ngIf="!examResultForm.get('examType')?.valid && examResultForm.get('examType')?.touched"
+                                                                        class="form-text text-danger">Exam type is
+                                                                        required</mat-hint>
+                                                                </mat-form-field>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="scroll-content">
+                                                        <div class="wide-content">
+                                                            <div class="container">
+                                                                <div class="row">
+                                                                    <ng-container *ngIf="theoryMarks && classSubject">
+                                                                        <div class="col-12 p-4 pt-0 pb-0">
+                                                                            <h3>Exam Theory Marks</h3>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <div
+                                                                                *ngFor="let subjects of classSubject; let i = index">
+                                                                                <button mat-raised-button
+                                                                                    class="pt-2 pb-2 mb-4"
+                                                                                    style="background-color: transparent;box-shadow: none;color: #7c7698fb;">{{subjects.subject}}</button>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <div formGroupName="type">
+                                                                                <div formArrayName="theoryMaxMarks">
+                                                                                    <div
+                                                                                        *ngFor="let subjects of classSubject; let i = index">
+                                                                                        <div [formGroupName]="i">
+                                                                                            <mat-form-field
+                                                                                                appearance="outline">
+                                                                                                <mat-label>Theory
+                                                                                                    Maximum
+                                                                                                    Marks</mat-label>
+                                                                                                <input type="number"
+                                                                                                    matInput
+                                                                                                    [formControlName]="subjects.subject">
+                                                                                            </mat-form-field>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <div formGroupName="type">
+                                                                                <div formArrayName="theoryPassMarks">
+                                                                                    <div
+                                                                                        *ngFor="let subjects of classSubject; let i = index">
+                                                                                        <div [formGroupName]="i">
+                                                                                            <mat-form-field
+                                                                                                appearance="outline">
+                                                                                                <mat-label>Theory
+                                                                                                    Passing
+                                                                                                    Marks</mat-label>
+                                                                                                    <input type="number"
+                                                                                                    matInput
+                                                                                                    [formControlName]="subjects.subject">
+                                                                                            </mat-form-field>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </ng-container>
+                                                                    <ng-container
+                                                                        *ngIf="theoryMarks && practicalMarks && classSubject">
+                                                                        <div class="col-12 p-4 pt-0 pb-0">
+                                                                            <h3>Exam Practical Marks</h3>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <div
+                                                                                *ngFor="let subjects of classSubject; let i = index">
+                                                                                <button mat-raised-button
+                                                                                    class="pt-2 pb-2 mb-4"
+                                                                                    style="background-color: transparent;box-shadow: none;color: #7c7698fb;">{{subjects.subject}}</button>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <div formGroupName="type">
+                                                                                <div formArrayName="practicalMaxMarks">
+                                                                                    <div
+                                                                                        *ngFor="let subjects of classSubject; let i = index">
+                                                                                        <div [formGroupName]="i">
+                                                                                            <mat-form-field
+                                                                                                appearance="outline">
+                                                                                                <mat-label>Practical
+                                                                                                    Maximum
+                                                                                                    Marks</mat-label>
+                                                                                                    <input type="number"
+                                                                                                    matInput
+                                                                                                    [formControlName]="subjects.subject">
+                                                                                            </mat-form-field>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <div formGroupName="type">
+                                                                                <div formArrayName="practicalPassMarks">
+                                                                                    <div
+                                                                                        *ngFor="let subjects of classSubject; let i = index">
+                                                                                        <div [formGroupName]="i">
+                                                                                            <mat-form-field
+                                                                                                appearance="outline">
+                                                                                                <mat-label>Practical
+                                                                                                    Passing
+                                                                                                    Marks</mat-label>
+                                                                                                    <input type="number"
+                                                                                                    matInput
+                                                                                                    [formControlName]="subjects.subject">
+                                                                                            </mat-form-field>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </ng-container>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <ng-container>
+                                                        <div class="col-12 p-4 pt-0 pb-0">
+                                                            <h3>Exam Grades</h3>
+                                                        </div>
+                                                        <div class="row p-4 pt-0" *ngIf="gradeRange">
+                                                            <div class="col-6 col-lg-3">
+                                                                <mat-checkbox class="example-margin" checked=“true”
+                                                                    [disabled]="disabled">
+                                                                    A+ : 91% - 100%
+                                                                </mat-checkbox>
+                                                            </div>
+                                                            <div class="col-6 col-lg-3">
+                                                                <mat-checkbox class="example-margin" checked=“true”
+                                                                    [disabled]="disabled">
+                                                                    A : 81% - 90%
+                                                                </mat-checkbox>
+                                                            </div>
+                                                            <div class="col-6 col-lg-3">
+                                                                <mat-checkbox class="example-margin" checked=“true”
+                                                                    [disabled]="disabled">
+                                                                    B+ : 71% - 80%
+                                                                </mat-checkbox>
+                                                            </div>
+                                                            <div class="col-6 col-lg-3">
+                                                                <mat-checkbox class="example-margin" checked=“true”
+                                                                    [disabled]="disabled">
+                                                                    B : 61% - 70%
+                                                                </mat-checkbox>
+                                                            </div>
+                                                            <div class="col-6 col-lg-3">
+                                                                <mat-checkbox class="example-margin" checked=“true”
+                                                                    [disabled]="disabled">
+                                                                    C+ : 51% - 60%
+                                                                </mat-checkbox>
+                                                            </div>
+                                                            <div class="col-6 col-lg-3">
+                                                                <mat-checkbox class="example-margin" checked=“true”
+                                                                    [disabled]="disabled">
+                                                                    C : 41% - 50%
+                                                                </mat-checkbox>
+                                                            </div>
+                                                            <div class="col-6 col-lg-3">
+                                                                <mat-checkbox class="example-margin" checked=“true”
+                                                                    [disabled]="disabled">
+                                                                    D : 33% - 40%
+                                                                </mat-checkbox>
+                                                            </div>
+                                                            <div class="col-6 col-lg-3">
+                                                                <mat-checkbox class="example-margin" checked=“true”
+                                                                    [disabled]="disabled">
+                                                                    F : 00% - 32%
+                                                                </mat-checkbox>
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                </div>
+                                                <div class="modal-footer" *ngIf="!deleteMode">
+                                                    <button class="submit-button" mat-raised-button
+                                                        [disabled]="!examResultForm.valid || !stream"
+                                                        type="submit">Submit</button>
+                                                </div>
+
+                                            </form>
+                                        </ng-container>
+                                        <div *ngIf="deleteMode">
+                                            <div class="modal-body">
+                                                <ng-container>
+                                                    <h3 style="font-size: 16px;letter-spacing: normal;">Note : As
+                                                        soon as the exam result structure for the {{cls | classSuffix}}
+                                                        class is
+                                                        deleted, the exam result for all the students will be
+                                                        automatically deleted.</h3>
+                                                </ng-container>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="delete-button" mat-raised-button type="button"
+                                                    (click)="resultStructureDelete(deleteById)">Ok</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal fade show" [class.show]="showExamResultStructureModal">
+                                <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Class {{cls | classSuffix}}</h5>
+                                            <mat-icon matRipple (click)="closeModal()">close</mat-icon>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="custom-container">
+                                                    <div class="table-container">
+                                                        <ng-container>
+                                                            <h3>{{examResultInfo?.examType | titlecase}} Exam Result <span *ngIf="examResultInfo?.stream!=='N/A'">- {{examResultInfo?.stream}}</span></h3>
+                                                        </ng-container>
+                                                        <table class="custom-table">
+                                                            <tr>
+                                                                <th>S.No.</th>
+                                                                <th>Subject</th>
+                                                                <th>Theory Maximum Marks</th>
+                                                                <th>Theory Passing Marks</th>
+                                                            </tr>
+                                                            <ng-container
+                                                                *ngIf="processedTheoryData && processedTheoryData.length > 0">
+                                                                <tr *ngFor="let exam of processedTheoryData; let i = index">
+                                                                    <td>
+                                                                        {{ i + 1 }}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{ exam.subject | titlecase}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{ exam.theoryMaxMarks}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{ exam.theoryPassMarks}}
+                                                                    </td>
+                                                                </tr>
+                                                            </ng-container>
+                                                        </table>
+
+                                                        <table class="custom-table" *ngIf="processedPracticalData && processedPracticalData.length > 0">
+                                                            <tr>
+                                                                <th>S.No.</th>
+                                                                <th>Subject</th>
+                                                                <th>Practical Maximum Marks</th>
+                                                                <th>Practical Passing Marks</th>
+                                                            </tr>
+                                                            <ng-container>
+                                                                <tr *ngFor="let exam of processedPracticalData; let i = index">
+                                                                    <td>
+                                                                        {{ i + 1 }}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{ exam.subject | titlecase}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{ exam.practicalMaxMarks}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{ exam.practicalPassMarks}}
+                                                                    </td>
+                                                                </tr>
+                                                            </ng-container>
+                                                        </table>
+                                                        <table class="custom-table" *ngIf="processedPracticalData && processedPracticalData.length == 0">
+                                                            <tr>
+                                                                <th>Practical Marks</th>
+                                                            </tr>
+                                                            <ng-container>
+                                                                <tr>
+                                                                    <td>
+                                                                        Not Applicable
+                                                                    </td>
+                                                                </tr>
+                                                            </ng-container>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button style="background-color: transparent;" class="submit-button"
+                                                mat-raised-button type="submit"></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="spinner-container" *ngIf="loader">
+    <div class="spinner-overlay" *ngIf="loader">
+        <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate" strokeWidth="3"></mat-progress-spinner>
+    </div>
+</div> -->

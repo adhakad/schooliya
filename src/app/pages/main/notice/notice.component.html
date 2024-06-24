@@ -1,0 +1,28 @@
+<app-header></app-header>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12 col-lg-8 offset-lg-2 big-container">
+      <div class="col-lg-10 offset-lg-1">
+        <div class="main-card">
+          <h3 style="text-align: center;margin-bottom: 10vh;" *ngIf="notifications.length<=0">No new notifications</h3>
+          <h3 style="text-align: center;margin-bottom: 10vh;" *ngIf="notifications.length>0">Notifications</h3>
+          <mat-accordion>
+            <mat-expansion-panel class="notice-card" *ngFor="let notification of notifications">
+              <mat-expansion-panel-header>
+                <mat-panel-title>{{notification.title}}</mat-panel-title>
+              </mat-expansion-panel-header>
+              <p>{{notification.message}}</p>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>
+<div class="spinner-container" *ngIf="loader">
+  <div class="spinner-overlay" *ngIf="loader">
+    <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate" animationDuration="20000"
+      strokeWidth="3"></mat-progress-spinner>
+  </div>
+</div>

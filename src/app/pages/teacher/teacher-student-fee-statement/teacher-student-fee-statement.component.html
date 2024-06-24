@@ -1,0 +1,267 @@
+<app-header-nav></app-header-nav>
+<div class="container-fluid dashboard-container">
+    <div class="row">
+        <div class="col-12 col-lg-2">
+            <app-side-nav></app-side-nav>
+        </div>
+        <div class="col-12 col-lg-10">
+            <div class="row">
+                <div class="col-12 big-container">
+                    <div class="row mt-2">
+                        <div #content class="custom-container">
+                            <div class="table-container">
+                                <table class="logo-table text-bold text-center">
+                                    <tr>
+                                        <td>
+                                            <img src="../../../../assets/logo.png" alt="">
+                                            {{schoolInfo?.schoolName}}
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table class="info-table text-center">
+                                    <tr>
+                                        <td>
+                                            School Code : {{schoolInfo?.schoolCode}}
+                                        </td>
+                                        <td>
+                                            School Fee Statement - {{studentInfo[0]?.session}}
+                                        </td>
+                                        <td>
+                                            Affiliation No. :
+                                            {{schoolInfo?.affiliationNumber}}
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table class="info-table text-center">
+                                    <tr>
+                                        <td class="text-bold">Admission No. :</td>
+                                        <td>{{studentInfo[0]?.admissionNo}}</td>
+                                        <td class="text-bold">Roll Number :</td>
+                                        <td>{{studentInfo[0]?.rollNumber}}</td>
+                                        <td class="text-bold">Class :</td>
+                                        <td>{{studentInfo[0]?.class | classSuffix}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-bold">Student Name :</td>
+                                        <td>{{studentInfo[0]?.name | titlecase}}</td>
+                                        <td class="text-bold">Father Name :</td>
+                                        <td>{{studentInfo[0]?.fatherName | titlecase}}</td>
+                                        <td class="text-bold">Mother Name :</td>
+                                        <td>{{studentInfo[0]?.motherName | titlecase}}</td>
+                                    </tr>
+                                </table>
+                                <table class="custom-table">
+                                    <tr>
+                                        <td class="text-bold">Paid Fee</td>
+                                        <td>&#8377; {{studentFeesCollection?.paidFees}}</td>
+                                        <td class="text-bold">Due Fee</td>
+                                        <td>&#8377; {{studentFeesCollection?.dueFees}}</td>
+                                        <td class="text-bold">Total Fee</td>
+                                        <td>&#8377; {{studentFeesCollection?.totalFees}}</td>
+                                    </tr>
+                                </table>
+                                <table class="custom-table">
+                                    <tr>
+                                        <th>Particulars</th>
+                                        <ng-container *ngFor="let item of clsFeesStructure?.feesType,let i = index">
+                                            <th style="font-weight: normal;" *ngFor="let fee of item | keyvalue">
+                                                {{ fee.key}} Fee</th>
+                                        </ng-container>
+                                    </tr>
+                                    <tr>
+                                        <th>Fee Amount</th>
+                                        <ng-container *ngFor="let item of clsFeesStructure?.feesType,let i = index">
+                                            <th style="font-weight: normal;" *ngFor="let fee of item | keyvalue">
+                                                &#8377; {{ fee.value}}</th>
+                                        </ng-container>
+                                    </tr>
+                                </table>
+                                <table class="custom-table">
+                                    <tr>
+                                        <th>S.No.</th>
+                                        <th>Receipt No.</th>
+                                        <th>Installment</th>
+                                        <th>Fee Amount</th>
+                                        <th>Payment Date</th>
+                                        <th>Fee Receipt</th>
+                                        <th>Fee Recipient</th>
+                                    </tr>
+                                    <ng-container *ngIf="processedData && processedData.length > 0">
+                                        <tr *ngFor="let fee of processedData; let i = index">
+                                            <td>
+                                                {{ i + 1 }}
+                                            </td>
+                                            <td>
+                                                <span *ngIf="fee.receiptNo==0">-</span>
+                                                <span *ngIf="fee.receiptNo!==0">{{ fee.receiptNo }}</span>
+                                            </td>
+                                            <td>
+                                                {{ fee.installment |titlecase }}
+                                            </td>
+                                            <td>
+                                                &#8377; {{ fee.paidAmount }}
+                                            </td>
+                                            <td>
+                                                <span *ngIf="fee.paymentDate==0">-</span>
+                                                <span *ngIf="fee.paymentDate!==0">{{ fee.paymentDate }}</span>
+                                            </td>
+                                            <td>
+                                                <span *ngIf="fee.receiptNo==0">-</span>
+                                                <mat-icon *ngIf="fee.receiptNo!==0"
+                                                    (click)="feeReceipt(fee.installment)">launch</mat-icon>
+                                            </td>
+                                            <td>
+                                                <span *ngIf="fee.collectedBy==0">-</span>
+                                                <span *ngIf="fee.collectedBy!==0 && collectBy==fee.collectedBy">{{ fee.collectedBy }}</span>
+                                                <span *ngIf="fee.collectedBy!==0 && collectBy !==fee.collectedBy">Other</span>
+                                            </td>
+                                        </tr>
+                                    </ng-container>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade show" [class.show]="showModal">
+                <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Fee Payment Receipt</h5>
+                            <mat-icon matRipple (click)="closeModal()">close</mat-icon>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div #receipt class="custom-container">
+                                    <div class="table-container">
+                                        <table class="logo-table text-bold text-center">
+                                            <tr>
+                                            <tr>
+                                                <td>
+                                                    <img src="../../../../assets/logo.png" alt="">
+                                                    {{schoolInfo?.schoolName}}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <table class="info-table text-center">
+                                            <tr>
+                                                <td>
+                                                    School Code : {{schoolInfo?.schoolCode}}
+                                                </td>
+                                                <td>
+                                                    School Fee Receipt - {{studentInfo[0]?.session}}
+                                                </td>
+                                                <td>
+                                                    Affiliation No. :
+                                                    {{schoolInfo?.affiliationNumber}}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <table class="info-table text-center">
+                                            <tr>
+                                                <td class="text-bold">Receipt No. :</td>
+                                                <td>{{ singleReceiptInstallment[0]?.receiptNo }}</td>
+                                                <td class="text-bold">Admission No. :</td>
+                                                <td>{{studentInfo[0]?.admissionNo}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-bold">Class :</td>
+                                                <td>{{studentInfo[0]?.class | classSuffix}}</td>
+                                                <td class="text-bold">Date Of Birth :</td>
+                                                <td>{{studentInfo[0]?.dob}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-bold">Student Name :</td>
+                                                <td>{{studentInfo[0]?.name | titlecase}}</td>
+                                                <td class="text-bold">Father Name :</td>
+                                                <td>{{studentInfo[0]?.fatherName | titlecase}}</td>
+                                            </tr>
+                                        </table>
+                                        <table class="receipt-table">
+                                            <tr class="text-center">
+                                                <th class="border">S. No.</th>
+                                                <th class="border">Particulars</th>
+                                                <th class="border">Fee Amount</th>
+                                            </tr>
+
+                                            <tr class="text-center"
+                                                *ngFor="let item of clsFeesStructure?.feesType,let i = index">
+                                                <td class="border">{{i+1}}.</td>
+                                                <td class="border" *ngFor="let fee of item | keyvalue">
+                                                    {{ fee.key}} Fee</td>
+                                                <td class="border" *ngFor="let fee of item | keyvalue">
+                                                    &#8377; {{ fee.value}}</td>
+                                            </tr>
+                                            <tr class="text-center receipt-row">
+                                                <td></td>
+                                                <td class="text-bold text-right">Total Fee</td>
+                                                <td class="text-bold">&#8377;
+                                                    {{studentFeesCollection?.totalFees}}</td>
+                                            </tr>
+                                            <tr class="text-center receipt-row">
+                                                <td></td>
+                                                <td class="text-bold text-right">Paid Fee</td>
+                                                <td class="text-bold">&#8377;
+                                                    {{singleReceiptInstallment[0]?.allPaidAmount}}</td>
+                                            </tr>
+                                            <tr class="text-center receipt-row">
+                                                <td></td>
+                                                <td class="text-bold text-right">Due Fee</td>
+                                                <td class="text-bold">&#8377;
+                                                    {{studentFeesCollection?.totalFees - singleReceiptInstallment[0]?.allPaidAmount}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>
+                                                    <p class="text-center"><span class="text-bold">{{
+                                                            singleReceiptInstallment[0]?.installment |titlecase
+                                                            }}</span>
+                                                        installment amount deposited <span class="text-bold">&#8377; {{
+                                                            singleReceiptInstallment[0]?.paidAmount }} /-</span></p>
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                        </table>
+                                        <p>Date : {{ singleReceiptInstallment[0]?.paymentDate }}</p>
+                                        <div>
+                                            <h4 class="text-bold">Disclaimer:</h4>
+                                            <p>1. Payment Responsibility: Confirms your obligation to
+                                                {{schoolInfo?.schoolName}} for listed fees.</p>
+                                            <p>2. Verification: Review receipt details for accuracy,
+                                                including payment amount and purpose. Report
+                                                discrepancies to the School Office for correction.</p>
+                                            <p>3. Non-Transferable: Intended for your use only; do not
+                                                share it.</p>
+                                            <p>4. Record Keeping: Keep this receipt for future
+                                                reference, reimbursement, or tax purposes.</p>
+                                            <p>5. Lost Receipt: If lost or damaged, contact the School
+                                                Office for a duplicate. A fee may apply.</p>
+                                            <p>6. Refund Policy: Refer to our institution's refund
+                                                policy for fee refund information. Generally, fees are
+                                                non-refundable. Exceptions may apply for duplicate
+                                                payments or inadvertent overpayments with proper
+                                                documentation and school policy approval.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="submit-button print-pdf mx-4" mat-raised-button
+                                (click)="downloadReceiptPDF()">PDF</button>
+                            <button class="submit-button print-pdf" mat-raised-button
+                                (click)="printReceipt()">Print</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="spinner-container" *ngIf="loader">
+    <div class="spinner-overlay" *ngIf="loader">
+      <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate" strokeWidth="3"></mat-progress-spinner>
+    </div>
+  </div>

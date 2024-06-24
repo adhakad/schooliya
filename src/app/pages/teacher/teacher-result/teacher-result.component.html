@@ -1,0 +1,280 @@
+<app-header-nav></app-header-nav>
+<div class="container-fluid dashboard-container">
+  <div class="row">
+    <div class="col-12 col-lg-2">
+      <app-side-nav></app-side-nav>
+    </div>
+    <div class="col-12 col-lg-10">
+      <div class="row">
+        <div class="col-12 big-container">
+          <div class="col-lg-12 offset-lg-0">
+            <div class="main-card">
+              <div class="row">
+                <div class="col-12 col-lg-4 pt-2 pb-2">
+                  <div class="row">
+                    <div class="col-12">
+                      <h3>Exam Result ><span>
+                          {{cls | classSuffix}}</span></h3>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-2">
+                <div class="col-8 col-lg-6">
+                  <mat-radio-group (change)="onChange($event)">
+                    <mat-radio-button [value]="0" [checked]="selectedValue==0">Single Result</mat-radio-button>
+                    <!-- <mat-radio-button [value]="1" [checked]="selectedValue==1">Bulk Result</mat-radio-button> -->
+                  </mat-radio-group>
+                </div>
+                <div class="col-4 col-lg-2 offset-lg-4">
+                  <button *ngIf="selectedValue==0" class="submit-button" mat-raised-button
+                    (click)="addExamResultModel()"><mat-icon>add</mat-icon>Create</button>
+                  <button *ngIf="selectedValue==1" class="submit-button" mat-raised-button
+                    (click)="addBulkExamResultModel()"><mat-icon>add</mat-icon>Import</button>
+                </div>
+              </div>
+              <table class="table table-hover align-middle mt-2 mb-1 bg-white">
+                <thead class="bg-light">
+                  <tr class="text-muted">
+                    <th>No.</th>
+                    <th>Admission No.</th>
+                    <th>Name</th>
+                    <th>Roll Number</th>
+                    <th>Class</th>
+                    <th>Stream</th>
+                    <th>Exam</th>
+                    <th>Created By</th>
+                  </tr>
+                </thead>
+
+                <tbody *ngIf="allExamResults && allExamResults.length>0">
+                  <tr *ngFor="let students of allExamResults,let i=index">
+                    <td>
+                      <p class="mb-0">{{i+1}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{students.admissionNo}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{students.name}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{students.rollNumber}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{students.class | classSuffix}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{students.stream}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{students.examType | titlecase}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0" *ngIf="students.createdBy == createdBy">{{students.createdBy}}</p>
+                      <p class="mb-0" *ngIf="students.createdBy !== createdBy">Other</p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="modal fade show" [class.show]="showModal">
+                <div class="modal-dialog modal-lg" role="document" [class.modal-lg]="!successMsg">
+                  <div class="modal-content" *ngIf="successMsg">
+                    <div class="modal-header">
+                      <h5 class="modal-title" style="color: transparent;">&nbsp;</h5>
+                    </div>
+                    <div class="modal-body">
+                      <p class="success-message">{{successMsg}}</p>
+                    </div>
+                    <div class="modal-footer">
+                      <mat-icon></mat-icon>
+                    </div>
+                  </div>
+                  <div class="modal-content" *ngIf="!successMsg">
+                    <div class="modal-header">
+                      <h5 class="modal-title mt-2">{{updateMode?'Update': deleteMode ? 'Delete' :'Create'}} Exam Result
+                        Class - {{cls | classSuffix}}
+                      </h5>
+                      <mat-icon matRipple (click)="closeModal()">close</mat-icon>
+                    </div>
+                    <form [formGroup]="examResultForm" (ngSubmit)="examResultAddUpdate()" *ngIf="!deleteMode">
+                      <div class="modal-body">
+                        <div *ngIf="errorCheck">
+                          <p class="error-message">{{errorMsg}}</p>
+                        </div>
+                        <div class="scroll-content">
+                          <div class="wide-content">
+                            <div class="container">
+                              <div class="row">
+                                <div class="col-6">
+                                  <mat-form-field appearance="outline">
+                                    <mat-label>Exam Type</mat-label>
+                                    <mat-select #examSelect matInput>
+                                      <div *ngFor="let exam of examType">
+                                        <mat-option (click)="selectExam(examSelect.value)" value="{{exam}}">
+                                          {{exam | titlecase}} Exam
+                                        </mat-option>
+                                      </div>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </div>
+                                <div class="col-6">
+                                  <mat-form-field appearance="outline">
+                                    <mat-label>Stream</mat-label>
+                                    <mat-select type="text" matInput>
+                                      <ng-container *ngIf="cls==12 || cls==11">
+                                        <div *ngFor="let subject of streamMainSubject">
+                                          <mat-option (click)="chooseStream(subject)"
+                                            value="{{subject}}">{{subject}}</mat-option>
+                                        </div>
+                                      </ng-container>
+                                      <ng-container *ngIf="cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202">
+                                        <div>
+                                          <mat-option value="notApplicable"
+                                            (click)='chooseStream(notApplicable)'>N/A</mat-option>
+                                        </div>
+                                      </ng-container>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </div>
+                                <div class="col-6">
+                                  <mat-form-field appearance="outline">
+                                    <mat-label>Roll Number</mat-label>
+                                    <input matInput type="number" formControlName="rollNumber">
+                                    <mat-hint
+                                      *ngIf="!examResultForm.get('rollNumber')?.valid && examResultForm.get('rollNumber')?.touched"
+                                      class="form-text text-danger">Roll number is required</mat-hint>
+                                  </mat-form-field>
+                                </div>
+                                <ng-container *ngIf="classSubject.length>0">
+                                  <h3>Theory marks</h3>
+                                  <ng-container formGroupName="type">
+                                    <ng-container formArrayName="theoryMarks">
+                                      <div class="col-6" *ngFor="let subjects of classSubject; let i = index">
+                                        <div [formGroupName]="i">
+                                          <mat-form-field appearance="outline">
+                                            <mat-label>{{subjects | titlecase}} Theory Marks</mat-label>
+                                            <input matInput type="text" [formControlName]="subjects">
+                                          </mat-form-field>
+                                        </div>
+                                      </div>
+                                    </ng-container>
+                                  </ng-container>
+                                </ng-container>
+                                <ng-container *ngIf="practicalSubjects.length>0">
+                                  <h3>Practical marks</h3>
+                                  <ng-container formGroupName="type">
+                                    <ng-container formArrayName="practicalMarks">
+                                      <div class="col-6" *ngFor="let subjects of practicalSubjects; let i = index">
+                                        <div [formGroupName]="i">
+                                          <mat-form-field appearance="outline">
+                                            <mat-label>{{subjects | titlecase}} Prac. Marks</mat-label>
+                                            <input matInput type="text" [formControlName]="subjects">
+                                          </mat-form-field>
+                                        </div>
+                                      </div>
+                                    </ng-container>
+                                  </ng-container>
+                                </ng-container>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button class="submit-button" [disabled]="!examResultForm.valid || !classSubject"
+                          mat-raised-button type="submit">Submit</button>
+                      </div>
+                    </form>
+                    <div *ngIf="deleteMode">
+                      <h4>To delete examResult detail, click ok to confirm.</h4>
+                      <div class="modal-footer">
+                        <button class="delete-button" mat-raised-button type="button"
+                          (click)="examResultDelete(deleteById)">Ok</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="modal fade show" [class.show]="showBulkImportModal">
+                <div class="modal-dialog modal-dialog-top" role="document">
+                  <div class="modal-content" *ngIf="successMsg">
+                    <div class="modal-header">
+                      <h5 class="modal-title" style="color: transparent;">&nbsp;</h5>
+                    </div>
+                    <div class="modal-body">
+                      <p class="success-message">{{successMsg}}</p>
+                    </div>
+                    <div class="modal-footer">
+                      <mat-icon></mat-icon>
+                    </div>
+                  </div>
+                  <div class="modal-content" *ngIf="!successMsg">
+                    <div class="modal-header">
+                      <h6 class="modal-title">File Choose xlsx/csv
+                      </h6>
+                      <mat-icon matRipple (click)="closeModal()" style="cursor: pointer;">close</mat-icon>
+                    </div>
+                    <div class="modal-body">
+                      <div *ngIf="errorCheck">
+                        <p class="error-message">{{errorMsg}}</p>
+                      </div>
+                      <main>
+                        <div class="row mb-2 mt-5">
+                          <mat-form-field appearance="outline">
+                            <mat-label>Exam Type</mat-label>
+                            <mat-select #examSelect matInput>
+                              <div *ngFor="let exam of examType">
+                                <mat-option (click)="selectExam(examSelect.value)" value="{{exam}}">
+                                  {{exam | titlecase}} Exam
+                                </mat-option>
+                              </div>
+                            </mat-select>
+                          </mat-form-field>
+                          <mat-form-field appearance="outline">
+                            <mat-label>Stream</mat-label>
+                            <mat-select type="text" matInput>
+                              <ng-container *ngIf="cls==12 || cls==11">
+                                <div *ngFor="let subject of streamMainSubject">
+                                  <mat-option (click)="chooseStream(subject)"
+                                    value="{{subject}}">{{subject}}</mat-option>
+                                </div>
+                              </ng-container>
+                              <ng-container *ngIf="cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202">
+                                <div>
+                                  <mat-option value="notApplicable"
+                                    (click)='chooseStream(notApplicable)'>N/A</mat-option>
+                                </div>
+                              </ng-container>
+                            </mat-select>
+                          </mat-form-field>
+                          <div class="custom-file">
+                            <input type="file" name="file" class="form-control file-input" id="inputGroupFile" required
+                              (change)="handleImport($event)"
+                              accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                          </div>
+                        </div>
+                      </main>
+                    </div>
+                    <div class="modal-footer">
+                      <button [disabled]="!fileChoose || !selectedExam || !stream" (click)="addBulkExamResult()"
+                        class="submit-button" mat-raised-button>
+                        Import
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="spinner-container" *ngIf="loader">
+    <div class="spinner-overlay" *ngIf="loader">
+        <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate" strokeWidth="3"></mat-progress-spinner>
+    </div>
+</div>

@@ -1,0 +1,163 @@
+<app-header></app-header>
+<div class="login" *ngIf="!admitCardInfo">
+  <div class="row">
+    <div class="col-12 col-lg-5 offset-lg-3 login-card" *ngIf="!studentAdmitCardInfo">
+      <div class="row">
+        <div class="col-12 col-lg-10 offset-lg-1">
+          <h3>Admit Card</h3>
+          <div class="col-12">
+            <h2>{{errorMsg}}</h2>
+            <form [formGroup]="admitCardForm" (ngSubmit)="admitCard()">
+              <mat-form-field appearance="outline">
+                <mat-label>School Id</mat-label>
+                <input matInput type="text" formControlName="schoolId">
+                <mat-error
+                  *ngIf="admitCardForm.get('schoolId')?.hasError('required') && admitCardForm.get('schoolId')?.touched">
+                  School id is required
+                </mat-error>
+                <mat-error *ngIf="admitCardForm.get('schoolId')?.hasError('pattern')">
+                  Maximum 10 characters allowed for school id
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Admission No.</mat-label>
+                <input matInput type="text" formControlName="admissionNo">
+                <mat-hint *ngIf="!admitCardForm.get('admissionNo')?.valid && admitCardForm.get('admissionNo')?.touched"
+                  class="form-text text-danger">Admission is required</mat-hint>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Class</mat-label>
+                <mat-select type="number" matInput formControlName="class">
+                  <div *ngFor="let classInfo of classInfo">
+                    <mat-option value="{{classInfo.class}}">{{classInfo.class | classSuffix}}</mat-option>
+                  </div>
+                </mat-select>
+                <mat-hint *ngIf="!admitCardForm.get('class')?.valid && admitCardForm.get('class')?.touched"
+                  class="form-text text-danger">Class is required</mat-hint>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Roll Number</mat-label>
+                <input matInput type="text" formControlName="rollNumber">
+                <mat-hint *ngIf="!admitCardForm.get('rollNumber')?.valid && admitCardForm.get('rollNumber')?.touched"
+                  class="form-text text-danger">Roll number is required</mat-hint>
+              </mat-form-field>
+              <button type="submit" mat-raised-button [disabled]="!admitCardForm.valid"
+                class="submit-button">Submit</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid" *ngIf="admitCardInfo && studentAdmitCardInfo">
+  <div class="row">
+    <div #content class="col-lg-10 offset-lg-1 custom-container">
+      <div class="table-container">
+        <table class="logo-table text-bold">
+          <tr>
+            <td>
+              <img src="../../../../assets/logo.png" alt=""> {{schoolInfo?.schoolName | uppercase}}, {{schoolInfo?.city
+              | uppercase}}
+            </td>
+          </tr>
+        </table>
+        <table class="info-table">
+          <tr>
+            <td>
+              School Code : {{schoolInfo?.schoolCode}}
+            </td>
+            <td>
+              {{studentAdmitCardInfo?.examType | titlecase}} Exam Admit Card - {{studentAdmitCardInfo?.session}}
+            </td>
+            <td>
+              Affiliation No. : {{schoolInfo?.affiliationNumber}}
+            </td>
+          </tr>
+        </table>
+        <table class="info-table">
+          <tr>
+            <th>Admission No. :</th>
+            <td>{{studentAdmitCardInfo?.admissionNo}}</td>
+            <td class="text-bold">Roll Number :</td>
+            <td>{{studentAdmitCardInfo?.rollNumber}}</td>
+            <td class="text-bold">Class :</td>
+            <td>{{studentAdmitCardInfo?.class | classSuffix}}</td>
+          </tr>
+          <tr>
+            <td class="text-bold">Student Name :</td>
+            <td>{{studentAdmitCardInfo?.name | titlecase}}</td>
+            <td class="text-bold">Father Name :</td>
+            <td>{{studentAdmitCardInfo?.fatherName | titlecase}}</td>
+            <td class="text-bold">Mother Name :</td>
+            <td>{{studentAdmitCardInfo?.motherName | titlecase}}</td>
+          </tr>
+        </table>
+
+
+        <table class="custom-table">
+          <tr>
+            <th>S.No.</th>
+            <!-- <th>Subject Code</th> -->
+            <th>Subject</th>
+            <th>Exam Date</th>
+            <th>Exam Timing</th>
+          </tr>
+          <ng-container *ngIf="processedData && processedData.length > 0">
+            <tr *ngFor="let exam of processedData; let i = index">
+              <td>
+                {{ i + 1 }}
+              </td>
+              <!-- <td>
+                100
+              </td> -->
+              <td>
+                {{ exam.subject | titlecase}}
+              </td>
+              <td>
+                {{ exam.date }}
+              </td>
+              <td>
+                {{ exam.timing }}
+              </td>
+            </tr>
+          </ng-container>
+        </table>
+        <div>
+          <h4 class="text-bold">Disclaimer:</h4>
+          <p>This is your online admit card, issued in accordance with our institution's policies. Please take note of
+            the following:</p>
+          <p>1. Identification: This admit card serves as your identification for the examination or event at
+            {{schoolInfo?.schoolName}}.</p>
+          <p>2. Verify Details: Review the admit card for accuracy, including your name, exam details, and date. Report
+            any discrepancies to the Examination Office for correction.</p>
+          <p>3. Non-Transferable: This admit card is for your use only; it should not be shared or used by others.</p>
+          <p>4. Keep Secure: Maintain this admit card in a secure place. You'll need it for admission on the examination
+            or event day.</p>
+          <p>5. Lost or Damaged: In case of loss or damage to the admit card, please contact the Examination Office for
+            a duplicate or replacement. A fee may apply.</p>
+          <p>6. Exam Rules: Follow the rules and instructions provided by the examination authorities. Any violation may
+            lead to disqualification.</p>
+          <p>Your acceptance and retention of this admit card indicate your understanding and agreement with the terms
+            and conditions outlined in this document.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-10 offset-lg-1 mt-4 mb-4">
+      <button class="submit-button print-pdf mx-4" mat-raised-button (click)="downloadPDF()">PDF</button>
+      <button class="submit-button print-pdf" mat-raised-button (click)="printContent()">Print</button>
+    </div>
+  </div>
+
+  <app-footer></app-footer>
+</div>
+<div class="spinner-container" *ngIf="loader">
+  <div class="spinner-overlay" *ngIf="loader">
+    <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate" strokeWidth="3"></mat-progress-spinner>
+  </div>
+</div>

@@ -1,0 +1,383 @@
+<app-header-navbar></app-header-navbar>
+<div class="container-fluid dashboard-container">
+    <div class="row">
+        <div class="col-12 col-lg-2">
+            <app-side-navbar></app-side-navbar>
+        </div>
+        <div class="col-12 col-lg-10">
+            <div class="row">
+                <div class="col-12 big-container">
+                    <div class="col-lg-12 offset-lg-0">
+                        <div class="main-card">
+                            <div class="row mt-4 mb-2">
+                                <div class="col-8 col-lg-5">
+                                    <input type="text" class="form-control" placeholder="Search..." id="searchText"
+                                        name="searchText" #searchText="ngModel" [(ngModel)]="filters.searchText"
+                                        (keyup)="getAdmissionEnquiry({page : 1, limit : 0})">
+                                </div>
+                            </div>
+                            <table class="table table-hover align-middle mt-2 mb-1 bg-white">
+                                <thead class="bg-light">
+                                    <tr class="text-muted">
+                                        <th>No.</th>
+                                        <th>Name</th>
+                                        <th>Father Name</th>
+                                        <th>Contact</th>
+                                        <th>Admission</th>
+                                        <th>Admission Form</th>
+                                        <th>Remove</th>
+                                    </tr>
+                                </thead>
+                                <tbody *ngIf="admissionEnquiryInfo && admissionEnquiryInfo.length>0">
+                                    <tr *ngFor="let admissionEnquiry of admissionEnquiryInfo,let i=index">
+                                        <td>
+                                            <p class="mb-0">{{number*10+i+1-10}}</p>
+                                        </td>
+                                        <td>
+                                            <p class="mb-0">{{admissionEnquiry.name}}</p>
+                                        </td>
+                                        <td>
+                                            <p class="mb-0">{{admissionEnquiry.fatherName}}</p>
+                                        </td>
+                                        <td>
+                                            <p class="mb-0">{{admissionEnquiry.contact}}</p>
+                                        </td>
+                                        <td>
+                                            <a class="mb-0 status-active" *ngIf="admissionEnquiry.status=='Complete'"
+                                                href="javascript:void(0)">{{admissionEnquiry.status}}</a>
+                                            <a class="mb-0 status-inactive" *ngIf="admissionEnquiry.status=='Pending'"
+                                                href="javascript:void(0)">{{admissionEnquiry.status}}</a>
+                                        </td>
+                                        <td class="mb-0">
+                                            <button
+                                                style="background-color: transparent;color: #8d6dff;border: 1px solid #8d6dff;"
+                                                class="submit-button" *ngIf="admissionEnquiry.status=='Pending'"
+                                                mat-raised-button
+                                                (click)="updateAdmissionEnquiryModel(admissionEnquiry)">Form
+                                                Open</button>
+                                            <button class="submit-button" mat-raised-button
+                                                *ngIf="admissionEnquiry.status=='Complete'"
+                                                [disabled]="admissionEnquiry.status=='Complete'"
+                                                style="background-color: transparent;"><span
+                                                    class="status-active">Submitted</span></button>
+                                        </td>
+                                        <td class="mb-0">
+                                            <mat-icon
+                                                (click)="deleteAdmissionEnquiryModel(admissionEnquiry._id)">delete</mat-icon>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="pagination">
+                                <app-pagination [paginationValues]="paginationValues"
+                                    (onChange)="getAdmissionEnquiry($event)">
+                                </app-pagination>
+                            </div>
+                            <div class="modal fade show" [class.show]="showModal">
+                                <div class="modal-dialog modal-dialog-scrollable"
+                                    [class.modal-lg]="!successMsg && !deleteMode">
+                                    <div class="modal-content" *ngIf="successMsg">
+                                        <div class="modal-header">
+                                            <h5 class="modal-name" style="color: transparent;">&nbsp;</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="success-message">{{successMsg}}</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <mat-icon></mat-icon>
+                                        </div>
+                                    </div>
+                                    <div class="modal-content" *ngIf="!successMsg">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">{{updateMode?'Online': deleteMode ? 'Delete
+                                                Online':'Create'}}
+                                                Admission Form</h5>
+                                            <mat-icon matRipple (click)="closeModal()">close</mat-icon>
+                                        </div>
+
+                                        <form [formGroup]="admissionEnquiryForm"
+                                            (ngSubmit)="admissionEnquiryAddUpdate()" *ngIf="!deleteMode">
+                                            <div class="modal-body">
+
+                                                <div *ngIf="errorCheck">
+                                                    <p class="error-message">{{errorMsg}}</p>
+                                                </div>
+
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <div class="col-12 col-lg-6">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Roll Number Type</mat-label>
+                                                                <mat-select type="number" matInput
+                                                                    formControlName="rollNumberType">
+                                                                    <div>
+                                                                        <mat-option value="generate"
+                                                                            (click)="chooseRollNumberType(admissionEnquiryForm.get('rollNumberType'))">Generate</mat-option>
+                                                                        <mat-option value="manualFill"
+                                                                            (click)="chooseRollNumberType(admissionEnquiryForm.get('rollNumberType'))">Manual
+                                                                            Fill</mat-option>
+                                                                    </div>
+                                                                </mat-select>
+                                                                <mat-error
+                                                                    *ngIf="admissionEnquiryForm.get('rollNumberType')?.hasError('required') && admissionEnquiryForm.get('rollNumberType')?.touched">
+                                                                    Roll number type is required
+                                                                </mat-error>
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div class="col-12 col-lg-6"
+                                                            *ngIf="rollNumberType !=='generate' && rollNumberType !=='manualFill'">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Roll Number </mat-label>
+                                                                <input matInput readonly>
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div class="col-12 col-lg-6" *ngIf="rollNumberType=='generate'">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Roll Number</mat-label>
+                                                                <input matInput type="number"
+                                                                    formControlName="rollNumber" readonly>
+                                                                <mat-error
+                                                                    *ngIf="admissionEnquiryForm.get('rollNumber')?.hasError('required') && admissionEnquiryForm.get('rollNumber')?.touched">
+                                                                    Roll number is required
+                                                                </mat-error>
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div class="col-12 col-lg-6">
+                                                            <mat-form-field appearance="outline">
+                                                              <mat-label>Aadhar Card Number</mat-label>
+                                                              <input matInput type="number" formControlName="aadharNumber">
+                                                              <mat-error
+                                                                *ngIf="admissionEnquiryForm.get('aadharNumber')?.hasError('required') && admissionEnquiryForm.get('aadharNumber')?.touched">
+                                                                Aadhar card number is required
+                                                              </mat-error>
+                                                              <mat-error
+                                                                *ngIf="admissionEnquiryForm.get('aadharNumber')?.hasError('pattern') && admissionEnquiryForm.get('aadharNumber')?.touched">
+                                                                Aadhar number must be a 12-digit number
+                                                              </mat-error>
+                                                            </mat-form-field>
+                                                          </div>
+                                                          <div class="col-12 col-lg-6">
+                                                            <mat-form-field appearance="outline">
+                                                              <mat-label>Samagra Id</mat-label>
+                                                              <input matInput type="number" formControlName="samagraId">
+                                                              <mat-error
+                                                                *ngIf="admissionEnquiryForm.get('samagraId')?.hasError('required') && admissionEnquiryForm.get('samagraId')?.touched">
+                                                                Samagra id is required
+                                                              </mat-error>
+                                                              <mat-error
+                                                                *ngIf="admissionEnquiryForm.get('samagraId')?.hasError('pattern') && admissionEnquiryForm.get('samagraId')?.touched">
+                                                                Samagra id must be a 9-digit number
+                                                              </mat-error>
+                                                            </mat-form-field>
+                                                          </div>
+                                                        <div class="col-12 col-lg-6"
+                                                            *ngIf="rollNumberType=='manualFill'">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Roll Number</mat-label>
+                                                                <input matInput type="number"
+                                                                    formControlName="rollNumber">
+                                                                <mat-error
+                                                                    *ngIf="admissionEnquiryForm.get('rollNumber')?.hasError('required') && admissionEnquiryForm.get('rollNumber')?.touched">
+                                                                    Roll number is required
+                                                                </mat-error>
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <ng-container>
+                                                            <h3>Academic Session</h3>
+                                                        </ng-container>
+                                                        <div class="col-12 col-lg-6">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Session</mat-label>
+                                                                <input matInput type="text" formControlName="session"
+                                                                    readonly>
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div class="col-12 col-lg-6">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Admission No.</mat-label>
+                                                                <input matInput type="number"
+                                                                    formControlName="admissionNo" readonly>
+                                                                <mat-hint
+                                                                    *ngIf="!admissionEnquiryForm.get('admissionNo')?.valid && admissionEnquiryForm.get('admissionNo')?.touched"
+                                                                    class="form-text text-danger">Admission no. is
+                                                                    required</mat-hint>
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div class="col-12 col-lg-6">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Class</mat-label>
+                                                                <input matInput type="number" formControlName="class"
+                                                                    readonly>
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div class="col-12 col-lg-6">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Stream</mat-label>
+                                                                <input matInput type="text" formControlName="stream"
+                                                                    readonly>
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <ng-container>
+                                                            <h3>Student Info</h3>
+                                                        </ng-container>
+                                                        <div class="col-12 col-lg-6">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Name</mat-label>
+                                                                <input matInput type="text" formControlName="name"
+                                                                    readonly>
+                                                            </mat-form-field>
+                                                        </div>
+
+                                                        <div class="col-12 col-lg-6">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Date Of Birth</mat-label>
+                                                                <input matInput type="text" formControlName="dob"
+                                                                    readonly>
+                                                            </mat-form-field>
+                                                        </div>
+
+                                                        <div class="col-12 col-lg-6">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Gender</mat-label>
+                                                                <input matInput type="text" formControlName="gender"
+                                                                    readonly>
+                                                            </mat-form-field>
+                                                        </div>
+
+                                                        <div class="col-12 col-lg-6">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Category</mat-label>
+                                                                <input matInput type="text" formControlName="category"
+                                                                    readonly>
+                                                            </mat-form-field>
+                                                        </div>
+
+                                                        <div class="col-12 col-lg-6">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Religion</mat-label>
+                                                                <input matInput type="text" formControlName="religion"
+                                                                    readonly>
+                                                            </mat-form-field>
+                                                        </div>
+
+                                                        <div class="col-12 col-lg-6">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Nationality</mat-label>
+                                                                <input matInput type="text"
+                                                                    formControlName="nationality" readonly>
+                                                            </mat-form-field>
+                                                        </div>
+
+
+                                                        <div class="col-12 col-lg-6">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Contact</mat-label>
+                                                                <input matInput type="number" formControlName="contact"
+                                                                    readonly>
+                                                            </mat-form-field>
+                                                        </div>
+
+                                                        <div class="col-12 col-lg-6">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Address</mat-label>
+                                                                <input matInput type="text" formControlName="address"
+                                                                    readonly>
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div class="col-12 col-lg-6">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Last School (Optional)</mat-label>
+                                                                <input matInput type="text" formControlName="lastSchool"
+                                                                    readonly>
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <ng-container>
+                                                            <h3>Parent's Info</h3>
+                                                        </ng-container>
+                                                        <div class="co-12 col-lg-6">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Father Name</mat-label>
+                                                                <input matInput type="text" formControlName="fatherName"
+                                                                    readonly>
+                                                            </mat-form-field>
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Father Qualification</mat-label>
+                                                                <input matInput type="text"
+                                                                    formControlName="fatherQualification">
+                                                            </mat-form-field>
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Father Occupation</mat-label>
+                                                                <input matInput type="text"
+                                                                    formControlName="fatherOccupation" readonly>
+                                                            </mat-form-field>
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Father Contact</mat-label>
+                                                                <input matInput type="number"
+                                                                    formControlName="fatherContact" readonly>
+                                                            </mat-form-field>
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Father Annual Income</mat-label>
+                                                                <input matInput type="number"
+                                                                    formControlName="fatherAnnualIncome" readonly>
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div class="co-12 col-lg-6">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Mother Name</mat-label>
+                                                                <input matInput type="text" formControlName="motherName"
+                                                                    readonly>
+                                                            </mat-form-field>
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Mother Qualification</mat-label>
+                                                                <input matInput type="text"
+                                                                    formControlName="motherQualification" readonly>
+                                                            </mat-form-field>
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Mother Occupation</mat-label>
+                                                                <input matInput type="text"
+                                                                    formControlName="motherOccupation" readonly>
+                                                            </mat-form-field>
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Mother Contact</mat-label>
+                                                                <input matInput type="number"
+                                                                    formControlName="motherContact" readonly>
+                                                            </mat-form-field>
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Mother Annual Income</mat-label>
+                                                                <input matInput type="number"
+                                                                    formControlName="motherAnnualIncome" readonly>
+                                                            </mat-form-field>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button [disabled]="!admissionEnquiryForm.valid" type="submit"
+                                                    mat-raised-button class="submit-button">Submit</button>
+                                            </div>
+                                        </form>
+                                        <div *ngIf="deleteMode">
+                                            <div class="modal-body">
+                                                <h4>To delete online admission form, click ok to confirm.</h4>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="delete-button" mat-raised-button type="button"
+                                                    (click)="admissionEnquiryDelete(deleteById)">Ok</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="spinner-container" *ngIf="loader">
+    <div class="spinner-overlay" *ngIf="loader">
+        <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate" strokeWidth="3"></mat-progress-spinner>
+    </div>
+</div>

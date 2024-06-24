@@ -1,0 +1,36 @@
+<app-header></app-header>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12 col-lg-8 offset-lg-2 big-container">
+      <div class="col-lg-10 offset-lg-1">
+        <div class="main-card">
+          <h3 style="text-align: center;margin-bottom: 10vh;">Refund and cancellation policy</h3>
+          <h3>Refund and Cancellation Policy Overview</h3>
+          <p>This Refund and Cancellation Policy is applicable to online school fees payments made through the {{schoolInfo?.schoolName}} website ("Website"). Please read this policy carefully to understand the terms and conditions governing refunds and cancellations for online school fees payments.</p>
+          <h3>Eligibility for Refunds and Cancellations</h3>
+          <p>Refunds and cancellations are eligible only for online school fees payments made through the Website.Refunds and cancellations are subject to the conditions outlined in this policy and applicable laws and regulations.</p>
+          <h3>Refund Process</h3>
+          <p>To request a refund or cancellation, you must contact {{schoolInfo?.schoolName}}'s department by email at {{schoolInfo?.email}} or by phone at {{schoolInfo?.phoneOne}}. Please provide the necessary details, including your payment reference number and the reason for the request.Refund and cancellation requests will be reviewed and processed within 15 business days of receiving the request.</p>
+          <h3>Refund and Cancellation Conditions</h3>
+          <p>If you accidentally made duplicate payments for school fees, we will initiate a cancellation and refund process for the duplicate payment.
+            If you request the cancellation of a school fees payment before the commencement of the program or service for which the payment was made, we will process the cancellation and issue a refund.
+            Refunds and cancellations for other exceptional circumstances will be considered on a case-by-case basis.
+            Post-commencement Requests: Cancellation requests made after the commencement of the program or service will not be eligible for a refund.
+            Refunds and cancellations will not be issued due to a change of mind or circumstances.
+            Payments made without proper authorization are not eligible for refund or cancellation.
+          </p>
+          <h3>Method of Refund and Cancellation</h3>
+          <p>If the refund or cancellation request is approved, the school fees payment will be canceled, and the corresponding amount will be refunded using the same payment method used for the original transaction.
+            Refund and cancellation notifications and details will be provided to you via email.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>
+<div class="spinner-container" *ngIf="loader">
+  <div class="spinner-overlay" *ngIf="loader">
+    <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate"
+      strokeWidth="3"></mat-progress-spinner>
+  </div>
+</div>

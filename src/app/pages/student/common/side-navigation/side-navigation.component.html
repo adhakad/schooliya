@@ -1,0 +1,35 @@
+<mat-toolbar class="side-navbar">
+  <ul class="nav navbar-nav">
+    <li class="nav-item">
+      <button mat-button class="menu-button" [routerLink]="['/student/dashboard']" routerLinkActive="active-link"
+        [routerLinkActiveOptions]="{exact:true}">
+        <mat-icon>dashboard</mat-icon>
+        <span>Dashboard </span>
+      </button>
+    </li>
+    <li class="nav-item">
+      <button mat-button class="menu-button" [routerLink]="['/student/fees']" routerLinkActive="active-link">
+        <mat-icon>currency_rupee</mat-icon>
+        <span>Fee Payment</span>
+      </button>
+    </li>
+    <!-- <li class="nav-item">
+      <button mat-button class="menu-button" routerLinkActive="active-link">
+        <mat-icon>currency_rupee</mat-icon>
+        <span>Transaction's</span>
+      </button>
+    </li> -->
+    <li class="nav-item">
+      <button mat-button class="menu-button" [routerLink]="['/student/admit-card']" routerLinkActive="active-link">
+        <mat-icon>assignment</mat-icon>
+        <span>Admit Card</span>
+      </button>
+    </li>
+    <li class="nav-item">
+      <button mat-button class="menu-button" [routerLink]="['/student/result']" routerLinkActive="active-link">
+        <mat-icon>content_paste_search</mat-icon>
+        <span>Exam Result</span>
+      </button>
+    </li>
+  </ul>
+</mat-toolbar>

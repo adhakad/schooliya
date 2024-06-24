@@ -1,0 +1,103 @@
+<app-header-navigation></app-header-navigation>
+<div class="container-fluid dashboard-container">
+    <div class="row">
+        <div class="col-12 col-lg-2">
+            <app-side-navigation></app-side-navigation>
+        </div>
+        <div class="col-12 col-lg-10">
+            <div class="row">
+                <div class="col-12 big-container">
+                    <div class="main-card">
+                        <div class="row" *ngIf="check">
+                            <div #content class="custom-container">
+                                <div class="table-container">
+                                    <table class="info-table" style="width: auto;">
+                                        <tr>
+                                            <td class="text-bold">Acadmic Session</td>
+                                            <td>: {{studentInfo[0]?.session}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-bold">Admission No.</td>
+                                            <td>: {{studentInfo[0]?.admissionNo}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-bold">Roll Number</td>
+                                            <td>: {{studentInfo[0]?.rollNumber}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-bold">Class</td>
+                                            <td>: {{studentInfo[0]?.class | classSuffix}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-bold">Student Name</td>
+                                            <td>: {{studentInfo[0]?.name}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-bold">Fee Statement</td>
+                                            <td><mat-icon
+                                                    routerLink="/student/fees/statement/{{studentInfo[0]?.class}}/{{studentInfo[0]?._id}}">launch</mat-icon>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table class="info-table">
+                                        <tr
+                                            *ngIf="studentFeesCollection.admissionFeesPayable==true && studentFeesCollection.admissionFees>0 || studentFeesCollection.admissionFeesPayable==false && studentFeesCollection.admissionFees==0">
+                                            <td *ngIf="paybleInstallment.length>0 && paybleInstallment[0]!=='abc'">
+                                                <ng-container
+                                                    *ngFor="let installment of paybleInstallment[0] | keyvalue">
+                                                    <p style="display: inline-block;margin-right: 25px;"><span
+                                                            class="text-bold">
+                                                            {{installment.key}}</span>
+                                                        installment <span class="text-bold">&#8377;
+                                                            {{installment.value}}</span>
+                                                    </p> <button style="display: inline-block;" class="submit-button"
+                                                        mat-raised-button (click)="createPayment()">Pay Online</button>
+                                                </ng-container>
+                                            </td>
+                                            <td *ngIf="paybleInstallment.length==0 && paybleInstallment[0]!=='abc'">
+                                                <p class="text-bold" style="display: inline-block;margin-right: 25px;">*
+                                                    All Fee Already Paid</p>
+                                            </td>
+                                        </tr>
+                                        <tr
+                                            *ngIf="studentFeesCollection.admissionFeesPayable==true && studentFeesCollection.admissionFees==0">
+                                            <td>
+                                                <p class="text-bold" style="display: inline-block;margin-right: 25px;">*
+                                                    Please Admission Fee Pay Now ! </p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <div>
+                                        <h4 class="text-bold">Disclaimer:</h4>
+                                        <p>1. Payment Responsibility: Confirms your obligation to
+                                            {{schoolInfo?.schoolName}} for listed fees.</p>
+                                        <p>2. Verification: Review receipt details for accuracy,
+                                            including payment amount and purpose. Report
+                                            discrepancies to the School Office for correction.</p>
+                                        <p>3. Non-Transferable: Intended for your use only; do not
+                                            share it.</p>
+                                        <p>4. Record Keeping: Keep this receipt for future
+                                            reference, reimbursement, or tax purposes.</p>
+                                        <p>5. Lost Receipt: If lost or damaged, contact the School
+                                            Office for a duplicate. A fee may apply.</p>
+                                        <p>6. Refund Policy: Refer to our institution's refund
+                                            policy for fee refund information. Generally, fees are
+                                            non-refundable. Exceptions may apply for duplicate
+                                            payments or inadvertent overpayments with proper
+                                            documentation and school policy approval.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="spinner-container" *ngIf="loader">
+    <div class="spinner-overlay" *ngIf="loader">
+      <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate"
+        strokeWidth="3"></mat-progress-spinner>
+    </div>
+  </div>

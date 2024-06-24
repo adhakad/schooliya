@@ -1,0 +1,44 @@
+<app-header-navbar></app-header-navbar>
+<div class="container-fluid dashboard-container">
+  <div class="row">
+    <div class="col-12 col-lg-2">
+      <app-side-navbar></app-side-navbar>
+    </div>
+    <div class="col-12 col-lg-10">
+      <div class="row">
+        <div class="col-12 big-container">
+          <div class="col-lg-12">
+            <div class="main-card">
+              <div class="row">
+                <div class="col-12 col-lg-4 pt-2 pb-2">
+                  <div class="row">
+                    <div class="col-12">
+                      <h3 *ngIf="id==='student'">Student</h3>
+                      <h3 *ngIf="id==='fees'">Fee Payment</h3>
+                      <h3 *ngIf="id==='admit-card'">Admit Card</h3>
+                      <h3 *ngIf="id==='result'">Exam Result</h3>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12 col-lg-4 pt-2 pb-4" *ngFor="let cls of classInfo">
+                  <div class="row">
+                    <div class="col-10 offset-1 category-card" routerLink="/admin/students/{{id}}/class/{{cls.class}}">
+                      <h3 class="category-title">{{cls.class | classSuffix}}</h3>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="spinner-container" *ngIf="loader">
+  <div class="spinner-overlay" *ngIf="loader">
+    <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate" strokeWidth="3"></mat-progress-spinner>
+  </div>
+</div>

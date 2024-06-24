@@ -1,0 +1,98 @@
+<app-header></app-header>
+<div class="login">
+  <div class="row">
+    <div class="col-12 col-lg-5 offset-lg-3 login-card" *ngIf="formType=='Forgot'">
+      <div class="row">
+        <div class="col-12 col-lg-10 offset-lg-1">
+          <h3>Forget Password</h3>
+          <div class="col-12">
+            <h2>{{errorMsg}}</h2>
+            <form [formGroup]="forgotForm" (ngSubmit)="forgotPassword()" *ngIf="formType=='Forgot'">
+              <mat-form-field appearance="outline">
+                <mat-label>Email</mat-label>
+                <input matInput type="text" formControlName="email">
+                <mat-hint *ngIf="forgotForm.get('email')?.hasError('required') && forgotForm.get('email')?.touched"
+                  class="form-text text-danger">Email is required.</mat-hint>
+              </mat-form-field>
+
+              <button type="submit" mat-raised-button [disabled]="!forgotForm.valid" class="submit-button">Get
+                OTP</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-12 col-lg-5 offset-lg-3 login-card" *ngIf="formType=='VarifyOTP'">
+      <ng-container>
+        <div class="row" style="padding-bottom: 20px;">
+          <div class="col-12 " style="max-width: auto !important;">
+            <div class="col-12 card-title">
+              <h2>Varification
+              </h2>
+              <p>Enter the code sent to your email</p>
+              <p><span>{{email}}</span></p>
+            </div>
+          </div>
+        </div>
+        <form [formGroup]="otpForm" (ngSubmit)="submitOtp()">
+          <div class="error-msg">
+            <h2>{{errorMsg}}</h2>
+          </div>
+          <div class="row">
+            <div class="col-12 col-lg-9">
+              <div class="otp-input">
+                <input autofocus type="number" formControlName="digit1" maxlength="1" appOtpInput>
+                <input type="number" formControlName="digit2" maxlength="1" appOtpInput>
+                <input type="number" formControlName="digit3" maxlength="1" appOtpInput>
+                <input type="number" formControlName="digit4" maxlength="1" appOtpInput>
+                <input type="number" formControlName="digit5" maxlength="1" appOtpInput>
+                <input type="number" formControlName="digit6" maxlength="1" appOtpInput>
+              </div>
+            </div>
+            <div class="col-12 col-lg-3">
+
+              <button type="submit" mat-raised-button class="submit-button" [disabled]="!otpForm.valid"
+                style="width: 100% !important;font-size: 16px;letter-spacing: .5px;">Continue<mat-icon>arrow_right_alt</mat-icon></button>
+
+            </div>
+          </div>
+        </form>
+      </ng-container>
+    </div>
+
+    <div class="col-12 col-lg-5 offset-lg-3 login-card" *ngIf="formType=='Reset'">
+      <div class="row">
+        <div class="col-12 col-lg-10 offset-lg-1">
+          <h3>Reset Password</h3>
+          <div class="col-12">
+            <h2>{{errorMsg}}</h2>
+            <form [formGroup]="resetForm" (ngSubmit)="passwordReset()">
+              <mat-form-field appearance="outline">
+                <mat-label>Reset Password</mat-label>
+                <input matInput type="password" formControlName="password">
+                <mat-hint *ngIf="resetForm.get('password')?.hasError('required') && resetForm.get('password')?.touched"
+                  class="form-text text-danger">Password is required.</mat-hint>
+                <mat-hint *ngIf="resetForm.get('password')?.hasError('minlength')" class="form-text text-danger">
+                  Password must be at least 6 characters long.
+                </mat-hint>
+                <mat-hint *ngIf="resetForm.get('password')?.hasError('maxlength')" class="form-text text-danger">
+                  Password can't be more than 30 characters long.
+                </mat-hint>
+              </mat-form-field>
+              <button type="submit" mat-raised-button [disabled]="!resetForm.valid" class="submit-button">Reset</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-5 offset-lg-3 login-card" *ngIf="formType=='ResetSuccsess'">
+      <div class="row">
+        <div class="col-12 col-lg-10 offset-lg-1">
+          <p class="success-message">{{successMsg}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

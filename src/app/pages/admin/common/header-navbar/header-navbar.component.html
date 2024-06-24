@@ -1,0 +1,107 @@
+<mat-toolbar class="header">
+  <div class="col-2 col-lg-1" class="logo">
+    <img src="../../../assets/logo.png" alt="">
+  </div>
+  <div class="hamburger col-2 col-lg-0">
+    <button mat-icon-button style="margin-left: 10px;">
+      <svg class="hamburger-icon" (click)="hamburgerMenu(true)" xmlns="http://www.w3.org/2000/svg" width="24"
+        height="24" viewBox="0 0 25 25">
+        <rect x="0" y="3" width="24" height="1.5" />
+        <rect x="0" y="10" width="24" height="1.5" />
+        <rect x="0" y="17" width="24" height="1.5" />
+      </svg>
+    </button>
+  </div>
+  <div class="main-menu col-lg-6" style="text-align: right;padding-right: 25px;">
+    <button mat-button *ngIf="isAdminAuthenticated" (click)="onLogout('admin')">
+      <mat-icon>logout</mat-icon>
+      <span>Logout</span>
+    </button>
+  </div>
+</mat-toolbar>
+<div [ngClass]="{'top-hamburger-menu' : false==nav}">
+  <mat-toolbar class="hamburger-menu">
+    <mat-icon class="close-icon" (click)="hamburgerMenu(false)">close</mat-icon>
+    <button mat-menu-item [routerLink]="['/admin/dashboard']" routerLinkActive="active-link"
+      (click)="hamburgerMenu(true)">
+      <mat-icon>dashboard</mat-icon>
+      <span>Dashboard</span>
+    </button>
+    <button mat-menu-item class="menu-button" [routerLink]="['/admin/setting']" routerLinkActive="active-link">
+      <mat-icon>settings</mat-icon>
+      <span>Settings</span>
+    </button>
+    <button mat-menu-item class="menu-button" [routerLink]="['/admin/online-admission-forms']"
+      routerLinkActive="active-link">
+      <mat-icon>app_registration</mat-icon>
+      <span>Online Forms</span>
+    </button>
+    <button mat-menu-item class="menu-button" [routerLink]="['/admin/admission']" routerLinkActive="active-link">
+      <mat-icon>dialpad</mat-icon>
+      <span>Admissions</span>
+    </button>
+    <button mat-menu-item class="menu-button" [routerLink]="['/admin/students/student']" routerLinkActive="active-link">
+      <mat-icon>person_add</mat-icon>
+      <span>Students</span>
+    </button>
+    <!-- fees,admit card route is working only without brackets -->
+    <button mat-menu-item class="menu-button" routerLink="/admin/students/fees" routerLinkActive="active-link">
+      <mat-icon>currency_rupee</mat-icon>
+      <span>Fee Managements</span>
+    </button>
+    <button mat-menu-item class="menu-button" routerLink="/admin/students/admit-card" routerLinkActive="active-link">
+      <mat-icon>assignment</mat-icon>
+      <span>Admit Cards</span>
+    </button>
+    <button mat-menu-item class="menu-button" [routerLink]="['/admin/students/result']" routerLinkActive="active-link">
+      <mat-icon>content_paste_search</mat-icon>
+      <span>Students Results</span>
+    </button>
+    <button mat-menu-item class="menu-button" routerLink="/admin/issued-transfer-certificate"
+      routerLinkActive="active-link">
+      <mat-icon>workspace_premium</mat-icon>
+      <span>Issued T & C</span>
+    </button>
+    <button mat-menu-item class="menu-button" [routerLink]="['/admin/notification']" routerLinkActive="active-link">
+      <mat-icon>notification_add</mat-icon>
+      <span>Notifications</span>
+    </button>
+    <button mat-menu-item class="menu-button" [routerLink]="['/admin/teacher']" routerLinkActive="active-link">
+      <mat-icon>manage_accounts</mat-icon>
+      <span>Teachers</span>
+    </button>
+    <button mat-menu-item class="menu-button" [routerLink]="['/admin/class']" routerLinkActive="active-link">
+      <mat-icon>note_add</mat-icon>
+      <span>Classes</span>
+    </button>
+    <button mat-menu-item class="menu-button" [routerLink]="['/admin/subject']" routerLinkActive="active-link">
+      <mat-icon>menu_book</mat-icon>
+      <span>Subjects</span>
+    </button>
+    <button mat-menu-item class="menu-button" [routerLink]="['/admin/class-subject']" routerLinkActive="active-link">
+      <mat-icon>local_library</mat-icon>
+      <span>Class With Subjects</span>
+    </button>
+    <button mat-menu-item class="menu-button" [routerLink]="['/admin/banner']" routerLinkActive="active-link">
+      <mat-icon>wallpaper</mat-icon>
+      <span>Banners</span>
+    </button>
+    <button mat-menu-item class="menu-button" [routerLink]="['/admin/topper']" routerLinkActive="active-link">
+      <mat-icon>school</mat-icon>
+      <span>Toppers</span>
+    </button>
+    <button mat-menu-item class="menu-button" [routerLink]="['/admin/testimonial']" routerLinkActive="active-link">
+      <mat-icon>sentiment_satisfied</mat-icon>
+      <span>Testimonials</span>
+    </button>
+    <button mat-menu-item class="menu-button" [routerLink]="['/admin/ads']" routerLinkActive="active-link">
+      <mat-icon>desktop_mac
+      </mat-icon>
+      <span>Ads</span>
+    </button>
+    <button mat-menu-item class="menu-button" *ngIf="isAdminAuthenticated" (click)="onLogout('admin')">
+      <mat-icon>logout</mat-icon>
+      <span>Logout</span>
+    </button>
+  </mat-toolbar>
+</div>

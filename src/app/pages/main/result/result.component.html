@@ -1,0 +1,169 @@
+<app-header></app-header>
+<div class="login" *ngIf="!examResultInfo">
+  <div class="row">
+    <div class="col-12 col-lg-5 offset-lg-3 login-card" *ngIf="!examResultInfo">
+      <div class="row">
+        <div class="col-12 col-lg-10 offset-lg-1">
+          <h3>Exam Result</h3>
+          <div class="col-12">
+            <h2>{{errorMsg}}</h2>
+            <form [formGroup]="examResultForm" (ngSubmit)="examResult()">
+              <mat-form-field appearance="outline">
+                <mat-label>School Id</mat-label>
+                <input matInput type="text" formControlName="schoolId">
+                <mat-error
+                  *ngIf="examResultForm.get('schoolId')?.hasError('required') && examResultForm.get('schoolId')?.touched">
+                  School id is required
+                </mat-error>
+                <mat-error *ngIf="examResultForm.get('schoolId')?.hasError('pattern')">
+                  Maximum 10 characters allowed for school id
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Admission No.</mat-label>
+                <input matInput type="text" formControlName="admissionNo">
+                <mat-hint *ngIf="!examResultForm.get('admissionNo')?.valid && examResultForm.get('admissionNo')?.touched"
+                  class="form-text text-danger">Admission is required</mat-hint>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Class</mat-label>
+                <mat-select type="number" matInput formControlName="class">
+                  <div *ngFor="let classInfo of classInfo">
+                    <mat-option value="{{classInfo.class}}">{{classInfo.class | classSuffix}}</mat-option>
+                  </div>
+                </mat-select>
+                <mat-hint *ngIf="!examResultForm.get('class')?.valid && examResultForm.get('class')?.touched"
+                  class="form-text text-danger">Class is required</mat-hint>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Roll Number</mat-label>
+                <input matInput type="text" formControlName="rollNumber">
+                <mat-hint *ngIf="!examResultForm.get('rollNumber')?.valid && examResultForm.get('rollNumber')?.touched"
+                  class="form-text text-danger">Roll number is required</mat-hint>
+              </mat-form-field>
+              <button type="submit" mat-raised-button [disabled]="!examResultForm.valid"
+                class="submit-button">Submit</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid" *ngIf="examResultInfo && studentInfo">
+  <div class="row">
+    <div #content class="col-lg-10 offset-lg-1 custom-container">
+      <div class="table-container">
+        <table class="logo-table text-bold">
+          <tr>
+            <td>
+              <img src="../../../../assets/logo.png" alt=""> {{schoolInfo?.schoolName | uppercase}}, {{schoolInfo?.city
+              | uppercase}}
+            </td>
+          </tr>
+        </table>
+        <table class="info-table">
+          <tr>
+            <td>
+              School Code : {{schoolInfo?.schoolCode}}
+            </td>
+            <td>
+              {{examResultInfo?.examType | titlecase}} Exam Result - {{studentInfo?.session}}
+            </td>
+            <td>
+              Affiliation No. : {{schoolInfo?.affiliationNumber}}
+            </td>
+          </tr>
+        </table>
+        <table class="info-table">
+          <tr>
+            <td class="text-bold">Admission No. :</td>
+            <td>{{studentInfo?.admissionNo}}</td>
+            <td class="text-bold">Roll Number :</td>
+            <td>{{studentInfo?.rollNumber}}</td>
+            <td class="text-bold">Class :</td>
+            <td>{{studentInfo?.class | classSuffix}}</td>
+          </tr>
+          <tr>
+            <td class="text-bold">Student Name :</td>
+            <td>{{studentInfo?.name | titlecase}}</td>
+            <td class="text-bold">Father Name :</td>
+            <td>{{studentInfo?.fatherName | titlecase}}</td>
+            <td class="text-bold">Mother Name :</td>
+            <td>{{studentInfo?.motherName | titlecase}}</td>
+          </tr>
+        </table>
+
+        <table class="custom-table">
+          <tr>
+            <th>S.No.</th>
+            <th>Subject</th>
+            <th>Theory Marks</th>
+            <th>Practical Marks</th>
+            <th>Total Marks</th>
+            <th>Grade</th>
+          </tr>
+          <tr *ngFor="let exam of examResultInfo.resultDetail.marks; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ exam.subject | titlecase }}</td>
+            <td>{{ exam.theoryMarks }}</td>
+            <td>{{ exam.practicalMarks > 0 ? exam.practicalMarks : '' }}</td>
+            <td>{{ exam.totalMarks }}</td>
+            <td>{{ exam.grade }}</td>
+          </tr>
+        </table>
+
+        <table class="custom-table">
+          <tr>
+            <td>
+              <span class="text-bold">Result Status</span> : {{examResultInfo.resultDetail.resultStatus}}
+            </td>
+            <td>
+              <span class="text-bold">Grand Total (Theory + Practical/Internal Marks)</span> : {{
+                examResultInfo.resultDetail.grandTotalMarks }}/{{ examResultInfo.resultDetail.totalMaxMarks}}
+            </td>
+            <td>
+              <span class="text-bold">Percentage</span> : {{examResultInfo.resultDetail.percentile}}%
+            </td>
+            <td>
+              <span class="text-bold">Overall Grade</span> : {{examResultInfo.resultDetail.percentileGrade}}
+            </td>
+
+          </tr>
+        </table>
+        <div>
+          <h4 class="text-bold">Disclaimer:</h4>
+          <p>This is your online exam result, issued in accordance with our institution's policies. Please take note of
+            the following:</p>
+          <p>1. Result Identification: This document serves as your official exam result for the specified examination
+            at {{schoolInfo?.schoolName}}.</p>
+          <p>2. Verify Accuracy: Review the result for accuracy, including your name, exam details, and scores. Report
+            any discrepancies to the Examination Office for correction.</p>
+          <p>3. Confidential: This result is meant for your use only and should not be shared or used by others.</p>
+          <p>4. Record Keeping: Keep this result document for your records. It may be required for future reference or
+            academic purposes.</p>
+          <p>5. Lost or Damaged: In case of loss or damage to the result, please contact the Examination Office for a
+            duplicate or replacement. A fee may apply.</p>
+          <p>6. Academic Integrity: It is essential to maintain academic integrity and adhere to the school's code of
+            conduct in all academic matters.</p>
+          <p>Your acceptance and retention of this result indicate your understanding and agreement with the terms and
+            conditions outlined in this disclaimer.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-10 offset-lg-1 mt-4 mb-4">
+      <button class="submit-button print-pdf mx-4" mat-raised-button (click)="downloadPDF()">PDF</button>
+      <button class="submit-button print-pdf" mat-raised-button (click)="printContent()">Print</button>
+    </div>
+  </div>
+  <app-footer></app-footer>
+</div>
+<div class="spinner-container" *ngIf="loader">
+  <div class="spinner-overlay" *ngIf="loader">
+    <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate" strokeWidth="3"></mat-progress-spinner>
+  </div>
+</div>

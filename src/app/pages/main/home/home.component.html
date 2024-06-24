@@ -1,0 +1,244 @@
+<app-header></app-header>
+<div class="home">
+    <div class="banner">
+        <div class="container-fluid">
+            <div class="box">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-lg-6 offset-lg-1">
+                    <div class="row" style="padding-top: 100px;">
+                        <h3>
+                            <span>School Online ERP Software Start Only &#8377;
+                                1999</span>
+                        </h3>
+                        <h2>
+                            School Software is Very Useful Software
+                        </h2>
+                        <p>
+                            This software provide to all your schools offline services like admission,fee
+                            Module,results
+                            or admit card Module etc use in online This software provide to all your schools offline
+                            services like admission,fee managment,results or admit card managment etc use in online
+                        </p>
+                        <div class="col-6">
+                            <button class="submit-button" mat-raised-button>Get Started</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-5 img-section">
+                    <div class="row img-section-row">
+                        <img src="../../../../assets/home-desktop.png" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid" style="padding: 0 !important;">
+        <div class="container-fluid customer-section">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="owl-carousel topper-carousel">
+
+                            <div class="topper-card" matRipple>
+                                <img src="../../../../assets/zoschool-logo.png" alt="">
+                            </div>
+
+                            <div class="topper-card" matRipple>
+                                <img src="../../../../assets/dngurukul-logo.png" alt="">
+                            </div>
+                            <div class="topper-card" matRipple>
+                                <img src="../../../../assets/school.png" alt="">
+                            </div>
+                            <div class="topper-card" matRipple>
+                                <img src="../../../../assets/school.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid pricing-section" style="padding-left: 0 !important;padding-right: 0 !important;">
+            <div class="row">
+                <div class="col-12 col-lg-10 offset-lg-1">
+                    <div class="col-12 col-lg-12 offset-lg-0">
+                        <div class="row title">
+                            <h2>Pick Your Perfect Plan</h2>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-lg-4 pricing-card-container">
+                                <div class="pricing-card">
+                                    <div class="pricing-title">
+                                        <h2>{{plansInfo[0]?.plans}}</h2>
+                                        <p>Everything you need to create your website</p>
+                                    </div>
+                                    <h3><span style="font-size:22px;font-weight: 500;">&#8377;</span>
+                                        {{plansInfo[0]?.price}}<span style="font-size: medium;font-weight: 500;"> /
+                                            Yearly</span></h3>
+                                    <button class="pricing-button" mat-raised-button
+                                        routerLink="/admin/payment/{{plansInfo[0]?._id}}">Buy Now</button>
+                                    <div class="pricing-amount">
+                                        <p>₹ {{plansInfo[0]?.price}}/year when you renew</p>
+                                    </div>
+                                    <mat-divider></mat-divider>
+                                    <div class="pricing-feature">
+                                        <h3>Top Features</h3>
+                                        <p>Custom Website<span> (Website + Online ERP Software )</span></p>
+                                        <p>Listed Module<span> (Student Listing Module,Admission Module,Fees
+                                                Module,Admit Card and Result Module,Transfer Certificate Or TC
+                                                Module,Class Promote,Notifications,Class and Subjects
+                                                Listing,Website Module etc.)</span></p>
+                                        <p>Student Listing<span> (Upto 300)</span></p>
+                                        <p>Custom Support<span> No</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-4 pricing-card-container">
+                                <div class="pricing-card">
+                                    <!-- <div class="pricing-card" style="border:2px solid #a77bff;"> -->
+                                    <div class="pricing-title">
+                                        <h2>{{plansInfo[1]?.plans}}</h2>
+                                        <p>Level-up with more power and enhanced features</p>
+                                    </div>
+                                    <h3><span style="font-size:22px;font-weight: 500;">&#8377;</span>
+                                        {{plansInfo[1]?.price}}<span style="font-size: medium;font-weight: 500;"> /
+                                            Yearly</span></h3>
+                                    <button class="pricing-button" mat-raised-button
+                                        routerLink="/admin/payment/{{plansInfo[1]?._id}}">Buy Now</button>
+                                    <div class="pricing-amount">
+                                        <p>₹ {{plansInfo[1]?.price}}/year when you renew</p>
+                                    </div>
+                                    <mat-divider></mat-divider>
+                                    <div class="pricing-feature">
+                                        <h3>Top Features</h3>
+                                        <p>Custom Website<span> (Website + Online ERP Software )</span></p>
+                                        <p>Listed Module<span> (Student Listing Module,Admission Module,Fees
+                                                Module,Admit Card and Result Module,Transfer Certificate Or TC
+                                                Module,Class Promote,Notifications,Class and Subjects
+                                                Listing,Website Module etc.)</span></p>
+                                        <p>Student Listing<span> (Upto 500)</span></p>
+                                        <p>Custom Support<span> No</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-4 pricing-card-container">
+                                <div class="pricing-card">
+                                    <div class="pricing-title">
+                                        <h2>{{plansInfo[2]?.plans}}</h2>
+                                        <p>Enjoy optimised performance & guaranteed resources</p>
+                                    </div>
+                                    <h3><span style="font-size:22px;font-weight: 500;">&#8377;</span>
+                                        {{plansInfo[2]?.price}}<span style="font-size: medium;font-weight: 500;"> /
+                                            Yearly</span></h3>
+                                    <button class="pricing-button" mat-raised-button
+                                        routerLink="/admin/payment/{{plansInfo[2]?._id}}">Buy Now</button>
+                                    <div class="pricing-amount">
+                                        <p>₹ {{plansInfo[2]?.price}}/year when you renew</p>
+                                    </div>
+                                    <mat-divider></mat-divider>
+                                    <div class="pricing-feature">
+                                        <h3>Top Features</h3>
+                                        <p>Custom Website<span> (Website + Online ERP Software )</span></p>
+                                        <p>Listed Module<span> (Student Listing Module,Admission Module,Fees
+                                                Module,Admit Card and Result Module,Transfer Certificate Or TC
+                                                Module,Class Promote,Notifications,Class and Subjects
+                                                Listing,Website Module etc.)</span></p>
+                                        <p>Student Listing<span> (Upto 1000)</span></p>
+                                        <p>Custom Support<span> Yes</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="container-fluid service-section">
+        <div class="row">
+            <div class="col-12 col-lg-10 offset-lg-1">
+                <div class="col-12 col-lg-12 offset-lg-0">
+                    <div class="row title">
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-lg-6">
+                            <div class="row">
+                                <div class="col-12 col-lg-9">
+                                    <div class="img-section">
+                                        <img src="../../../../assets/modules-img.png" alt=""
+                                        style="width: 100%;height: 100%;">
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <div class="row">
+                                <div class="col-6 service-card-container">
+                                    <div class="service-card">
+                                        <h3>Admission Module</h3>
+                                    </div>
+                                </div>
+                                <div class="col-6 service-card-container">
+                                    <div class="service-card">
+                                        <h3>Fees Module</h3>
+                                    </div>
+                                </div>
+                                <div class="col-6 service-card-container">
+                                    <div class="service-card">
+                                        <h3>Student Module</h3>
+                                    </div>
+                                </div>
+                                <div class="col-6 service-card-container">
+                                    <div class="service-card">
+                                        <h3>Admit Card Module</h3>
+                                    </div>
+                                </div>
+                                <div class="col-6 service-card-container">
+                                    <div class="service-card">
+                                        <h3>Exam Result Module</h3>
+                                    </div>
+                                </div>
+                                <div class="col-6 service-card-container">
+                                    <div class="service-card">
+                                        <h3>Certificates Module</h3>
+                                    </div>
+                                </div>
+                                <div class="col-6 service-card-container">
+                                    <div class="service-card">
+                                        <h3>Notifications</h3>
+                                    </div>
+                                </div>
+                                <div class="col-6 service-card-container">
+                                    <div class="service-card">
+                                        <h3>School Brand Promotions</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <app-footer></app-footer>
+</div>
+
+<div class="spinner-container" *ngIf="loader">
+    <div class="spinner-overlay" *ngIf="loader">
+        <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate" strokeWidth="3"></mat-progress-spinner>
+    </div>
+</div>

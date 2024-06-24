@@ -1,0 +1,137 @@
+<app-header-navigation></app-header-navigation>
+<div class="container-fluid dashboard-container">
+  <div class="row">
+    <div class="col-12 col-lg-2">
+      <app-side-navigation></app-side-navigation>
+    </div>
+    <div class="col-12 col-lg-10">
+      <div class="row">
+        <div class="col-12 big-container">
+          <div class="col-lg-12 offset-lg-0">
+            <div class="main-card">
+              <div class="row">
+                <div *ngIf="!studentAdmitCardInfo">
+                  <h3 style="text-align: center;margin-top: 25vh;">No Record Found</h3>
+                </div>
+                <div #content class="custom-container" *ngIf="studentAdmitCardInfo">
+                  <div class="table-container">
+                    <table class="logo-table text-bold text-center">
+                      <tr>
+                        <td>
+                          <img src="../../../../assets/logo.png" alt="">
+                          {{schoolInfo?.schoolName}}, {{schoolInfo?.city}}
+                        </td>
+                      </tr>
+                    </table>
+                    <table class="info-table text-center">
+                      <tr>
+                        <td>
+                          School Code : {{schoolInfo?.schoolCode}}
+                        </td>
+                        <td>
+                          {{studentAdmitCardInfo?.examType | titlecase}}
+                          Exam Admit Card - {{studentAdmitCardInfo?.session}}
+                        </td>
+                        <td>
+                          Affiliation No. :
+                          {{schoolInfo?.affiliationNumber}}
+                        </td>
+                      </tr>
+                    </table>
+                    <table class="info-table text-center">
+                      <tr>
+                        <th>Admission No. :</th>
+                        <td>
+                          {{studentAdmitCardInfo?.admissionNo}}
+                        </td>
+                        <td class="text-bold">Roll Number :</td>
+                        <td>
+                          {{studentAdmitCardInfo?.rollNumber}}
+                        </td>
+                        <td class="text-bold">Class :</td>
+                        <td>
+                          {{studentAdmitCardInfo?.class | classSuffix}}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="text-bold">Student Name :</td>
+                        <td>
+                          {{studentAdmitCardInfo?.name | titlecase}}
+                        </td>
+                        <td class="text-bold">Father Name :</td>
+                        <td>{{studentAdmitCardInfo?.fatherName | titlecase}}</td>
+                        <td class="text-bold">Mother Name :</td>
+                        <td>{{studentAdmitCardInfo?.motherName | titlecase}}</td>
+                      </tr>
+                    </table>
+
+
+                    <table class="custom-table">
+                      <tr>
+                        <th>S.No.</th>
+                        <!-- <th>Subject Code</th> -->
+                        <th>Subject</th>
+                        <th>Exam Date</th>
+                        <th>Exam Timing</th>
+                      </tr>
+                      <ng-container *ngIf="processedData && processedData.length > 0">
+                        <tr *ngFor="let exam of processedData; let i = index">
+                          <td>
+                            {{ i + 1 }}
+                          </td>
+                          <!-- <td>
+                            100
+                          </td> -->
+                          <td>
+                            {{ exam.subject | titlecase}}
+                          </td>
+                          <td>
+                            {{ exam.date }}
+                          </td>
+                          <td>
+                            {{ exam.timing }}
+                          </td>
+                        </tr>
+                      </ng-container>
+                    </table>
+                    <div>
+                      <h4 class="text-bold">Disclaimer:</h4>
+                      <p>This is your online admit card, issued in accordance with our institution's policies. Please
+                        take note of
+                        the following:</p>
+                      <p>1. Identification: This admit card serves as your identification for the examination or event
+                        at {{schoolInfo?.schoolName}}.</p>
+                      <p>2. Verify Details: Review the admit card for accuracy, including your name, exam details, and
+                        date. Report
+                        any discrepancies to the Examination Office for correction.</p>
+                      <p>3. Non-Transferable: This admit card is for your use only; it should not be shared or used by
+                        others.</p>
+                      <p>4. Keep Secure: Maintain this admit card in a secure place. You'll need it for admission on the
+                        examination
+                        or event day.</p>
+                      <p>5. Lost or Damaged: In case of loss or damage to the admit card, please contact the Examination
+                        Office for
+                        a duplicate or replacement. A fee may apply.</p>
+                      <p>6. Exam Rules: Follow the rules and instructions provided by the examination authorities. Any
+                        violation may
+                        lead to disqualification.</p>
+                      <p>Your acceptance and retention of this admit card indicate your understanding and agreement with
+                        the terms
+                        and conditions outlined in this document.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="spinner-container" *ngIf="loader">
+  <div class="spinner-overlay" *ngIf="loader">
+    <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate"
+      strokeWidth="3"></mat-progress-spinner>
+  </div>
+</div>

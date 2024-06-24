@@ -1,0 +1,276 @@
+<app-header-navbar></app-header-navbar>
+<div class="container-fluid dashboard-container">
+    <div class="row">
+        <div class="col-12 col-lg-2">
+            <app-side-navbar></app-side-navbar>
+        </div>
+        <div class="col-12 col-lg-10">
+            <div class="row">
+                <div class="col-12 big-container">
+                    <div class="col-lg-12 offset-lg-0">
+                        <div class="main-card">
+                            <div class="row">
+                                <div class="col-12 col-lg-4 pt-2">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h3>Settings > Fee Payment > Structure</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-8 col-lg-5">
+                                    <button class="submit-button" mat-raised-button
+                                        (click)="addFeesModel()"><mat-icon>add</mat-icon>Create</button>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <table class="table table-hover mt-3 align-middle mb-0 bg-white">
+                                    <thead class="bg-light">
+                                        <tr class="text-muted">
+                                            <th>S.No.</th>
+                                            <th>Class</th>
+                                            <th>Particular Total Fee</th>
+                                            <th>Admission Fee</th>
+                                            <th>Fee Structure</th>
+                                            <th>Remove</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngIf="clsFeesStructure">
+                                        <tr>
+                                            <td>
+                                                <p class="mb-0">1</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">{{clsFeesStructure.class | classSuffix}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">&#8377; {{clsFeesStructure.totalFees}}</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0">&#8377; {{clsFeesStructure.admissionFees}}</p>
+                                            </td>
+                                            <td class="mb-0">
+                                                <mat-icon (click)="openFeesStructureModal()">launch</mat-icon>
+                                            </td>
+                                            <td class="mb-0">
+                                                <mat-icon
+                                                    (click)="deleteFeesStructureModel(clsFeesStructure._id)">delete</mat-icon>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <ng-container *ngIf="!clsFeesStructure">
+                                    <h2 style="text-align: center;margin-top: 150px;">No Record Found</h2>
+                                </ng-container>
+                            </div>
+
+                            <div class="modal fade show" [class.show]="showModal">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content" *ngIf="successMsg">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" style="color: transparent;">&nbsp;</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="success-message">{{successMsg}}</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <mat-icon></mat-icon>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-content" *ngIf="!successMsg">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" *ngIf="feesTypeMode || feesMode">Create Fee
+                                                Structure {{cls | classSuffix}}</h5>
+                                            <h5 class="modal-title" *ngIf="deleteMode">Delete Fee Structure {{cls |
+                                                classSuffix}}</h5>
+                                            <mat-icon matRipple (click)="closeModal()">close</mat-icon>
+                                        </div>
+                                        <div class="modal-body" *ngIf="feesTypeMode && !deleteMode">
+                                            <ng-container>
+                                                <h3>Particular's</h3>
+                                            </ng-container>
+                                            <div class="col-10 mb-4 example-margin">
+                                                <mat-form-field appearance="outline">
+                                                    <mat-label>Perticular Total
+                                                        Fee</mat-label>
+                                                    <input matInput type="number" [(ngModel)]="totalFees">
+                                                </mat-form-field>
+                                            </div>
+                                            <section class="example-section">
+                                                <div class="row">
+                                                    <div class="col-6"
+                                                        *ngFor="let perticular of feePerticulars,let i=index;">
+                                                        <mat-checkbox class="example-margin"
+                                                            (click)="feesType(perticular)">{{perticular}}
+                                                            Fee</mat-checkbox>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                        </div>
+                                        <div class="modal-footer" *ngIf="feesTypeMode">
+                                            <button class="submit-button" mat-raised-button
+                                                [disabled]="selectedFeesType.length==0 || totalFees<=0"
+                                                (click)="selectFeesStructure()">Save</button>
+                                        </div>
+                                        <form [formGroup]="feesForm" (ngSubmit)="feesStructureAddUpdate()"
+                                            *ngIf="feesMode && !deleteMode">
+
+                                            <div class="modal-body">
+                                                <div *ngIf="errorCheck">
+                                                    <p class="error-message">{{errorMsg}}</p>
+                                                </div>
+                                                <ng-container>
+                                                    <h3>Admission Fee</h3>
+                                                </ng-container>
+                                                <mat-form-field appearance="outline">
+                                                    <mat-label>Admission Fee</mat-label>
+                                                    <input matInput type="number" formControlName="admissionFees">
+                                                    <mat-hint
+                                                        *ngIf="!feesForm.get('admissionFees')?.valid && feesForm.get('admissionFees')?.touched"
+                                                        class="form-text text-danger">admission fee is
+                                                        required</mat-hint>
+                                                </mat-form-field>
+                                                <h3>Fee Particulars</h3>
+                                                <p>Perticular Total Fee :&#8377; {{totalFees}}</p>
+                                                <div formGroupName="type">
+                                                    <div formArrayName="feesType">
+                                                        <div
+                                                            *ngFor="let singleFeesType of selectedFeesType; let i = index">
+                                                            <div [formGroupName]="i">
+                                                                <mat-form-field appearance="outline">
+                                                                    <mat-label>{{singleFeesType | titlecase}}
+                                                                        Fee</mat-label>
+                                                                    <input matInput type="number"
+                                                                        [formControlName]="singleFeesType">
+                                                                </mat-form-field>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="submit-button" mat-raised-button
+                                                    [disabled]="!feesForm.valid" type="submit">Submit</button>
+                                            </div>
+                                        </form>
+                                        <div *ngIf="deleteMode && !feesMode && !feesTypeMode">
+                                            <div class="modal-body">
+                                                <ng-container>
+                                                    <h3 style="font-size: 16px;letter-spacing: normal;">Note : As
+                                                        soon as the fee structure for the {{cls | classSuffix}} class is
+                                                        deleted, the fee records for all the students will be
+                                                        automatically deleted.</h3>
+                                                </ng-container>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="delete-button" mat-raised-button type="button"
+                                                    (click)="feesStructureDelete(deleteById)">Ok</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal fade show" [class.show]="showFeesStructureModal">
+                                <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Fee Structure Class - {{cls | classSuffix}}</h5>
+                                            <mat-icon matRipple (click)="closeModal()">close</mat-icon>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="custom-container">
+                                                    <div class="table-container">
+                                                        <ng-container>
+                                                            <h3>New Student's</h3>
+                                                        </ng-container>
+                                                        <table class="custom-table">
+                                                            <tr>
+                                                                <td class="text-bold">Admission Fee</td>
+                                                                <td>*Apply</td>
+                                                                <td class="text-bold">Total Annual Fee</td>
+                                                                <td>&#8377; {{clsFeesStructure?.totalFees +
+                                                                    clsFeesStructure?.admissionFees}}</td>
+                                                            </tr>
+                                                        </table>
+                                                        <ng-container>
+                                                            <h3>Existing Student's</h3>
+                                                        </ng-container>
+                                                        <table class="custom-table">
+                                                            <tr>
+                                                                <td class="text-bold">Admission Fee</td>
+                                                                <td>*Not Apply</td>
+                                                                <td class="text-bold">Total Annual Fee</td>
+                                                                <td>&#8377; {{clsFeesStructure?.totalFees}}</td>
+                                                            </tr>
+                                                        </table>
+                                                        <ng-container>
+                                                            <h3>Installment's</h3>
+                                                        </ng-container>
+                                                        <table class="custom-table">
+                                                            <tr
+                                                                *ngFor="let installmentGroup of clsFeesStructure?.installment | chunk: 3; let i = index">
+                                                                <ng-container>
+                                                                    <ng-container
+                                                                        *ngFor="let installmentObject of installmentGroup; let j = index">
+                                                                        <ng-container
+                                                                            *ngFor="let entry of installmentObject | keyvalue">
+                                                                            <td class="text-bold">
+                                                                                {{ entry.key }}
+                                                                            </td>
+                                                                            <td style="font-weight: 400">
+                                                                                &#8377; {{ entry.value }}
+                                                                            </td>
+                                                                        </ng-container>
+                                                                    </ng-container>
+                                                                </ng-container>
+                                                            </tr>
+                                                        </table>
+                                                        <ng-container>
+                                                            <h3>Particular's</h3>
+                                                        </ng-container>
+                                                        <table class="custom-table">
+                                                            <tr
+                                                                *ngFor="let installmentGroup of particularsAdmissionFees | chunk: 3; let i = index">
+                                                                <ng-container>
+                                                                    <ng-container
+                                                                        *ngFor="let installmentObject of installmentGroup; let j = index">
+                                                                        <ng-container
+                                                                            *ngFor="let entry of installmentObject | keyvalue">
+                                                                            <td class="text-bold">
+                                                                                {{ entry.key }} Fee
+                                                                            </td>
+                                                                            <td style="font-weight: 400">
+                                                                                &#8377; {{ entry.value }}
+                                                                            </td>
+                                                                        </ng-container>
+                                                                    </ng-container>
+                                                                </ng-container>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button style="background-color: transparent;" class="submit-button" mat-raised-button
+                                                 type="submit"></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="spinner-container" *ngIf="loader">
+    <div class="spinner-overlay" *ngIf="loader">
+        <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate" strokeWidth="3"></mat-progress-spinner>
+    </div>
+</div>

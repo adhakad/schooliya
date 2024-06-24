@@ -1,0 +1,397 @@
+<app-header-navbar></app-header-navbar>
+<div class="container-fluid dashboard-container">
+  <div class="row">
+    <div class="col-12 col-lg-2">
+      <app-side-navbar></app-side-navbar>
+    </div>
+    <div class="col-12 col-lg-10">
+      <div class="row">
+        <div class="col-12 big-container">
+          <div class="col-lg-12 offset-lg-0">
+            <div class="main-card">
+              <div class="row">
+                <div class="col-12 col-lg-4 pt-2">
+                  <div class="row">
+                    <div class="col-12">
+                      <h3>Settings > School Details</h3>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row mt-3 mb-2">
+                <div class="col-4">
+                  <button class="submit-button" mat-raised-button
+                    (click)="addSchoolModel()"><mat-icon>add</mat-icon>Create</button>
+                </div>
+              </div>
+              <table class="table table-hover align-middle mt-3 mb-1 bg-white">
+                <thead class="bg-light">
+                  <tr class="text-muted">
+                    <th>No.</th>
+                    <th>School Name</th>
+                    <th>Affiliation Number</th>
+                    <th>School Code</th>
+                    <th>Founded Year</th>
+                    <th>Board</th>
+                    <th>Medium</th>
+                    <th>Street</th>
+                    <th>City/Town</th>
+                    <th>District</th>
+                    <th>State</th>
+                    <th>Country</th>
+                    <th>Pin Code</th>
+                    <th>First Phone</th>
+                    <th>Second Phone</th>
+                    <th>Email</th>
+                    <th>Remove</th>
+                  </tr>
+                </thead>
+                <tbody *ngIf="schoolInfo">
+                  <tr>
+                    <td>
+                      <p class="mb-0">1</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{schoolInfo?.schoolName}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{schoolInfo?.affiliationNumber}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{schoolInfo?.schoolCode}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{schoolInfo?.foundedYear}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{schoolInfo?.board}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{schoolInfo?.medium}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{schoolInfo?.street}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{schoolInfo?.city}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{schoolInfo?.district}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{schoolInfo?.state}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{schoolInfo?.country}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{schoolInfo?.pinCode}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{schoolInfo?.phoneOne}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{schoolInfo?.phoneSecond}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{schoolInfo?.email}}</p>
+                    </td>
+                    <td class="mb-0">
+                      <!-- <mat-icon (click)="updateSchoolModel(schoolInfo)">edit</mat-icon> -->
+                      <mat-icon (click)="deleteSchoolModel(schoolInfo?._id)">delete</mat-icon>
+                    </td>
+                  </tr>
+
+                </tbody>
+              </table>
+
+              <div class="modal fade show" [class.show]="showModal">
+                <div class="modal-dialog modal-dialog-scrollable" [class.modal-lg]="!deleteMode && !successMsg">
+                  <div class="modal-content" *ngIf="successMsg">
+                    <div class="modal-header">
+                      <h5 class="modal-title" style="color: transparent;">&nbsp;</h5>
+                    </div>
+                    <div class="modal-body">
+                      <p class="success-message">{{successMsg}}</p>
+                    </div>
+                    <div class="modal-footer">
+                      <mat-icon></mat-icon>
+                    </div>
+                  </div>
+
+                  <div class="modal-content" *ngIf="!successMsg">
+                    <div class="modal-header">
+                      <h5 class="modal-title">{{updateMode?'Update': deleteMode ? 'Delete' :'Create New'}} School</h5>
+                      <mat-icon matRipple (click)="closeModal()">close</mat-icon>
+                    </div>
+
+                    <form [formGroup]="schoolForm" (ngSubmit)="schoolAddUpdate()">
+                      <div class="modal-body" *ngIf="!deleteMode">
+
+                        <div *ngIf="errorCheck">
+                          <p class="error-message">{{errorMsg}}</p>
+                        </div>
+
+                        <div class="container">
+
+                          <div class="row">
+                            <ng-container>
+                              <h3>School Info</h3>
+                            </ng-container>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>School Name</mat-label>
+                                <input matInput type="text" formControlName="schoolName">
+                                <mat-error *ngIf="schoolForm.get('schoolName')?.hasError('required') && schoolForm.get('schoolName')?.touched">
+                                  School name is required
+                                </mat-error>
+                                <mat-error *ngIf="schoolForm.get('schoolName')?.hasError('maxlength')">
+                                  Maximum 50 characters allowed for School Name
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Affiliation Number</mat-label>
+                                <input matInput type="text" formControlName="affiliationNumber">
+                                <mat-error *ngIf="schoolForm.get('affiliationNumber')?.hasError('required') && schoolForm.get('affiliationNumber')?.touched">
+                                  Affiliation number is required
+                                </mat-error>
+                                <mat-error *ngIf="schoolForm.get('affiliationNumber')?.hasError('pattern')">
+                                  Maximum 15 characters allowed for affiliation number
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>School Code</mat-label>
+                                <input matInput type="text" formControlName="schoolCode">
+                                <mat-error *ngIf="schoolForm.get('schoolCode')?.hasError('required') && schoolForm.get('schoolCode')?.touched">
+                                  School code is required
+                                </mat-error>
+                                <mat-error *ngIf="schoolForm.get('schoolCode')?.hasError('maxlength')">
+                                  Maximum 15 characters allowed for School Code
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Founded Year</mat-label>
+                                <input matInput type="text" formControlName="foundedYear">
+                                <mat-error *ngIf="schoolForm.get('foundedYear')?.hasError('required') && schoolForm.get('foundedYear')?.touched">
+                                  Founded year is required
+                                </mat-error>
+                                <mat-error *ngIf="schoolForm.get('foundedYear')?.hasError('pattern')">
+                                  Invalid founded year format. Use a four-digit year starting with '19' or '20'
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Board</mat-label>
+                                <input matInput type="text" formControlName="board">
+                                <mat-error *ngIf="schoolForm.get('board')?.hasError('required') && schoolForm.get('board')?.touched">
+                                  Board is required
+                                </mat-error>
+                                <mat-error *ngIf="schoolForm.get('board')?.hasError('maxlength')">
+                                  Maximum 50 characters allowed for Board
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Medium</mat-label>
+                                <input matInput type="text" formControlName="medium">
+                                <mat-error *ngIf="schoolForm.get('medium')?.hasError('required') && schoolForm.get('medium')?.touched">
+                                  Medium is required
+                                </mat-error>
+                                <mat-error *ngIf="schoolForm.get('medium')?.hasError('maxlength')">
+                                  Maximum 50 characters allowed for Medium
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <ng-container>
+                              <h3>School Address</h3>
+                            </ng-container>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Street</mat-label>
+                                <input matInput type="text" formControlName="street">
+                                <mat-error *ngIf="schoolForm.get('street')?.hasError('required') && schoolForm.get('street')?.touched">
+                                  Street is required
+                                </mat-error>
+                                <mat-error *ngIf="schoolForm.get('street')?.hasError('maxlength')">
+                                  Maximum 100 characters allowed for Street
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>City/Town</mat-label>
+                                <input matInput type="text" formControlName="city">
+                                <mat-error *ngIf="schoolForm.get('city')?.hasError('required') && schoolForm.get('city')?.touched">
+                                  City/Town is required
+                                </mat-error>
+                                <mat-error *ngIf="schoolForm.get('city')?.hasError('maxlength')">
+                                  Maximum 50 characters allowed for city/town
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>District</mat-label>
+                                <input matInput type="text" formControlName="district">
+                                <mat-error *ngIf="schoolForm.get('district')?.hasError('required') && schoolForm.get('district')?.touched">
+                                  District is required
+                                </mat-error>
+                                <mat-error *ngIf="schoolForm.get('district')?.hasError('maxlength')">
+                                  Maximum 50 characters allowed for district
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>State</mat-label>
+                                <input matInput type="text" formControlName="state">
+                                <mat-error *ngIf="schoolForm.get('state')?.hasError('required') && schoolForm.get('state')?.touched">
+                                  State is required
+                                </mat-error>
+                                <mat-error *ngIf="schoolForm.get('state')?.hasError('maxlength')">
+                                  Maximum 50 characters allowed for State
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Pin Code</mat-label>
+                                <input matInput type="text" formControlName="pinCode">
+                                <mat-error *ngIf="schoolForm.get('pinCode')?.hasError('required') && schoolForm.get('pinCode')?.touched">
+                                  Pin code is required
+                                </mat-error>
+                                <mat-error *ngIf="schoolForm.get('pinCode')?.hasError('pattern')">
+                                  Invalid postal code format. Use a 6-digit code.
+                                </mat-error>
+                              </mat-form-field>
+                            </div>   
+                            <ng-container>
+                              <h3>School Contact</h3>
+                            </ng-container>                     
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>First Phone</mat-label>
+                                <input matInput type="number" formControlName="phoneOne">
+                                <mat-error *ngIf="schoolForm.get('phoneOne')?.hasError('required') && schoolForm.get('phoneOne')?.touched">
+                                  Phone is required
+                                </mat-error>
+                                <mat-error *ngIf="schoolForm.get('phoneOne')?.hasError('minlength')">
+                                  Phone must be at least 10 characters long
+                                </mat-error>
+                                <mat-error *ngIf="schoolForm.get('phoneOne')?.hasError('maxlength')">
+                                  Phone cannot be more than 10 characters long
+                                </mat-error>
+                                <mat-error *ngIf="schoolForm.get('phoneOne')?.hasError('pattern')">
+                                  Phone must contain only digits
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Second Phone</mat-label>
+                                <input matInput type="number" formControlName="phoneSecond">
+                                <mat-error *ngIf="schoolForm.get('phoneSecond')?.hasError('required') && schoolForm.get('phoneSecond')?.touched">
+                                  Phone is required
+                                </mat-error>
+                                <mat-error *ngIf="schoolForm.get('phoneSecond')?.hasError('minlength')">
+                                  Phone must be at least 10 characters long
+                                </mat-error>
+                                <mat-error *ngIf="schoolForm.get('phoneSecond')?.hasError('maxlength')">
+                                  Phone cannot be more than 10 characters long
+                                </mat-error>
+                                <mat-error *ngIf="schoolForm.get('phoneSecond')?.hasError('pattern')">
+                                  Phone must contain only digits
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Email</mat-label>
+                                <input matInput type="text" formControlName="email">
+                                <mat-error *ngIf="schoolForm.get('email')?.hasError('required') && schoolForm.get('email')?.touched">
+                                  Email is required
+                                </mat-error>
+                                <mat-error *ngIf="schoolForm.get('email')?.hasError('email')">
+                                  Invalid email format
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <ng-container>
+                              <h3>Social Media Account</h3>
+                            </ng-container>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Facebook Link</mat-label>
+                                <input matInput type="text" formControlName="facebookLink">
+                                <mat-error *ngIf="schoolForm.get('facebookLink')?.hasError('pattern')">
+                                  Invalid Facebook link format
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>LinkedIn Link</mat-label>
+                                <input matInput type="text" formControlName="linkedinLink">
+                                <mat-error *ngIf="schoolForm.get('linkedinLink')?.hasError('pattern')">
+                                  Invalid LinkedIn link format
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>Instagram Link</mat-label>
+                                <input matInput type="text" formControlName="instagramLink">
+                                <mat-error *ngIf="schoolForm.get('instagramLink')?.hasError('pattern')">
+                                  Invalid Instagram link format
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                              <mat-form-field appearance="outline">
+                                <mat-label>YouTube Link</mat-label>
+                                <input matInput type="text" formControlName="youtubeLink">
+                                <mat-error *ngIf="schoolForm.get('youtubeLink')?.hasError('pattern')">
+                                  Invalid YouTube link format
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="modal-footer" *ngIf="!deleteMode">
+                        <button class="submit-button" mat-raised-button type="submit"
+                          [disabled]="!schoolForm.valid">Submit</button>
+                      </div>
+                      <div *ngIf="deleteMode">
+                        <h3>To delete school detail, click ok to confirm.</h3>
+                        <div class="modal-footer">
+                          <button class="delete-button" mat-raised-button type="button"
+                            (click)="schoolDelete(deleteById)">Ok</button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="spinner-container" *ngIf="loader">
+  <div class="spinner-overlay" *ngIf="loader">
+    <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate"
+      strokeWidth="3"></mat-progress-spinner>
+  </div>
+</div>
