@@ -40,7 +40,7 @@ export class AdminStudentResultComponent implements OnInit {
   page: Number = 0;
   cls: any;
   selectedValue: number = 0;
-  classSubject: any[] = [];
+  theorySubjects: any[] = [];
   practicalSubjects: any[] = [];
   periodicTestSubjects: any[] = [];
   noteBookSubjects: any[] = [];
@@ -136,7 +136,7 @@ export class AdminStudentResultComponent implements OnInit {
     this.periodicTestSubjects = [];
     this.noteBookSubjects = [];
     this.subjectEnrichmentSubjects = [];
-    this.classSubject = [];
+    this.theorySubjects = [];
   }
 
   closeModal() {
@@ -292,7 +292,7 @@ export class AdminStudentResultComponent implements OnInit {
   }
 
   chooseStream(stream: any) {
-    if (this.classSubject || this.practicalSubjects || this.periodicTestSubjects || this.noteBookSubjects || this.subjectEnrichmentSubjects) {
+    if (this.theorySubjects || this.practicalSubjects || this.periodicTestSubjects || this.noteBookSubjects || this.subjectEnrichmentSubjects) {
       this.falseAllValue();
     }
     this.stream = stream;
@@ -307,85 +307,78 @@ export class AdminStudentResultComponent implements OnInit {
   }
   
   selectExam(selectedExam: string) {
-    // if (this.classSubject || this.practicalSubjects || this.periodicTestSubjects || this.noteBookSubjects || this.subjectEnrichmentSubjects) {
-    //   this.falseAllValue();
-    // }
-    // this.selectedExam = selectedExam;
-    // const examFilteredData = this.marksheetTemplateStructureInfo.marksheetTemplateStructure.examStructure[selectedExam];
-    // let subjects = this.marksheetTemplateStructureInfo.classSubjectList.subject;
-    // this.practicalSubjects = [];
-    //     this.periodicTestSubjects = [];
-    //     this.noteBookSubjects = [];
-    //     this.subjectEnrichmentSubjects = [];
+    if (this.theorySubjects || this.practicalSubjects || this.periodicTestSubjects || this.noteBookSubjects || this.subjectEnrichmentSubjects) {
+      this.falseAllValue();
+    }
+    this.selectedExam = selectedExam;
+    const examFilteredData = this.marksheetTemplateStructureInfo.marksheetTemplateStructure.examStructure[selectedExam];
+    let subjects = this.marksheetTemplateStructureInfo.classSubjectList.subject;
+    this.practicalSubjects = [];
+        this.periodicTestSubjects = [];
+        this.noteBookSubjects = [];
+        this.subjectEnrichmentSubjects = [];
 
-    //     if (true) {
-    //       this.classSubject = subjects.map((item: any) => {
-    //         const theorySubject = Object.keys(item)[0];
-    //         return theorySubject;
-    //       })
-    //       if (this.classSubject) {
-    //         this.patchTheory();
-    //       }
-    //     }
-
-
-
-
-
-
-        // if (res.practicalMaxMarks) {
-        //   this.practicalSubjects = res.practicalMaxMarks.map((item: any) => {
-        //     const practicalSubject = Object.keys(item)[0];
-        //     return practicalSubject;
-        //   })
-        //   if (this.practicalSubjects) {
-        //     this.patchPractical();
-        //   }
-        // }
-
-        // if (res.periodicTestMaxMarks) {
-        //   this.periodicTestSubjects = res.periodicTestMaxMarks.map((item: any) => {
-        //     const periodicTestSubject = Object.keys(item)[0];
-        //     return periodicTestSubject;
-        //   })
-        //   if (this.periodicTestSubjects) {
-        //     this.patchPeriodicTest();
-        //   }
-        // }
+        if (examFilteredData.theoryMaxMarks) {
+          this.theorySubjects = subjects.map((item: any) => {
+            const theorySubject = Object.values(item)[0];
+            return theorySubject;
+          })
+          if (this.theorySubjects) {
+            this.patchTheory();
+          }
+        }
+        if (examFilteredData.practicalMaxMarks) {
+          this.practicalSubjects = subjects.map((item: any) => {
+            const practicalSubject = Object.values(item)[0];
+            return practicalSubject;
+          })
+          if (this.practicalSubjects) {
+            this.patchPractical();
+          }
+        }
+        if (examFilteredData.periodicTestMaxMarks) {
+          this.periodicTestSubjects = subjects.map((item: any) => {
+            const periodicTestSubject = Object.values(item)[0];
+            return periodicTestSubject;
+          })
+          if (this.periodicTestSubjects) {
+            this.patchPeriodicTest();
+          }
+        }
 
 
-        // if (res.noteBookMaxMarks) {
-        //   this.noteBookSubjects = res.noteBookMaxMarks.map((item: any) => {
-        //     const noteBookSubject = Object.keys(item)[0];
-        //     return noteBookSubject;
-        //   })
-        //   if (this.noteBookSubjects) {
-        //     this.patchNoteBook();
-        //   }
-        // }
-        // if (res.subjectEnrichmentMaxMarks) {
-        //   this.subjectEnrichmentSubjects = res.subjectEnrichmentMaxMarks.map((item: any) => {
-        //     const subjectEnrichmentSubject = Object.keys(item)[0];
-        //     return subjectEnrichmentSubject;
-        //   })
-        //   if (this.subjectEnrichmentSubjects) {
-        //     this.patchSubjectEnrichment();
-        //   }
-        // }
+        if (examFilteredData.noteBookMaxMarks) {
+          this.noteBookSubjects = subjects.map((item: any) => {
+            const noteBookSubject = Object.values(item)[0];
+            return noteBookSubject;
+          })
+          if (this.noteBookSubjects) {
+            this.patchNoteBook();
+          }
+        }
+        if (examFilteredData.subjectEnrichmentMaxMarks) {
+          this.subjectEnrichmentSubjects = subjects.map((item: any) => {
+            const subjectEnrichmentSubject = Object.values(item)[0];
+            return subjectEnrichmentSubject;
+          })
+          if (this.subjectEnrichmentSubjects) {
+            this.patchSubjectEnrichment();
+          }
+        }
+        
+        this.resultStructureInfo = {
+
+          practicalMaxMarks: this.practicalSubjects.map((subject:any) => ({ [subject]: examFilteredData.practicalMaxMarks })),
+          noteBookMaxMarks: this.theorySubjects.map((subject:any) => ({ [subject]: examFilteredData.noteBookMaxMarks })),
+          periodicTestMaxMarks: this.periodicTestSubjects.map((subject:any) => ({ [subject]: examFilteredData.periodicTestMaxMarks })),
+          subjectEnrichmentMaxMarks: this.subjectEnrichmentSubjects.map((subject:any) => ({ [subject]: examFilteredData.subjectEnrichmentMaxMarks })),
+          theoryMaxMarks: this.theorySubjects.map((subject:any) => ({ [subject]: examFilteredData.theoryMaxMarks })),
+          theoryPassMarks: this.theorySubjects.map((subject:any) => ({ [subject]: examFilteredData.theoryPassMarks })),
+          gradeMaxMarks:examFilteredData.gradeMaxMarks,
+          gradeMinMarks:examFilteredData.gradeMinMarks
+      };
 
         
-        
-        
-        // this.resultStructureInfo = {
-
-        //     noteBookMaxMarks: this.classSubject.map((subject:any) => ({ [subject]: examFilteredData.noteBookMaxMarks })),
-        //     periodicTestMaxMarks: this.classSubject.map((subject:any) => ({ [subject]: examFilteredData.periodicTestMaxMarks })),
-        //     subjectEnrichmentMaxMarks: this.classSubject.map((subject:any) => ({ [subject]: examFilteredData.subjectEnrichmentMaxMarks })),
-        //     theoryMaxMarks: this.classSubject.map((subject:any) => ({ [subject]: examFilteredData.theoryMaxMarks })),
-        //     theoryPassMarks: this.classSubject.map((subject:any) => ({ [subject]: examFilteredData.theoryPassMarks })),
-        //     gradeMaxMarks:examFilteredData.gradeMaxMarks,
-        //     gradeMinMarks:examFilteredData.gradeMinMarks
-        // };
   }
 
 
@@ -402,7 +395,7 @@ export class AdminStudentResultComponent implements OnInit {
 
   patchTheory() {
     const controlOne = <FormArray>this.examResultForm.get('type.theoryMarks');
-    this.classSubject.forEach((x: any) => {
+    this.theorySubjects.forEach((x: any) => {
       controlOne.push(this.patchTheoryValues(x));
       this.examResultForm.reset();
     })
@@ -492,6 +485,7 @@ export class AdminStudentResultComponent implements OnInit {
     const calculateGrades = (subjectMarks: any[], isPractical: boolean,isPeriodicTest: boolean,isNoteBook:boolean,isSubjectEnrichment:boolean) => {
       return subjectMarks.map((subjectMark) => {
         const subjectName = Object.keys(subjectMark)[0];
+       
         const theoryMarks = parseFloat(subjectMark[subjectName]);
         const practicalMarkObject = isPractical ? examResult.practicalMarks.find((practicalMark: any) => practicalMark && practicalMark.hasOwnProperty(subjectName)) : null;
         const practicalMarks = practicalMarkObject ? parseFloat(practicalMarkObject[subjectName]) : 0;
@@ -545,7 +539,7 @@ export class AdminStudentResultComponent implements OnInit {
         };
       });
     };
-    const marks = calculateGrades(examResult.theoryMarks, !!examResult.practicalMarks, !!examResult.periodicTestMarks, !!examResult.noteBookMarks, !!examResult.subjectEnrichmentMarks);
+    let  marks = calculateGrades(examResult.theoryMarks, !!examResult.practicalMarks, !!examResult.periodicTestMarks, !!examResult.noteBookMarks, !!examResult.subjectEnrichmentMarks);
     const grandTotalMarks = marks.reduce((total: number, item: any) => total + item.totalMarks, 0);
     const percentile = parseFloat(((grandTotalMarks / totalMaxMarks) * 100).toFixed(2));
     const basePercentile = parseFloat(percentile.toFixed(0));
@@ -554,6 +548,20 @@ export class AdminStudentResultComponent implements OnInit {
       const minMarks = parseFloat(String(Object.values(this.resultStructureInfo.gradeMinMarks[i])[0]));
       return basePercentile >= minMarks && basePercentile <= maxMarks ? Object.keys(gradeRange)[0] : grade;
     }, '');
+
+    let emptyArrayProperties:any[] = [];
+for (let key in this.resultStructureInfo) {
+    if (Array.isArray(this.resultStructureInfo[key]) && this.resultStructureInfo[key].length === 0) {
+      let transformedKey = key.replace(/Max|Pass/, '');
+      emptyArrayProperties.push(transformedKey);
+    }
+}
+
+marks.forEach((subject:any) => {
+  emptyArrayProperties.forEach(prop => {
+      delete subject[prop];
+  });
+});
     let examResultInfo = {
       marks: marks,
       grandTotalMarks: grandTotalMarks,
@@ -583,15 +591,16 @@ export class AdminStudentResultComponent implements OnInit {
         this.examResultForm.value.examType = this.selectedExam;
         this.examResultForm.value.stream = this.stream;
         this.examResultForm.value.class = this.cls;
-        this.examResultService.addExamResult(this.examResultForm.value).subscribe((res: any) => {
-          if (res) {
-            this.successDone();
-            this.successMsg = res;
-          }
-        }, err => {
-          this.errorCheck = true;
-          this.errorMsg = err.error;
-        })
+        console.log(this.examResultForm.value)
+        // this.examResultService.addExamResult(this.examResultForm.value).subscribe((res: any) => {
+        //   if (res) {
+        //     this.successDone();
+        //     this.successMsg = res;
+        //   }
+        // }, err => {
+        //   this.errorCheck = true;
+        //   this.errorMsg = err.error;
+        // })
       }
     }
   }

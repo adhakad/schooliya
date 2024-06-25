@@ -139,11 +139,11 @@
                                       class="form-text text-danger">Roll number is required</mat-hint>
                                   </mat-form-field>
                                 </div>
-                                <ng-container *ngIf="classSubject.length>0">
+                                <ng-container *ngIf="theorySubjects.length>0">
                                   <h3>Theory marks</h3>
                                   <ng-container formGroupName="type">
                                     <ng-container formArrayName="theoryMarks">
-                                      <div class="col-6" *ngFor="let subjects of classSubject; let i = index">
+                                      <div class="col-6" *ngFor="let subjects of theorySubjects; let i = index">
                                         <div [formGroupName]="i">
                                           <mat-form-field appearance="outline">
                                             <mat-label>{{subjects | titlecase}} Theory Marks</mat-label>
@@ -220,7 +220,7 @@
                         </div>
                       </div>
                       <div class="modal-footer">
-                        <button class="submit-button" [disabled]="!examResultForm.valid || !classSubject"
+                        <button class="submit-button" [disabled]="!examResultForm.valid || !theorySubjects"
                           mat-raised-button type="submit">Submit</button>
                       </div>
                     </form>
