@@ -101,18 +101,6 @@
                               <div class="row">
                                 <div class="col-6">
                                   <mat-form-field appearance="outline">
-                                    <mat-label>Exam Type</mat-label>
-                                    <mat-select #examSelect matInput>
-                                      <div *ngFor="let exam of examType">
-                                        <mat-option (click)="selectExam(examSelect.value)" value="{{exam}}">
-                                          {{exam | titlecase}} Exam
-                                        </mat-option>
-                                      </div>
-                                    </mat-select>
-                                  </mat-form-field>
-                                </div>
-                                <div class="col-6">
-                                  <mat-form-field appearance="outline">
                                     <mat-label>Stream</mat-label>
                                     <mat-select type="text" matInput>
                                       <ng-container *ngIf="cls==12 || cls==11">
@@ -127,6 +115,18 @@
                                             (click)='chooseStream(notApplicable)'>N/A</mat-option>
                                         </div>
                                       </ng-container>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </div>
+                                <div class="col-6">
+                                  <mat-form-field appearance="outline">
+                                    <mat-label>Exam Type</mat-label>
+                                    <mat-select #examSelect matInput>
+                                      <div *ngFor="let exam of examType">
+                                        <mat-option (click)="selectExam(examSelect.value)" value="{{exam}}">
+                                          {{exam | titlecase}} Exam
+                                        </mat-option>
+                                      </div>
                                     </mat-select>
                                   </mat-form-field>
                                 </div>
@@ -304,34 +304,29 @@
                                 </table>
 
                                 <table class="custom-table">
-                                  <col>
-                                  <colgroup span="1"></colgroup>
-                                  <colgroup span="5"></colgroup>
-                                  <colgroup span="5"></colgroup>
-                                  <colgroup span="2"></colgroup>
-                                  <tr style="background-color: rgb(255, 202, 225);padding-bottom: 10px;">
+                                  <tr style="background-color: rgb(255, 254, 194);padding-bottom: 10px;font-size: 12px;">
                                     <th colspan="1" scope="colgroup"
-                                      style="text-align: left !important;padding-left: 15px;">Scholastic Area</th>
+                                      style="text-align: left !important;padding-left: 15px;">Scholastic</th>
                                     <th colspan="5" scope="colgroup">Term 1</th>
                                     <th colspan="5" scope="colgroup">Term 2</th>
-                                    <th colspan="2" scope="">Overall</th>
+                                    <!-- <th colspan="2" scope="">Overall</th> -->
                                   </tr>
-                                  <tr style="background-color: rgb(218, 247, 255);">
-                                    <th scope="col" style="text-align: left !important;padding-left: 15px;padding-bottom: 10px;">Subject</th>
-                                    <th scope="col">Per. Test 50</th>
-                                    <th scope="col">Note Book 50</th>
-                                    <th scope="col">SEA 50</th>
-                                    <th scope="col">Half Yearly 50</th>
-                                    <th scope="col"> Total 50</th>
-                                    <th scope="col">Per. Test 50</th>
-                                    <th scope="col">Note Book 50</th>
-                                    <th scope="col">SEA 50</th>
-                                    <th scope="col">Yearly Exam 50</th>
-                                    <th scope="col"> Total 50</th>
-                                    <th scope="col">Grand Total 500</th>
-                                    <th scope="col"> &nbsp;&nbsp;Grade&nbsp;&nbsp; </th>
+                                  <tr style="background-color: rgb(198, 252, 255)">
+                                    <th scope="col" style="text-align: left !important;padding-left: 15px;">Subject</th>
+                                    <th scope="col">Periodic Test<br>50</th>
+                                    <th scope="col">Note Book<br> 50</th>
+                                    <th scope="col">&nbsp;&nbsp;&nbsp;SEA&nbsp;&nbsp;&nbsp;<br> 50</th>
+                                    <th scope="col">Half Yearly <br>50</th>
+                                    <th scope="col">&nbsp;&nbsp;&nbsp;Total&nbsp;&nbsp;&nbsp;<br> 50</th>
+                                    <th scope="col">Per. Test<br> 50</th>
+                                    <th scope="col">Note Book<br> 50</th>
+                                    <th scope="col">&nbsp;&nbsp;&nbsp;SEA&nbsp;&nbsp;&nbsp; <br>50</th>
+                                    <th scope="col">Yearly Exam <br>50</th>
+                                    <th scope="col">&nbsp;&nbsp;&nbsp;Total&nbsp;&nbsp;&nbsp;<br>50</th>
+                                    <!-- <th scope="col">Grand Total 500</th>
+                                    <th scope="col"> &nbsp;&nbsp;&nbsp;Grade&nbsp;&nbsp;&nbsp; </th> -->
                                   </tr>
-                                  <tr *ngFor="let exam of result.resultDetail.marks; let i = index">
+                                  <tr *ngFor="let exam of result.resultDetail.term1.marks; let i = index">
                                     <td style="text-align: left !important;padding-left: 15px;">{{ exam.subject |
                                       titlecase }}</td>
                                     <td>{{ exam.periodicTestMarks > 0 ? exam.periodicTestMarks : '' }}</td>
@@ -339,14 +334,14 @@
                                     <td>{{ exam.subjectEnrichmentMarks > 0 ? exam.subjectEnrichmentMarks : '' }}</td>
                                     <td>{{ exam.theoryMarks }}</td>
                                     <td>{{ exam.totalMarks }}</td>
-                                    <td>{{ exam.periodicTestMarks > 0 ? exam.periodicTestMarks : '' }}</td>
-                                    <td>{{ exam.noteBookMarks > 0 ? exam.noteBookMarks : '' }}</td>
-                                    <td>{{ exam.subjectEnrichmentMarks > 0 ? exam.subjectEnrichmentMarks : '' }}</td>
-                                    <td>{{ exam.theoryMarks }}</td>
-                                    <td>{{ exam.totalMarks }}</td>
+                                    <td>{{ result.resultDetail.term2.marks[i].periodicTestMarks > 0 ? result.resultDetail.term2.marks[i].periodicTestMarks : '' }}</td>
+                                    <td>{{ result.resultDetail.term2.marks[i].noteBookMarks > 0 ? result.resultDetail.term2.marks[i].noteBookMarks : '' }}</td>
+                                    <td>{{ result.resultDetail.term2.marks[i].subjectEnrichmentMarks > 0 ? result.resultDetail.term2.marks[i].subjectEnrichmentMarks : '' }}</td>
+                                    <td>{{ result.resultDetail.term2.marks[i].theoryMarks }}</td>
+                                    <td>{{ result.resultDetail.term2.marks[i].totalMarks }}</td>
 
-                                    <td>{{ exam.totalMarks }}</td>
-                                    <td style="text-align: left;padding-left: 20px;">{{ exam.grade }}</td>
+                                    <!-- <td>{{ exam.totalMarks }}</td>
+                                    <td style="text-align: left;padding-left: 20px;">{{ exam.grade }}</td> -->
                                   </tr>
                                 </table>
                                 <table class="custom-table">

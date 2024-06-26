@@ -21,17 +21,7 @@ const ExamResultModel = mongoose.model('exam-result', {
     required: true,
     trim: true,
   },
-  examType: {
-    type: String,
-    required: true,
-    trim: true,
-  },
   resultDetail:{},
-  createdBy: {
-    type: String,
-    required: true,
-    trim: true,
-  }
 });
 
 module.exports = ExamResultModel;
