@@ -101,8 +101,7 @@ let GetAllStudentExamResultByClass = async (req, res, next) => {
         if (!marksheetTemplateStructure) {
             return res.status(404).json({ errorMsg: 'This class any marksheet template not found !' });
         }
-        let examStructure = marksheetTemplateStructure.examStructure
-        return res.status(200).json({ examResultInfo: examResult, studentInfo: student, examStructure: examStructure });
+        return res.status(200).json({ examResultInfo: examResult, studentInfo: student, marksheetTemplateStructure: marksheetTemplateStructure });
     } catch (error) {
         return res.status(500).json({ errorMsg: 'Internal Server Error !' });
     }

@@ -174,23 +174,8 @@ export class AdminStudentResultComponent implements OnInit {
       if (res) {
         this.examResultInfo = res.examResultInfo;
         this.studentInfo = res.studentInfo;
-        let examStructure = res.examStructure;
-        let isPractical = examStructure.practicalMaxMarks;
-        let isPeriodicTest = examStructure.periodicTestMaxMarks;
-        let isNoteBook = examStructure.noteBookMaxMarks;
-        let isSubjectEnrichment = examStructure.subjectEnrichmentMaxMarks;
-        if(isPractical){
-          console.log("a")
-        }
-        if(isPeriodicTest){
-          console.log("b")
-        }
-        if(isNoteBook){
-          console.log("c")
-        }
-        if(isSubjectEnrichment){
-          console.log("d")
-        }
+        let marksheetTemplateStructure = res.marksheetTemplateStructure;
+        console.log(res.examResultInfo)
         const mapExamResultsToStudents = (examResults: any, studentInfo: any) => {
           const studentInfoMap = studentInfo.reduce((acc: any, student: any) => {
             acc[student._id] = student;
@@ -205,8 +190,9 @@ export class AdminStudentResultComponent implements OnInit {
               studentId: result.studentId,
               class: result.class,
               stream: result.stream,
+              marksheetTemplateStructure:marksheetTemplateStructure,
               resultDetail: result.resultDetail,
-              status: result.status || "",
+              status: result.status || "", 
               name: student.name,
               fatherName: student.fatherName,
               motherName: student.motherName,
@@ -672,6 +658,198 @@ marks.forEach((subject:any) => {
     writeFile(wb, 'Result.xlsx');
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

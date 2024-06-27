@@ -303,60 +303,139 @@
                                   </tr>
                                 </table>
 
-                                <table class="custom-table">
-                                  <tr style="background-color: rgb(255, 254, 194);padding-bottom: 10px;font-size: 12px;">
-                                    <th colspan="1" scope="colgroup"
-                                      style="text-align: left !important;padding-left: 15px;">Scholastic</th>
-                                    <th colspan="5" scope="colgroup">Term 1</th>
-                                    <th colspan="5" scope="colgroup">Term 2</th>
-                                    <!-- <th colspan="2" scope="">Overall</th> -->
-                                  </tr>
-                                  <tr style="background-color: rgb(198, 252, 255)">
-                                    <th scope="col" style="text-align: left !important;padding-left: 15px;">Subject</th>
-                                    <th scope="col">Periodic Test<br>50</th>
-                                    <th scope="col">Note Book<br> 50</th>
-                                    <th scope="col">&nbsp;&nbsp;&nbsp;SEA&nbsp;&nbsp;&nbsp;<br> 50</th>
-                                    <th scope="col">Half Yearly <br>50</th>
-                                    <th scope="col">&nbsp;&nbsp;&nbsp;Total&nbsp;&nbsp;&nbsp;<br> 50</th>
-                                    <th scope="col">Per. Test<br> 50</th>
-                                    <th scope="col">Note Book<br> 50</th>
-                                    <th scope="col">&nbsp;&nbsp;&nbsp;SEA&nbsp;&nbsp;&nbsp; <br>50</th>
-                                    <th scope="col">Yearly Exam <br>50</th>
-                                    <th scope="col">&nbsp;&nbsp;&nbsp;Total&nbsp;&nbsp;&nbsp;<br>50</th>
-                                    <!-- <th scope="col">Grand Total 500</th>
-                                    <th scope="col"> &nbsp;&nbsp;&nbsp;Grade&nbsp;&nbsp;&nbsp; </th> -->
-                                  </tr>
-                                  <tr *ngFor="let exam of result.resultDetail.term1.marks; let i = index">
-                                    <td style="text-align: left !important;padding-left: 15px;">{{ exam.subject |
-                                      titlecase }}</td>
-                                    <td>{{ exam.periodicTestMarks > 0 ? exam.periodicTestMarks : '' }}</td>
-                                    <td>{{ exam.noteBookMarks > 0 ? exam.noteBookMarks : '' }}</td>
-                                    <td>{{ exam.subjectEnrichmentMarks > 0 ? exam.subjectEnrichmentMarks : '' }}</td>
-                                    <td>{{ exam.theoryMarks }}</td>
-                                    <td>{{ exam.totalMarks }}</td>
-                                    <td>{{ result.resultDetail.term2.marks[i].periodicTestMarks > 0 ? result.resultDetail.term2.marks[i].periodicTestMarks : '' }}</td>
-                                    <td>{{ result.resultDetail.term2.marks[i].noteBookMarks > 0 ? result.resultDetail.term2.marks[i].noteBookMarks : '' }}</td>
-                                    <td>{{ result.resultDetail.term2.marks[i].subjectEnrichmentMarks > 0 ? result.resultDetail.term2.marks[i].subjectEnrichmentMarks : '' }}</td>
-                                    <td>{{ result.resultDetail.term2.marks[i].theoryMarks }}</td>
-                                    <td>{{ result.resultDetail.term2.marks[i].totalMarks }}</td>
 
-                                    <!-- <td>{{ exam.totalMarks }}</td>
-                                    <td style="text-align: left;padding-left: 20px;">{{ exam.grade }}</td> -->
-                                  </tr>
-                                </table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                <ng-container *ngIf='mappedResults[0].marksheetTemplateStructure.templateName=="T1"'>
+                                  <table class="custom-table">
+                                    <tr
+                                      style="background-color: rgb(255, 254, 194);padding-bottom: 10px;font-size: 12px;">
+                                      <th colspan="1" scope="colgroup"
+                                        style="text-align: left !important;padding-left: 15px;">Scholastic</th>
+                                      <th colspan="6" scope="colgroup">Term 1</th>
+                                      <th colspan="6" scope="colgroup">Term 2</th>
+                                    </tr>
+                                    <tr style="background-color: rgb(198, 252, 255)">
+                                      <th scope="col" style="text-align: left !important;padding-left: 15px;">Subject
+                                      </th>
+                                      <th scope="col">Per. Test<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.periodicTestMaxMarks}}</th>
+                                      <th scope="col">Note Book<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.noteBookMaxMarks}}</th>
+                                      <th scope="col">&nbsp;&nbsp;&nbsp;SEA&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.subjectEnrichmentMaxMarks}}</th>
+                                      <th scope="col">Half Yearly <br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}</th>
+                                      <th scope="col">&nbsp;&nbsp;&nbsp;Total&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.periodicTestMaxMarks + mappedResults[0].marksheetTemplateStructure.examStructure.term1.noteBookMaxMarks + mappedResults[0].marksheetTemplateStructure.examStructure.term1.subjectEnrichmentMaxMarks + mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}</th>
+                                      <th scope="col">&nbsp;&nbsp;Grade&nbsp;&nbsp;</th>
+                                      <th scope="col">Per. Test<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.periodicTestMaxMarks}}</th>
+                                      <th scope="col">Note Book<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.noteBookMaxMarks}}</th>
+                                      <th scope="col">&nbsp;&nbsp;&nbsp;SEA&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.subjectEnrichmentMaxMarks}}</th>
+                                      <th scope="col">Yearly Exam<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}</th>
+                                      <th scope="col">&nbsp;&nbsp;&nbsp;Total&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.periodicTestMaxMarks + mappedResults[0].marksheetTemplateStructure.examStructure.term1.noteBookMaxMarks + mappedResults[0].marksheetTemplateStructure.examStructure.term1.subjectEnrichmentMaxMarks + mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}</th>
+                                      <th scope="col">&nbsp;&nbsp;Grade&nbsp;&nbsp;</th>
+                                    </tr>
+                                    <tr *ngFor="let exam of result.resultDetail.term1.marks; let i = index">
+                                      <td style="text-align: left !important;padding-left: 15px;">{{ exam.subject |
+                                        titlecase }}</td>
+                                      <td>{{ exam.periodicTestMarks > 0 ? exam.periodicTestMarks : '' }}</td>
+                                      <td>{{ exam.noteBookMarks > 0 ? exam.noteBookMarks : '' }}</td>
+                                      <td>{{ exam.subjectEnrichmentMarks > 0 ? exam.subjectEnrichmentMarks : '' }}</td>
+                                      <td>{{ exam.theoryMarks }}</td>
+                                      <td>{{ exam.totalMarks }}</td>
+                                      <td style="text-align: left;padding-left: 20px;">{{ exam.grade }}</td>
+                                      <td>{{ result.resultDetail.term2.marks[i].periodicTestMarks > 0 ?
+                                        result.resultDetail.term2.marks[i].periodicTestMarks : '' }}</td>
+                                      <td>{{ result.resultDetail.term2.marks[i].noteBookMarks > 0 ?
+                                        result.resultDetail.term2.marks[i].noteBookMarks : '' }}</td>
+                                      <td>{{ result.resultDetail.term2.marks[i].subjectEnrichmentMarks > 0 ?
+                                        result.resultDetail.term2.marks[i].subjectEnrichmentMarks : '' }}</td>
+                                      <td>{{ result.resultDetail.term2.marks[i].theoryMarks }}</td>
+                                      <td>{{ result.resultDetail.term2.marks[i].totalMarks }}</td>
+                                      <td style="text-align: left;padding-left: 20px;">{{result.resultDetail.term2.marks[i].grade }}</td>
+                                    </tr>
+                                    <tr>
+                                      <td colspan="1" style="border-bottom: #fff;"></td>
+                                      <td colspan="3" class="text-bold">GRAND TOTAL</td>
+                                      <td colspan="3" class="text-bold">{{result.resultDetail.term1.grandTotalMarks }} / {{result.resultDetail.term1.totalMaxMarks }}</td>
+                                      <td colspan="3" class="text-bold">GRAND TOTAL</td>
+                                      <td colspan="3" class="text-bold">{{result.resultDetail.term2.grandTotalMarks }} / {{result.resultDetail.term2.totalMaxMarks }}</td>
+                                    </tr>
+                                    <tr>
+                                      <td colspan="1" style="border-top: #fff;border-bottom: #fff;"></td>
+                                      <td colspan="3" class="text-bold">PERCENTAGE</td>
+                                      <td colspan="3" class="text-bold">{{result.resultDetail.term1.percentile }} %</td>
+                                      <td colspan="3" class="text-bold">PERCENTAGE</td>
+                                      <td colspan="3" class="text-bold">{{result.resultDetail.term2.percentile }} %</td>
+                                    </tr>
+                                    <tr>
+                                      <td colspan="1" style="border-top: #fff;"></td>
+                                      <td colspan="3" class="text-bold">GRADE</td>
+                                      <td colspan="3" class="text-bold">{{result.resultDetail.term1.percentileGrade }}</td>
+                                      <td colspan="3" class="text-bold">GRADE</td>
+                                      <td colspan="3" class="text-bold">{{result.resultDetail.term2.percentileGrade }}</td>
+                                    </tr>
+                                  </table>
+                                </ng-container>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                <!--
                                 <table class="custom-table">
-                                  <tr>
-                                    <td><span class="text-bold">Result Status</span> :
-                                      {{result.resultDetail.resultStatus}}</td>
-                                    <td><span class="text-bold">Grand Total</span> :
-                                      {{result.resultDetail.grandTotalMarks}}/{{result.resultDetail.totalMaxMarks}}</td>
-                                    <td><span class="text-bold">Percentage</span> : {{result.resultDetail.percentile}}%
-                                    </td>
-                                    <td><span class="text-bold">Overall Grade</span> :
-                                      {{result.resultDetail.percentileGrade}}</td>
-                                  </tr>
-                                </table>
-                                <table class="custom-table" style="border: none;margin-top: 20px;margin-bottom: 30px;">
+                                    <tr>
+                                      <td><span class="text-bold">Result Status</span> :
+                                        {{result.resultDetail.resultStatus}}</td>
+                                      <td><span class="text-bold">Grand Total</span> :
+                                        {{result.resultDetail.grandTotalMarks}}/{{result.resultDetail.totalMaxMarks}}
+                                      </td>
+                                      <td><span class="text-bold">Percentage</span> :
+                                        {{result.resultDetail.percentile}}%
+                                      </td>
+                                      <td><span class="text-bold">Overall Grade</span> :
+                                        {{result.resultDetail.percentileGrade}}</td>
+                                    </tr>
+                                  </table>
+                                 <table class="custom-table" style="border: none;margin-top: 20px;margin-bottom: 30px;">
                                   <tr>
                                     <td class="text-bold"
                                       style="width:50%;padding-left:10%;text-align: left;border: none;">Class Teacher
@@ -365,7 +444,7 @@
                                       style="width:50%;padding-right:10%;text-align: right;border: none;">Principal
                                       (Sign. with official seal)</td>
                                   </tr>
-                                </table>
+                                </table> -->
 
                               </div>
                             </div>
