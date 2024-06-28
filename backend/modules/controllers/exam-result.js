@@ -83,7 +83,7 @@ let GetAllStudentExamResultByClass = async (req, res, next) => {
     let adminId = req.params.id;
     let className = req.params.class;
     try {
-        const student = await StudentModel.find({ adminId: adminId, class: className, stream: "Mathematics(Science)" }, 'adminId session admissionNo name rollNumber class fatherName motherName stream');
+        const student = await StudentModel.find({ adminId: adminId, class: className, stream: "Mathematics(Science)" }, 'adminId session admissionNo name dob rollNumber class fatherName motherName stream');
         if (student.length <= 0) {
             return res.status(404).json({ errorMsg: 'This class any student not found !' });
         }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import  jsPDF from 'jspdf';
+import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { Observable, from } from 'rxjs';
 
@@ -8,7 +8,7 @@ import { Observable, from } from 'rxjs';
   providedIn: 'root'
 })
 export class PrintPdfService {
-  constructor() {}
+  constructor() { }
   printElement(element: HTMLElement): void {
     html2canvas(element).then(canvas => {
       var imgWidth = 208;
@@ -22,18 +22,18 @@ export class PrintPdfService {
     });
   }
 
-  
+
   printContent(content: string): void {
     const doc = new jsPDF("p", "mm", "a4");
     const printWindow = window.open(doc.output('bloburl'), '_blank');
-    
+
     if (printWindow) {
-        printWindow.document.write(content);
-        printWindow.document.close();
-        
-        printWindow.onload = () => {
-            const style = printWindow.document.createElement('style');
-            style.innerHTML = `
+      printWindow.document.write(content);
+      printWindow.document.close();
+
+      printWindow.onload = () => {
+        const style = printWindow.document.createElement('style');
+        style.innerHTML = `
                 @media print {
                     * {
                         -webkit-print-color-adjust: exact !important; /* Chrome, Safari, Edge */
@@ -41,15 +41,15 @@ export class PrintPdfService {
                     }
                 }
             `;
-            printWindow.document.head.appendChild(style);
+        printWindow.document.head.appendChild(style);
 
-            printWindow.print();
-            printWindow.close();
-        };
+        printWindow.print();
+        printWindow.close();
+      };
     }
-}
+  }
 
-  generatePDF(element: HTMLElement,params:string): void {
+  generatePDF(element: HTMLElement, params: string): void {
     html2canvas(element).then(canvas => {
       var imgWidth = 208;
       var imgHeight = (canvas.height * imgWidth) / canvas.width;

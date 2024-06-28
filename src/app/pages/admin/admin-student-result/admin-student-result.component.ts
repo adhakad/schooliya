@@ -19,6 +19,7 @@ export class AdminStudentResultComponent implements OnInit {
 
   examResultForm: FormGroup;
   showModal: boolean = false;
+
   showBulkResultPrintModal: boolean = false;
   showBulkImportModal: boolean = false;
   updateMode: boolean = false;
@@ -175,7 +176,6 @@ export class AdminStudentResultComponent implements OnInit {
         this.examResultInfo = res.examResultInfo;
         this.studentInfo = res.studentInfo;
         let marksheetTemplateStructure = res.marksheetTemplateStructure;
-        console.log(res.examResultInfo)
         const mapExamResultsToStudents = (examResults: any, studentInfo: any) => {
           const studentInfoMap = studentInfo.reduce((acc: any, student: any) => {
             acc[student._id] = student;
@@ -190,6 +190,7 @@ export class AdminStudentResultComponent implements OnInit {
               studentId: result.studentId,
               class: result.class,
               stream: result.stream,
+              dob:student.dob,
               marksheetTemplateStructure:marksheetTemplateStructure,
               resultDetail: result.resultDetail,
               status: result.status || "", 
@@ -216,32 +217,34 @@ export class AdminStudentResultComponent implements OnInit {
     this.closeModal();
   }
 
+  
+
   private getPrintOneAdmitCardContent(): string {
     let schoolName = this.schoolInfo.schoolName;
     let city = this.schoolInfo.city;
     let printHtml = '<html>';
     printHtml += '<head>';
     printHtml += '<style>';
-    printHtml += 'body { margin: 0; padding: 0; }';
-    printHtml += 'div { margin: 0; padding: 0;}';
-    printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto;}';
-    printHtml += '.table-container {background-color: #fff;border: none;}';
-    printHtml += '.logo { height: 75px;margin-right:10px; }';
+    printHtml += 'body {width: 100%; height: 100vh; margin: 0; padding: 0; }';
+    printHtml += 'div {margin: 0; padding: 0;}';
+    printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto; width: 100%; height: 100vh; box-sizing: border-box;}';
+    printHtml += '.table-container {width: 100%;height: 100%; background-color: #fff;border: 2px solid #9e9e9e; box-sizing: border-box;}';
+    printHtml += '.logo { height: 75px;}';
     printHtml += '.school-name {display: flex; align-items: center; justify-content: center; text-align: center; }';
-    printHtml += '.school-name h3 { color: #252525 !important; font-size: 18px !important;margin-top:-120px !important; margin-bottom: 0 !important; }';
-    printHtml += '.address{margin-top: -45px;}';
-    printHtml += '.address p{margin-top: -10px !important;}';
+    printHtml += '.school-name h3 { color: #252525 !important; font-size: 18px !important;margin-top:-115px !important; margin-bottom: 0 !important; }';
+    printHtml += '.address{margin-top: -42px;}';
+    printHtml += '.address p{font-size:10px;margin-top: -8px !important;}';
+    printHtml += '.title-lable {text-align: center;margin-bottom: 15px;}';
+    printHtml += '.title-lable p {color: #252525 !important;font-size: 15px;font-weight: bolder;letter-spacing: .5px;}';
 
     printHtml += '.info-table {width:100%;color: #252525 !important;border: none;font-size: 12px;letter-spacing: .25px;margin-top: 1.5vh;margin-bottom: 2vh;display: inline-table;}';
-    printHtml += '.table-container .info-table th, .table-container .info-table td{color: #252525 !important;text-align:center}';
-    printHtml += '.title-lable {max-height: 45px;text-align: center;margin-bottom: 15px;border:1px solid #454545;border-radius: 5px;margin-top: 25px;}';
-    printHtml += '.title-lable p {color: #252525 !important;font-size: 15px;font-weight: 500;letter-spacing: 1px;}';
-    printHtml += '.codes .school-code  {margin-right:65%;}';
+    printHtml += '.table-container .info-table th, .table-container .info-table td{color: #252525 !important;text-align:left;padding-left:15px;}';
     printHtml += '.custom-table {width: 100%;color: #252525 !important;border-collapse:collapse;font-size: 10px;letter-spacing: .20px;margin-bottom: 20px;display: inline-table;border-radius:5px}';
-    printHtml += '.custom-table th{height:38px;text-align: center;border:1px solid #454545;line-height:15px;}';
-    printHtml += '.custom-table tr{height:38px;}';
-    printHtml += '.custom-table td {text-align: center;border:1px solid #454545;}';
+    printHtml += '.custom-table th{height: 32px;text-align: center;border:1px solid #9e9e9e;line-height:15px;}';
+    printHtml += '.custom-table tr{height: 32px}';
+    printHtml += '.custom-table td {text-align: center;border:1px solid #9e9e9e;}';
     printHtml += '.text-bold { font-weight: bold;}';
+    printHtml += '.text-left { text-align: left;}';
     printHtml += 'p {color: #252525 !important;font-size:12px;}'
     printHtml += 'h4 {color: #252525 !important;}'
     printHtml += '@media print {';
@@ -274,7 +277,70 @@ export class AdminStudentResultComponent implements OnInit {
     });
     printHtml += '</body></html>';
     return printHtml;
-  }
+}
+  
+  // private getPrintOneAdmitCardContent(): string {
+  //   let schoolName = this.schoolInfo.schoolName;
+  //   let city = this.schoolInfo.city;
+  //   let printHtml = '<html>';
+  //   printHtml += '<head>';
+  //   printHtml += '<style>';
+  //   printHtml += 'body { margin: 0; padding: 0; }';
+  //   printHtml += 'div { margin: 0; padding: 0;}';
+  //   printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto;}';
+  //   printHtml += '.table-container {height:99.5%; background-color: #fff;border: 1px solid #404040;}';
+  //   printHtml += '.logo { height: 75px;margin-right:10px; }';
+  //   printHtml += '.school-name {display: flex; align-items: center; justify-content: center; text-align: center; }';
+  //   printHtml += '.school-name h3 { color: #252525 !important; font-size: 18px !important;margin-top:-115px !important; margin-bottom: 0 !important; }';
+  //   printHtml += '.address{margin-top: -42px;}';
+  //   printHtml += '.address p{font-size:10px;margin-top: -8px !important;}';
+  //   printHtml += '.title-lable {text-align: center;margin-bottom: 15px;}';
+  //   printHtml += '.title-lable p {color: #252525 !important;font-size: 15px;font-weight: bolder;letter-spacing: .5px;}';
+
+
+
+
+  //   printHtml += '.info-table {width:100%;color: #252525 !important;border: none;font-size: 12px;letter-spacing: .25px;margin-top: 1.5vh;margin-bottom: 2vh;display: inline-table;}';
+  //   printHtml += '.table-container .info-table th, .table-container .info-table td{color: #252525 !important;text-align:left;padding-left:15px;}';
+  //   printHtml += '.custom-table {width: 100%;color: #252525 !important;border-collapse:collapse;font-size: 10px;letter-spacing: .20px;margin-bottom: 20px;display: inline-table;border-radius:5px}';
+  //   printHtml += '.custom-table th{height: 32pxtext-align: center;border:1px solid #9e9e9e;line-height:15px;}';
+  //   printHtml += '.custom-table tr{height: 32px}';
+  //   printHtml += '.custom-table td {text-align: center;border:1px solid #9e9e9e;}';
+  //   printHtml += '.text-bold { font-weight: bold;}';
+  //   printHtml += '.text-left { text-align: left;}';
+  //   printHtml += 'p {color: #252525 !important;font-size:12px;}'
+  //   printHtml += 'h4 {color: #252525 !important;}'
+  //   printHtml += '@media print {';
+  //   printHtml += '  body::before {';
+  //   printHtml += `    content: "${schoolName}, ${city}";`;
+  //   printHtml += '    position: fixed;';
+  //   printHtml += '    top: 40%;';
+  //   printHtml += '    left:10%;';
+  //   printHtml += '    font-size: 20px;';
+  //   printHtml += '    font-weight: bold;';
+  //   printHtml += '    font-family: Arial, sans-serif;';
+  //   printHtml += '    color: rgba(0, 0, 0, 0.08);';
+  //   printHtml += '    pointer-events: none;';
+  //   printHtml += '  }';
+  //   printHtml += '}';
+  //   printHtml += '</style>';
+  //   printHtml += '</head>';
+  //   printHtml += '<body>';
+
+  //   this.mappedResults.forEach((student, index) => {
+  //     const studentElement = document.getElementById(`student-${student.studentId}`);
+  //     if (studentElement) {
+  //       printHtml += studentElement.outerHTML;
+
+  //       // Add a page break after each student except the last one
+  //       if (index < this.mappedResults.length - 1) {
+  //         printHtml += '<div style="page-break-after: always;"></div>';
+  //       }
+  //     }
+  //   });
+  //   printHtml += '</body></html>';
+  //   return printHtml;
+  // }
 
   chooseStream(stream: any) {
     if (this.theorySubjects || this.practicalSubjects || this.periodicTestSubjects || this.noteBookSubjects || this.subjectEnrichmentSubjects) {
@@ -1123,8 +1189,8 @@ marks.forEach((subject:any) => {
 //     printHtml += '.title-lable p {color: #252525 !important;font-size: 15px;font-weight: 500;letter-spacing: 1px;}';
 //     printHtml += '.codes .school-code  {margin-right:65%;}';
 //     printHtml += '.custom-table {width: 100%;color: #252525 !important;border-collapse:collapse;font-size: 12px;letter-spacing: .25px;margin-bottom: 20px;display: inline-table;border-radius:5px}';
-//     printHtml += '.custom-table th{height:38px;text-align: center;border:1px solid #252525;}';
-//     printHtml += '.custom-table tr{height:38px;}';
+//     printHtml += '.custom-table th{height: 32pxtext-align: center;border:1px solid #252525;}';
+//     printHtml += '.custom-table tr{height: 32px}';
 //     printHtml += '.custom-table td {text-align: center;border:1px solid #252525;}';
 //     printHtml += '.text-bold { font-weight: bold;}';
 //     printHtml += 'p {color: #252525 !important;font-size:12px;}'
