@@ -175,6 +175,7 @@ export class AdminStudentResultComponent implements OnInit {
       if (res) {
         this.examResultInfo = res.examResultInfo;
         this.studentInfo = res.studentInfo;
+        let isDate = res.isDate;
         let marksheetTemplateStructure = res.marksheetTemplateStructure;
         const mapExamResultsToStudents = (examResults: any, studentInfo: any) => {
           const studentInfoMap = studentInfo.reduce((acc: any, student: any) => {
@@ -198,7 +199,8 @@ export class AdminStudentResultComponent implements OnInit {
               fatherName: student.fatherName,
               motherName: student.motherName,
               rollNumber: student.rollNumber,
-              admissionNo: student.admissionNo
+              admissionNo: student.admissionNo,
+              isDate:isDate,
             };
           });
         };
@@ -225,11 +227,11 @@ export class AdminStudentResultComponent implements OnInit {
     let printHtml = '<html>';
     printHtml += '<head>';
     printHtml += '<style>';
-    printHtml += 'body {width: 100%; height: 100vh; margin: 0; padding: 0; }';
+    printHtml += 'body {width: 100%; height: 100%; margin: 0; padding: 0; }';
     printHtml += 'div {margin: 0; padding: 0;}';
-    printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto; width: 100%; height: 100vh; box-sizing: border-box;}';
+    printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto; width: 100%; height: 100%; box-sizing: border-box;}';
     printHtml += '.table-container {width: 100%;height: 100%; background-color: #fff;border: 2px solid #9e9e9e; box-sizing: border-box;}';
-    printHtml += '.logo { height: 75px;}';
+    printHtml += '.logo { height: 75px;margin-top:5px;margin-left:5px;}';
     printHtml += '.school-name {display: flex; align-items: center; justify-content: center; text-align: center; }';
     printHtml += '.school-name h3 { color: #252525 !important; font-size: 18px !important;font-weight: bolder;margin-top:-115px !important; margin-bottom: 0 !important; }';
 
@@ -255,6 +257,7 @@ export class AdminStudentResultComponent implements OnInit {
     printHtml += '    top: 40%;';
     printHtml += '    left:10%;';
     printHtml += '    font-size: 20px;';
+    printHtml += '    text-transform: uppercase;';
     printHtml += '    font-weight: bold;';
     printHtml += '    font-family: Arial, sans-serif;';
     printHtml += '    color: rgba(0, 0, 0, 0.08);';

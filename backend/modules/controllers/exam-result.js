@@ -5,6 +5,7 @@ const MarksheetTemplateStructureModel = require('../models/marksheet-template-st
 const MarksheetTemplateModel = require('../models/marksheet-template');
 const StudentModel = require('../models/student');
 const AdminUsersModel = require('../models/users/admin-user');
+const { DateTime } = require('luxon');
 
 let GetSingleStudentExamResult = async (req, res, next) => {
     let { schoolId, admissionNo, rollNumber } = req.body;
@@ -80,6 +81,8 @@ let GetSingleStudentExamResultById = async (req, res, next) => {
     }
 }
 let GetAllStudentExamResultByClass = async (req, res, next) => {
+    const currentDateIst = DateTime.now().setZone('Asia/Kolkata');
+    let isDate = currentDateIst.toFormat('dd-MM-yyyy');
     let adminId = req.params.id;
     let className = req.params.class;
     try {
@@ -101,7 +104,7 @@ let GetAllStudentExamResultByClass = async (req, res, next) => {
         if (!marksheetTemplateStructure) {
             return res.status(404).json({ errorMsg: 'This class any marksheet template not found !' });
         }
-        return res.status(200).json({ examResultInfo: examResult, studentInfo: student, marksheetTemplateStructure: marksheetTemplateStructure });
+        return res.status(200).json({ examResultInfo: examResult, studentInfo: student, marksheetTemplateStructure: marksheetTemplateStructure,isDate:isDate });
     } catch (error) {
         return res.status(500).json({ errorMsg: 'Internal Server Error !' });
     }
