@@ -231,18 +231,19 @@ export class AdminStudentResultComponent implements OnInit {
     printHtml += '.table-container {width: 100%;height: 100%; background-color: #fff;border: 2px solid #9e9e9e; box-sizing: border-box;}';
     printHtml += '.logo { height: 75px;}';
     printHtml += '.school-name {display: flex; align-items: center; justify-content: center; text-align: center; }';
-    printHtml += '.school-name h3 { color: #252525 !important; font-size: 18px !important;margin-top:-115px !important; margin-bottom: 0 !important; }';
+    printHtml += '.school-name h3 { color: #252525 !important; font-size: 18px !important;font-weight: bolder;margin-top:-115px !important; margin-bottom: 0 !important; }';
+
     printHtml += '.address{margin-top: -42px;}';
     printHtml += '.address p{font-size:10px;margin-top: -8px !important;}';
     printHtml += '.title-lable {text-align: center;margin-bottom: 15px;}';
     printHtml += '.title-lable p {color: #252525 !important;font-size: 15px;font-weight: bolder;letter-spacing: .5px;}';
 
-    printHtml += '.info-table {width:100%;color: #252525 !important;border: none;font-size: 12px;letter-spacing: .25px;margin-top: 1.5vh;margin-bottom: 2vh;display: inline-table;}';
+    printHtml += '.info-table {width:100%;color: #252525 !important;border: none;font-size: 11px;margin-top: 1.5vh;margin-bottom: 2vh;display: inline-table;}';
     printHtml += '.table-container .info-table th, .table-container .info-table td{color: #252525 !important;text-align:left;padding-left:15px;}';
-    printHtml += '.custom-table {width: 100%;color: #252525 !important;border-collapse:collapse;font-size: 10px;letter-spacing: .20px;margin-bottom: 20px;display: inline-table;border-radius:5px}';
-    printHtml += '.custom-table th{height: 32px;text-align: center;border:1px solid #9e9e9e;line-height:15px;}';
-    printHtml += '.custom-table tr{height: 32px}';
-    printHtml += '.custom-table td {text-align: center;border:1px solid #9e9e9e;}';
+    printHtml += '.custom-table {width: 100%;color: #252525 !important;border-collapse:collapse;margin-bottom: 20px;display: inline-table;border-radius:5px}';
+    printHtml += '.custom-table th{height: 32px;text-align: center;border:1px solid #9e9e9e;line-height:15px;font-size: 10px;}';
+    printHtml += '.custom-table tr{height: 32px;}';
+    printHtml += '.custom-table td {text-align: center;border:1px solid #9e9e9e;font-size: 10px;}';
     printHtml += '.text-bold { font-weight: bold;}';
     printHtml += '.text-left { text-align: left;}';
     printHtml += 'p {color: #252525 !important;font-size:12px;}'
