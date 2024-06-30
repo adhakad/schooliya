@@ -184,7 +184,8 @@
                                       </div>
                                     </ng-container>
                                   </ng-container>
-                                </ng-container><ng-container *ngIf="noteBookSubjects.length>0">
+                                </ng-container>
+                                <ng-container *ngIf="noteBookSubjects.length>0">
                                   <h3>Note Book marks</h3>
                                   <ng-container formGroupName="type">
                                     <ng-container formArrayName="noteBookMarks">
@@ -198,7 +199,8 @@
                                       </div>
                                     </ng-container>
                                   </ng-container>
-                                </ng-container><ng-container *ngIf="subjectEnrichmentSubjects.length>0">
+                                </ng-container>
+                                <ng-container *ngIf="subjectEnrichmentSubjects.length>0">
                                   <h3>Subject Enrichment marks</h3>
                                   <ng-container formGroupName="type">
                                     <ng-container formArrayName="subjectEnrichmentMarks">
@@ -214,6 +216,42 @@
                                     </ng-container>
                                   </ng-container>
                                 </ng-container>
+
+
+
+                                <ng-container *ngIf="coScholastic.length>0">
+                                  <h3>Co-Scholastic Activity</h3>
+                                  <ng-container formGroupName="type">
+                                    <ng-container formArrayName="coScholastic">
+                                      <div class="col-6" *ngFor="let coScholastic of coScholastic; let i = index">
+                                        <div [formGroupName]="i">
+                                          <mat-form-field appearance="outline">
+                                            <mat-label>{{coScholastic | titlecase}} Activity</mat-label>
+                                            <input matInput type="text" [formControlName]="coScholastic">
+                                          </mat-form-field>
+                                        </div>
+                                      </div>
+                                    </ng-container>
+                                  </ng-container>
+                                </ng-container>
+                                <ng-container *ngIf="discipline.length>0">
+                                  <h3>Discipline Element</h3>
+                                  <ng-container formGroupName="type">
+                                    <ng-container formArrayName="discipline">
+                                      <div class="col-6" *ngFor="let discipline of discipline; let i = index">
+                                        <div [formGroupName]="i">
+                                          <mat-form-field appearance="outline">
+                                            <mat-label>{{discipline | titlecase}} Element</mat-label>
+                                            <input matInput type="text" [formControlName]="discipline">
+                                          </mat-form-field>
+                                        </div>
+                                      </div>
+                                    </ng-container>
+                                  </ng-container>
+                                </ng-container>
+
+
+
                               </div>
                             </div>
                           </div>
@@ -261,7 +299,7 @@
                                     <div class="address" style="text-align: center;">
                                       <p>Affiliated to {{schoolInfo?.board | uppercase}}, Affliation No. -
                                         {{schoolInfo?.affiliationNumber}}</p>
-                                      <p><span>Contact - {{schoolInfo?.phoneOne}} &nbsp; EMAIL -
+                                      <p><span>Contact - {{schoolInfo?.phoneOne}} &nbsp; Email -
                                           {{schoolInfo?.email}}</span></p>
                                       <p><span>{{schoolInfo?.street | titlecase}}, {{schoolInfo?.city | titlecase}},
                                           Dist.-
@@ -417,13 +455,15 @@
                                         <span class="text-bold">GRAND TOTAL</span> <span
                                           style="margin-left: 79px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term1.grandTotalMarks
                                           }} /
-                                          {{result.resultDetail.term1.totalMaxMarks }} </span></td>
+                                          {{result.resultDetail.term1.totalMaxMarks }} </span>
+                                      </td>
                                       <td colspan="6"
                                         style="padding-top:10px;padding-left: 25px;text-align: left;border-bottom: 1px solid transparent;border-right: 1px solid transparent;">
                                         <span class="text-bold">GRAND TOTAL</span> <span
                                           style="margin-left: 79px;border-right: 1px solid transparent;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term2.grandTotalMarks
                                           }} /
-                                          {{result.resultDetail.term2.totalMaxMarks }}</span></td>
+                                          {{result.resultDetail.term2.totalMaxMarks }}</span>
+                                      </td>
                                     </tr>
 
 
@@ -448,7 +488,8 @@
                                       <td colspan="1"
                                         style="height: 15px;border-top: transparent;border-bottom: transparent;border-left: 1px solid transparent;">
                                       </td>
-                                      <td colspan="6" style="padding-bottom:10px;border-bottom: transparent;padding-left: 25px;text-align: left;">
+                                      <td colspan="6"
+                                        style="padding-bottom:10px;border-bottom: transparent;padding-left: 25px;text-align: left;">
                                         <span class="text-bold">GRADE</span> <span
                                           style="margin-left: 115px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term1.percentileGrade
                                           }}</span>
@@ -469,7 +510,7 @@
                                     style="height: 22px !important;background-color: rgb(198, 172, 240);padding-bottom: 10px;">
                                     <th class="text-bold"
                                       style="height: 22px !important;font-size:12px;padding-left: 15px;border: none;">
-                                      STUDENT'S PROFILE</th>
+                                      CO-SCHOLASTIC & DISCIPLINE AREA</th>
                                   </tr>
                                 </table>
                                 <ng-container *ngIf='mappedResults[0].marksheetTemplateStructure.templateName=="T1"'>
@@ -477,7 +518,7 @@
                                     <tr style="padding-bottom: 10px;height: 25px;font-size: 11px;">
                                       <th colspan="3" scope="colgroup"
                                         style="height: 25px;font-size: 11px;border-top: transparent;border-left: 1px solid transparent;border-right: 1px solid transparent;">
-                                        <p>CO-SCHOLASTIC AREA</p>
+                                        <p>CO-SCHOLASTIC</p>
                                       </th>
                                     </tr>
                                     <tr>
@@ -486,7 +527,8 @@
                                         ACTIVITY</th>
                                       <th scope="col" style="padding-top: 5px;padding-bottom: 5px;">GRADE <br>(TERM 1)
                                       </th>
-                                      <th scope="col" style="border-right: 1px solid transparent;">GRADE <br>(TERM 2)</th>
+                                      <th scope="col" style="border-right: 1px solid transparent;">GRADE <br>(TERM 2)
+                                      </th>
                                     </tr>
                                     <tr *ngFor="let exam of result.resultDetail.term1.marks; let i = index">
                                       <td
@@ -494,7 +536,8 @@
                                         {{ exam.subject |
                                         uppercase }}</td>
                                       <td>{{ exam.periodicTestMarks > 0 ? exam.periodicTestMarks : '' }}</td>
-                                      <td style="border-right: 1px solid transparent;">{{ exam.noteBookMarks > 0 ? exam.noteBookMarks : '' }}</td>
+                                      <td style="border-right: 1px solid transparent;">{{ exam.noteBookMarks > 0 ?
+                                        exam.noteBookMarks : '' }}</td>
                                     </tr>
                                   </table>
                                   <!-- <table class="custom-table" style="width: 10%;"></table> -->
@@ -502,7 +545,7 @@
                                     <tr style="padding-bottom: 10px;height: 25px;font-size: 11px;">
                                       <th colspan="3" scope="colgroup"
                                         style="height: 25px;font-size: 11px;border-top: transparent;border-right: 1px solid transparent;">
-                                        <p>DISIPLINE</p>
+                                        <p>DISCIPLINE</p>
                                       </th>
                                     </tr>
                                     <tr>
@@ -575,20 +618,24 @@
                                 <!-- border-top:1px solid #9e9e9e; -->
                                 <table class="custom-table" style="position: fixed;left: 0;bottom: 0;">
                                   <tr>
-                                    <td
-                                      style="width:33.33%;font-size: 12px;text-align: left;border: none;"><p style="margin-top: 30px;margin-left: 30px;">{{result?.isDate}}</p></td>
-                                    <td
-                                      style="width:33.33%;border: none;"></td>
-                                    <td 
-                                      style="width:33.33%;border: none"></td>
+                                    <td style="width:33.33%;font-size: 12px;text-align: left;border: none;">
+                                      <p style="margin-top: 30px;margin-left: 30px;">{{result?.isDate}}</p>
+                                    </td>
+                                    <td style="width:33.33%;border: none;"></td>
+                                    <td style="width:33.33%;border: none"></td>
                                   </tr>
                                   <tr>
                                     <td class="text-bold"
-                                      style="width:33.33%;font-size: 12px;text-align: left;border: none;"><p style="margin-left: 30px;">Issued Date</p></td>
+                                      style="width:33.33%;font-size: 12px;text-align: left;border: none;">
+                                      <p style="margin-left: 30px;">Issued Date</p>
+                                    </td>
                                     <td class="text-bold"
-                                      style="width:33.33%;font-size: 12px;text-align: center;border: none;">Signature of Class Teacher</td>
+                                      style="width:33.33%;font-size: 12px;text-align: center;border: none;">Signature of
+                                      Class Teacher</td>
                                     <td class="text-bold"
-                                      style="width:33.33%;font-size: 12px;text-align: right;border: none;"><p style="margin-right: 30px;">Signature of Principal</p></td>
+                                      style="width:33.33%;font-size: 12px;text-align: right;border: none;">
+                                      <p style="margin-right: 30px;">Signature of Principal</p>
+                                    </td>
                                   </tr>
                                 </table>
 

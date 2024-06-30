@@ -47,6 +47,8 @@ export class AdminStudentResultComponent implements OnInit {
   periodicTestSubjects: any[] = [];
   noteBookSubjects: any[] = [];
   subjectEnrichmentSubjects: any[] = [];
+  coScholastic:any[]=[];
+  discipline:any[]=[];
 
   fileChoose: boolean = false;
   existRollnumber: number[] = [];
@@ -72,6 +74,8 @@ export class AdminStudentResultComponent implements OnInit {
         periodicTestMarks: this.fb.array([]),
         noteBookMarks: this.fb.array([]),
         subjectEnrichmentMarks: this.fb.array([]),
+        coScholastic: this.fb.array([]),
+        discipline:this.fb.array([]),
       }),
     });
   }
@@ -125,11 +129,15 @@ export class AdminStudentResultComponent implements OnInit {
     const controlThree = <FormArray>this.examResultForm.get('type.periodicTestMarks');
     const controlFour = <FormArray>this.examResultForm.get('type.noteBookMarks');
     const controlFive = <FormArray>this.examResultForm.get('type.subjectEnrichmentMarks');
+    const controlSix = <FormArray>this.examResultForm.get('type.coScholastic');
+    const controlSeven = <FormArray>this.examResultForm.get('type.discipline');
     controlOne.clear();
     controlTwo.clear();
     controlThree.clear();
     controlFour.clear();
     controlFive.clear();
+    controlSix.clear();
+    controlSeven.clear();
     this.examResultForm.reset();
   }
   falseAllValue() {
@@ -206,7 +214,6 @@ export class AdminStudentResultComponent implements OnInit {
         };
 
         this.mappedResults = mapExamResultsToStudents(this.examResultInfo, this.studentInfo);
-        console.log(this.mappedResults)
       }
     })
     setTimeout(() => {
@@ -282,69 +289,6 @@ export class AdminStudentResultComponent implements OnInit {
     printHtml += '</body></html>';
     return printHtml;
 }
-  
-  // private getPrintOneAdmitCardContent(): string {
-  //   let schoolName = this.schoolInfo.schoolName;
-  //   let city = this.schoolInfo.city;
-  //   let printHtml = '<html>';
-  //   printHtml += '<head>';
-  //   printHtml += '<style>';
-  //   printHtml += 'body { margin: 0; padding: 0; }';
-  //   printHtml += 'div { margin: 0; padding: 0;}';
-  //   printHtml += '.custom-container {font-family: Arial, sans-serif;overflow: auto;}';
-  //   printHtml += '.table-container {height:99.5%; background-color: #fff;border: 1px solid #404040;}';
-  //   printHtml += '.logo { height: 75px;margin-right:10px; }';
-  //   printHtml += '.school-name {display: flex; align-items: center; justify-content: center; text-align: center; }';
-  //   printHtml += '.school-name h3 { color: #252525 !important; font-size: 18px !important;margin-top:-115px !important; margin-bottom: 0 !important; }';
-  //   printHtml += '.address{margin-top: -42px;}';
-  //   printHtml += '.address p{font-size:10px;margin-top: -8px !important;}';
-  //   printHtml += '.title-lable {text-align: center;margin-bottom: 15px;}';
-  //   printHtml += '.title-lable p {color: #252525 !important;font-size: 15px;font-weight: bolder;letter-spacing: .5px;}';
-
-
-
-
-  //   printHtml += '.info-table {width:100%;color: #252525 !important;border: none;font-size: 12px;letter-spacing: .25px;margin-top: 1.5vh;margin-bottom: 2vh;display: inline-table;}';
-  //   printHtml += '.table-container .info-table th, .table-container .info-table td{color: #252525 !important;text-align:left;padding-left:15px;}';
-  //   printHtml += '.custom-table {width: 100%;color: #252525 !important;border-collapse:collapse;font-size: 10px;letter-spacing: .20px;margin-bottom: 20px;display: inline-table;border-radius:5px}';
-  //   printHtml += '.custom-table th{height: 32pxtext-align: center;border:1px solid #9e9e9e;line-height:15px;}';
-  //   printHtml += '.custom-table tr{height: 32px}';
-  //   printHtml += '.custom-table td {text-align: center;border:1px solid #9e9e9e;}';
-  //   printHtml += '.text-bold { font-weight: bold;}';
-  //   printHtml += '.text-left { text-align: left;}';
-  //   printHtml += 'p {color: #252525 !important;font-size:12px;}'
-  //   printHtml += 'h4 {color: #252525 !important;}'
-  //   printHtml += '@media print {';
-  //   printHtml += '  body::before {';
-  //   printHtml += `    content: "${schoolName}, ${city}";`;
-  //   printHtml += '    position: fixed;';
-  //   printHtml += '    top: 40%;';
-  //   printHtml += '    left:10%;';
-  //   printHtml += '    font-size: 20px;';
-  //   printHtml += '    font-weight: bold;';
-  //   printHtml += '    font-family: Arial, sans-serif;';
-  //   printHtml += '    color: rgba(0, 0, 0, 0.08);';
-  //   printHtml += '    pointer-events: none;';
-  //   printHtml += '  }';
-  //   printHtml += '}';
-  //   printHtml += '</style>';
-  //   printHtml += '</head>';
-  //   printHtml += '<body>';
-
-  //   this.mappedResults.forEach((student, index) => {
-  //     const studentElement = document.getElementById(`student-${student.studentId}`);
-  //     if (studentElement) {
-  //       printHtml += studentElement.outerHTML;
-
-  //       // Add a page break after each student except the last one
-  //       if (index < this.mappedResults.length - 1) {
-  //         printHtml += '<div style="page-break-after: always;"></div>';
-  //       }
-  //     }
-  //   });
-  //   printHtml += '</body></html>';
-  //   return printHtml;
-  // }
 
   chooseStream(stream: any) {
     if (this.theorySubjects || this.practicalSubjects || this.periodicTestSubjects || this.noteBookSubjects || this.subjectEnrichmentSubjects) {
@@ -367,11 +311,14 @@ export class AdminStudentResultComponent implements OnInit {
     }
     this.selectedExam = selectedExam;
     const examFilteredData = this.marksheetTemplateStructureInfo.marksheetTemplateStructure.examStructure[selectedExam];
+    console.log(examFilteredData);
     let subjects = this.marksheetTemplateStructureInfo.classSubjectList.subject;
     this.practicalSubjects = [];
         this.periodicTestSubjects = [];
         this.noteBookSubjects = [];
         this.subjectEnrichmentSubjects = [];
+        this.coScholastic = [];
+        this.discipline = [];
 
         if (examFilteredData.theoryMaxMarks) {
           this.theorySubjects = subjects.map((item: any) => {
@@ -418,6 +365,18 @@ export class AdminStudentResultComponent implements OnInit {
           })
           if (this.subjectEnrichmentSubjects) {
             this.patchSubjectEnrichment();
+          }
+        }
+        if (examFilteredData.coScholastic) {
+          this.coScholastic = examFilteredData.coScholastic;
+          if (this.coScholastic) {
+            this.patchCoScholastic();
+          }
+        }
+        if (examFilteredData.discipline) {
+          this.discipline = examFilteredData.discipline;
+          if (this.discipline) {
+            this.patchDiscipline();
           }
         }
         
@@ -483,6 +442,20 @@ export class AdminStudentResultComponent implements OnInit {
       this.examResultForm.reset();
     })
   }
+  patchCoScholastic() {
+    const controlOne = <FormArray>this.examResultForm.get('type.coScholastic');
+    this.coScholastic.forEach((x: any) => {
+      controlOne.push(this.patchCoScholasticValues(x))
+      this.examResultForm.reset();
+    })
+  }
+  patchDiscipline() {
+    const controlOne = <FormArray>this.examResultForm.get('type.discipline');
+    this.discipline.forEach((x: any) => {
+      controlOne.push(this.patchDisciplineValues(x))
+      this.examResultForm.reset();
+    })
+  }
 
 
   patchTheoryValues(theoryMarks: any) {
@@ -509,6 +482,16 @@ export class AdminStudentResultComponent implements OnInit {
   patchSubjectEnrichmentValues(subjectEnrichmentMarks: any) {
     return this.fb.group({
       [subjectEnrichmentMarks]: [subjectEnrichmentMarks],
+    })
+  }
+  patchCoScholasticValues(coScholastic: any) {
+    return this.fb.group({
+      [coScholastic]: [coScholastic],
+    })
+  }
+  patchDisciplineValues(discipline: any) {
+    return this.fb.group({
+      [discipline]: [discipline],
     })
   }
 

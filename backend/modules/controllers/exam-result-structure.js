@@ -27,9 +27,9 @@ let GetSingleClassExamResultStructureByStream = async (req, res, next) => {
     }
     let streamMsg = `${stream} stream`;
     try {
-        const classSubjectList = await ClassSubjectModel.findOne({adminId:adminId,class:className,stream:stream},'subject');
-        if(!classSubjectList){
-            return res.status(404).json( 'This class and subject group not found. !' );
+        const classSubjectList = await ClassSubjectModel.findOne({ adminId: adminId, class: className, stream: stream }, 'subject');
+        if (!classSubjectList) {
+            return res.status(404).json('This class and subject group not found. !');
         }
         const singleExamResultStructure = await MarksheetTemplateModel.findOne({ adminId: adminId, class: className, stream: stream });
         if (!singleExamResultStructure) {
@@ -40,7 +40,7 @@ let GetSingleClassExamResultStructureByStream = async (req, res, next) => {
             return res.status(404).json(`Class ${className} ${streamMsg} exam not found !`);
         }
         const templateName = singleExamResultStructure.templateName;
-        const marksheetTemplateStructure = await MarksheetTemplateStructureModel.findOne({ templateName:templateName });
+        const marksheetTemplateStructure = await MarksheetTemplateStructureModel.findOne({ templateName: templateName });
         if (!marksheetTemplateStructure) {
             if (stream === "N/A") {
 
@@ -48,7 +48,7 @@ let GetSingleClassExamResultStructureByStream = async (req, res, next) => {
             }
             return res.status(404).json(`Class ${className} ${streamMsg} marksheet template not found !`);
         }
-        return res.status(200).json({marksheetTemplateStructure:marksheetTemplateStructure,classSubjectList:classSubjectList});
+        return res.status(200).json({ marksheetTemplateStructure: marksheetTemplateStructure, classSubjectList: classSubjectList });
     } catch (error) {
         return res.status(500).json('Internal Server Error !');
     }
@@ -88,6 +88,8 @@ let CreateExamResultStructure = async (req, res, next) => {
 //         { "A+": 100 }, { "A": 90 }, { "B+": 80 }, { "B": 70 },
 //         { "C+": 60 }, { "C": 50 }, { "D": 40 }, { "F": 32 }
 //     ];
+//     const coScholastic = ['work education', 'arts education'];
+//     const discipline = ['discipline'];
 //     const templateData = {
 //         templateName: "T1",
 //         examStructure: {
@@ -98,7 +100,9 @@ let CreateExamResultStructure = async (req, res, next) => {
 //                 noteBookMaxMarks: 5,
 //                 subjectEnrichmentMaxMarks: 5,
 //                 gradeMinMarks: gradeMinMarks,
-//                 gradeMaxMarks: gradeMaxMarks
+//                 gradeMaxMarks: gradeMaxMarks,
+//                 coScholastic: coScholastic,
+//                 discipline: discipline,
 //             },
 //             term2: {
 //                 theoryMaxMarks: 80,
@@ -107,7 +111,9 @@ let CreateExamResultStructure = async (req, res, next) => {
 //                 noteBookMaxMarks: 5,
 //                 subjectEnrichmentMaxMarks: 5,
 //                 gradeMinMarks: gradeMinMarks,
-//                 gradeMaxMarks: gradeMaxMarks
+//                 gradeMaxMarks: gradeMaxMarks,
+//                 coScholastic: coScholastic,
+//                 discipline: discipline,
 //             }
 //         }
 //     };
