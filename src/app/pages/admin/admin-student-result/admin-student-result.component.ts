@@ -214,6 +214,7 @@ export class AdminStudentResultComponent implements OnInit {
         };
 
         this.mappedResults = mapExamResultsToStudents(this.examResultInfo, this.studentInfo);
+        console.log(this.mappedResults)
       }
     })
     setTimeout(() => {
@@ -497,6 +498,7 @@ export class AdminStudentResultComponent implements OnInit {
 
   examResultAddUpdate() {
     const examResult = this.examResultForm.value.type;
+    console.log(examResult)
     const countSubjectsBelowPassingMarks = (passMarks: any[], actualMarks: any[]): number => {
       return passMarks.reduce((count, passMarkSubject, index) => {
         const subject = Object.keys(passMarkSubject)[0];
@@ -600,13 +602,35 @@ marks.forEach((subject:any) => {
       delete subject[prop];
   });
 });
+
+const coScholastic = examResult.coScholastic.map((activity:any) => {
+  const activityName = Object.keys(activity)[0];
+  const grade = activity[activityName];
+  return {
+    activity:activityName,
+    grade:grade
+  };
+});
+const discipline = examResult.discipline.map((discipline:any) => {
+  const disciplineName = Object.keys(discipline)[0];
+  const grade = discipline[disciplineName];
+  return {
+    discipline:disciplineName,
+    grade:grade
+  };
+})
+
+
+
     let examResultInfo = {
       marks: marks,
       grandTotalMarks: grandTotalMarks,
       totalMaxMarks: totalMaxMarks,
       percentile: percentile,
       percentileGrade: percentileGrade,
-      resultStatus: resultStatus
+      resultStatus: resultStatus,
+      coScholastic:coScholastic,
+      discipline:discipline,
     };
     if (this.examResultForm.valid) {
       this.examResultForm.value.resultDetail = examResultInfo;
