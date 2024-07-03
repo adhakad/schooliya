@@ -249,10 +249,10 @@ export class AdminStudentResultComponent implements OnInit {
     printHtml += '.title-lable p {color: #252525 !important;font-size: 15px;font-weight: bolder;letter-spacing: .5px;}';
 
     printHtml += '.info-table {width:100%;color: #252525 !important;border: none;font-size: 11px;margin-top: 1.5vh;margin-bottom: 2vh;display: inline-table;}';
-    printHtml += '.table-container .info-table th, .table-container .info-table td{color: #252525 !important;text-align:left;padding-left:15px;}';
+    printHtml += '.table-container .info-table th, .table-container .info-table td{color: #252525 !important;text-align:left;padding-left:15px;padding-top:5px;}';
     printHtml += '.custom-table {width: 100%;color: #252525 !important;border-collapse:collapse;margin-bottom: 20px;display: inline-table;border-radius:5px}';
-    printHtml += '.custom-table th{height: 32px;text-align: center;border:1px solid #9e9e9e;line-height:15px;font-size: 10px;}';
-    printHtml += '.custom-table tr{height: 32px;}';
+    printHtml += '.custom-table th{height: 31px;text-align: center;border:1px solid #9e9e9e;line-height:15px;font-size: 10px;}';
+    printHtml += '.custom-table tr{height: 30px;}';
     printHtml += '.custom-table td {text-align: center;border:1px solid #9e9e9e;font-size: 10px;}';
     printHtml += '.text-bold { font-weight: bold;}';
     printHtml += '.text-left { text-align: left;}';
