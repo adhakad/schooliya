@@ -471,13 +471,13 @@
                                         style="padding-left: 25px;text-align: left;border-bottom: 1px solid transparent;">
                                         <span class="text-bold">PERCENTAGE</span> <span
                                           style="margin-left: 82px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term1.percentile
-                                          }}</span>
+                                          }}%</span>
                                       </td>
                                       <td colspan="6"
                                         style="padding-left: 25px;text-align: left;border-bottom: 1px solid transparent;border-right: 1px solid transparent;">
                                         <span class="text-bold">PERCENTAGE</span> <span
                                           style="margin-left: 82px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term2.percentile
-                                          }}</span>
+                                          }}%</span>
                                       </td>
                                     </tr>
                                     <tr style="height: 15px;">
@@ -499,16 +499,15 @@
                                   </table>
                                 </ng-container>
 
-                                <table class="custom-table" style="margin-bottom: 0;">
-                                  <!-- rgb(240, 172, 178) -->
-                                  <tr
-                                    style="height: 22px !important;background-color: rgb(198, 172, 240);padding-bottom: 10px;">
-                                    <th class="text-bold"
-                                      style="height: 22px !important;font-size:12px;padding-left: 15px;border: none;">
-                                      CO-SCHOLASTIC & DISCIPLINE AREA (3 Point Grading Scale A,B,C)</th>
-                                  </tr>
-                                </table>
-                                <ng-container *ngIf='mappedResults[0].marksheetTemplateStructure.templateName=="T1"'>
+                                <ng-container *ngIf='mappedResults.length>0'>
+                                  <table class="custom-table" style="margin-bottom: 0;">
+                                    <tr
+                                      style="height: 22px !important;background-color: rgb(198, 172, 240);padding-bottom: 10px;">
+                                      <th class="text-bold"
+                                        style="height: 22px !important;font-size:12px;padding-left: 15px;border: none;">
+                                        CO-SCHOLASTIC & DISCIPLINE AREA (3 Point Grading Scale A,B,C)</th>
+                                    </tr>
+                                  </table>
                                   <table class="custom-table" style="margin-bottom: 0;width: 100%;">
                                     <tr style="padding-bottom: 11px;height: 25px;">
                                       <th colspan="1" scope="colgroup"
@@ -536,26 +535,13 @@
                                         style="text-align: left !important;padding-left: 10px;border-left: 1px solid transparent;padding-right: 10px;">
                                         {{exam.activity |uppercase}}</td>
                                       <td>{{exam.grade | uppercase}}</td>
-                                      <td>{{result.resultDetail.term2.coScholastic[i].grade}}</td>
-                                    </tr>
-                                    <tr *ngFor="let exam of result.resultDetail.term1.coScholastic;let i = index ">
-                                      <td
-                                        style="padding-left: 10px;padding-right: 10px;border-left: 1px solid transparent;">
-                                        {{i+1}}</td>
-                                      <td
-                                        style="text-align: left !important;padding-left: 10px;border-left: 1px solid transparent;padding-right: 10px;">
-                                        {{exam.activity |uppercase}}</td>
-                                      <td>{{exam.grade | uppercase}}</td>
-                                      <td>{{result.resultDetail.term2.coScholastic[i].grade}}</td>
+                                      <td style="border-right: 1px solid transparent;">
+                                        {{result.resultDetail.term2.coScholastic[i].grade}}</td>
                                     </tr>
                                   </table>
 
 
-
-
-
-                                  <table class="custom-table" style="margin-bottom: 0;">
-                                    <!-- rgb(240, 172, 178) -->
+                                  <table class="custom-table" style="margin-top: -2px;margin-bottom: 0;">
                                     <tr
                                       style="height: 22px !important;background-color: rgb(198, 172, 240);padding-bottom: 10px;">
                                       <th class="text-bold"
@@ -564,70 +550,23 @@
                                     </tr>
                                   </table>
                                   <table class="custom-table" style="margin-bottom: 0;width: 100%;">
-                                    <tr style="padding-bottom: 11px;height: 25px;">
-                                      <th colspan="1" scope="colgroup"
-                                        style="height: 25px;font-size: 11px;border-top: transparent;border-left: 1px solid transparent;">
-                                        <span>S.NO.</span>
-                                      </th>
-                                      <th colspan="1" scope="colgroup"
-                                        style="height: 25px;font-size: 11px;text-align: left;border-top: transparent;border-left: 1px solid transparent;">
-                                        <span style="margin-left: 10px;">ACTIVTY</span>
-                                      </th>
-                                      <th colspan="1" scope="colgroup"
-                                        style="height: 25px;font-size: 11px;border-top: transparent;border-left: 1px solid transparent;">
-                                        <span>TERM 1</span>
-                                      </th>
-                                      <th colspan="1" scope="colgroup"
-                                        style="height: 25px;font-size: 11px;border-top: transparent;border-left: 1px solid transparent;border-right: 1px solid transparent;">
-                                        <span>TERM 2</span>
-                                      </th>
+                                    <tr style="height: 25px;">
+                                      <td class="text-bold"
+                                        *ngFor="let gradeMarks of mappedResults[0].gradeMinMarks; let i = index"
+                                        style="padding-top: 5px;border-top:1px solid transparent;border-left:1px solid transparent;">{{gradeMarks}}% - {{mappedResults[0].gradeMaxMarks[i]}}%</td>
                                     </tr>
-                                    <tr *ngFor="let exam of result.resultDetail.term1.coScholastic;let i = index ">
-                                      <td
-                                        style="padding-left: 10px;padding-right: 10px;border-left: 1px solid transparent;">
-                                        {{i+1}}</td>
-                                      <td
-                                        style="text-align: left !important;padding-left: 10px;border-left: 1px solid transparent;padding-right: 10px;">
-                                        {{exam.activity |uppercase}}</td>
-                                      <td>{{exam.grade | uppercase}}</td>
-                                      <td>{{result.resultDetail.term2.coScholastic[i].grade}}</td>
+                                    <tr style="height: 25px;">
+                                      <ng-container
+                                        *ngFor="let installmentObject of let grade of mappedResults[0].marksheetTemplateStructure.examStructure.term1.gradeMinMarks; let j = index">
+                                        <ng-container *ngFor="let entry of installmentObject | keyvalue">
+                                          <td style="padding-bottom: 5px;border-left:1px solid transparent;">
+                                            {{ entry.key }}
+                                          </td>
+                                        </ng-container>
+                                      </ng-container>
                                     </tr>
-                                    
                                   </table>
                                 </ng-container>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                <!-- <table class="custom-table">
-                                  <tr>
-                                    <td><span class="text-bold">Result Status</span> :
-                                      {{result.resultDetail.resultStatus}}</td>
-                                    <td><span class="text-bold">Grand Total</span> :
-                                      {{result.resultDetail.grandTotalMarks}}/{{result.resultDetail.totalMaxMarks}}
-                                    </td>
-                                    <td><span class="text-bold">Percentage</span> :
-                                      {{result.resultDetail.percentile}}%
-                                    </td>
-                                    <td><span class="text-bold">Overall Grade</span> :
-                                      {{result.resultDetail.percentileGrade}}</td>
-                                  </tr>
-                                </table> -->
-                                <!-- border-top:1px solid #9e9e9e; -->
 
                                 <table class="custom-table" style="position: fixed;left: 0;bottom: 0;">
                                   <tr>

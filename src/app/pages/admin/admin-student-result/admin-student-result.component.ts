@@ -185,6 +185,8 @@ export class AdminStudentResultComponent implements OnInit {
         this.studentInfo = res.studentInfo;
         let isDate = res.isDate;
         let marksheetTemplateStructure = res.marksheetTemplateStructure;
+        const gradeMinMarks = marksheetTemplateStructure.examStructure.term1.gradeMinMarks.map((grade:any) => Object.values(grade)[0]);
+        const gradeMaxMarks = marksheetTemplateStructure.examStructure.term1.gradeMaxMarks.map((grade:any) => Object.values(grade)[0]);
         const mapExamResultsToStudents = (examResults: any, studentInfo: any) => {
           const studentInfoMap = studentInfo.reduce((acc: any, student: any) => {
             acc[student._id] = student;
@@ -201,6 +203,8 @@ export class AdminStudentResultComponent implements OnInit {
               stream: result.stream,
               dob:student.dob,
               marksheetTemplateStructure:marksheetTemplateStructure,
+              gradeMinMarks,
+              gradeMaxMarks,
               resultDetail: result.resultDetail,
               status: result.status || "", 
               name: student.name,
@@ -312,7 +316,6 @@ export class AdminStudentResultComponent implements OnInit {
     }
     this.selectedExam = selectedExam;
     const examFilteredData = this.marksheetTemplateStructureInfo.marksheetTemplateStructure.examStructure[selectedExam];
-    console.log(examFilteredData);
     let subjects = this.marksheetTemplateStructureInfo.classSubjectList.subject;
     this.practicalSubjects = [];
         this.periodicTestSubjects = [];
@@ -498,7 +501,6 @@ export class AdminStudentResultComponent implements OnInit {
 
   examResultAddUpdate() {
     const examResult = this.examResultForm.value.type;
-    console.log(examResult)
     const countSubjectsBelowPassingMarks = (passMarks: any[], actualMarks: any[]): number => {
       return passMarks.reduce((count, passMarkSubject, index) => {
         const subject = Object.keys(passMarkSubject)[0];
