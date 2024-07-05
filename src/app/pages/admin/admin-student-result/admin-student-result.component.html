@@ -344,16 +344,20 @@
                                     </td>
                                   </tr>
                                 </table>
+                                <table class="custom-table" style="margin-bottom: 0;">
+                                  <tr
+                                    style="height: 22px !important;background-color: rgb(198, 172, 240);padding-bottom: 10px;">
+                                    <th class="text-bold"
+                                      style="height: 22px !important;font-size: 12px;padding-left: 15px; border: none;">
+                                      ACADEMIC PERFORMANCE - SCHOLASTIC AREA</th>
+                                  </tr>
+                                </table>
 
-                                <ng-container *ngIf='mappedResults[0].marksheetTemplateStructure.templateName=="T1"'>
-                                  <table class="custom-table" style="margin-bottom: 0;">
-                                    <tr
-                                      style="height: 22px !important;background-color: rgb(198, 172, 240);padding-bottom: 10px;">
-                                      <th class="text-bold"
-                                        style="height: 22px !important;font-size: 12px;padding-left: 15px; border: none;">
-                                        ACADEMIC PERFORMANCE - SCHOLASTIC AREA</th>
-                                    </tr>
-                                  </table>
+
+
+
+
+                                <!-- <ng-container *ngIf='mappedResults[0].marksheetTemplateStructure.templateName=="T1"'>
                                   <table class="custom-table" style="margin-bottom: 0;">
                                     <tr style="padding-bottom: 10px;height: 25px;">
                                       <th colspan="1" scope="colgroup"
@@ -462,6 +466,173 @@
                                       </td>
                                     </tr>
 
+                                    <tr style="height: 15px;">
+                                      <td colspan="1"
+                                        style="height: 15px;border-top: transparent;border-bottom: transparent;border-left: 1px solid transparent;">
+                                      </td>
+                                      <td colspan="6"
+                                        style="padding-left: 25px;text-align: left;border-bottom: 1px solid transparent;">
+                                        <span class="text-bold">PERCENTAGE</span> <span
+                                          style="margin-left: 82px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term1.percentile
+                                          }}%</span>
+                                      </td>
+                                      <td colspan="6"
+                                        style="padding-left: 25px;text-align: left;border-bottom: 1px solid transparent;border-right: 1px solid transparent;">
+                                        <span class="text-bold">PERCENTAGE</span> <span
+                                          style="margin-left: 82px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term2.percentile
+                                          }}%</span>
+                                      </td>
+                                    </tr>
+                                    <tr style="height: 15px;">
+                                      <td colspan="1"
+                                        style="height: 15px;border-top: transparent;border-bottom: transparent;border-left: 1px solid transparent;">
+                                      </td>
+                                      <td colspan="6"
+                                        style="border-bottom: transparent;padding-left: 25px;text-align: left;">
+                                        <span class="text-bold">GRADE</span> <span
+                                          style="margin-left: 115px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term1.percentileGrade
+                                          }}</span>
+                                      </td>
+                                      <td colspan="6"
+                                        style="border-bottom: transparent;padding-left: 25px;text-align: left;border-right: 1px solid transparent;">
+                                        <span class="text-bold">GRADE</span> <span
+                                          style="margin-left: 115px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term2.percentileGrade
+                                          }}</span>
+                                      </td>
+                                    </tr>
+
+                                    <tr style="height: 15px;">
+                                      <td colspan="1"
+                                        style="height: 15px;border-top:transparent;border-bottom: transparent;border-left: 1px solid transparent;">
+                                      </td>
+                                      <td colspan="6"
+                                        style="padding-bottom:10px;border-top:transparent;border-bottom: transparent;padding-left: 25px;text-align: left;">
+                                        <span class="text-bold">RESULT</span> <span
+                                          style="margin-left: 112px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term1.resultStatus}}</span>
+                                      </td>
+                                      <td colspan="6"
+                                        style="padding-bottom:10px;border-top:transparent;border-bottom: transparent;padding-left: 25px;text-align: left;border-right: 1px solid transparent;">
+                                        <span class="text-bold">RESULT</span> <span
+                                          style="margin-left: 112px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term2.resultStatus}}</span>
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </ng-container> -->
+
+
+
+                                <ng-container *ngIf='mappedResults[0].marksheetTemplateStructure.templateName=="T1"'>
+                                  <table class="custom-table" style="margin-bottom: 0;">
+                                    <tr style="padding-bottom: 10px;height: 25px;">
+                                      <th colspan="1" scope="colgroup"
+                                        style="height: 25px;text-align: left !important;padding-left: 10px;position: absolute;border:none;">
+                                        <p style="position: relative;font-size: 11px;margin-top: 20px;">SUBJECT</p>
+                                      </th>
+                                      <th colspan="5" scope="colgroup"
+                                        style="height: 25px;font-size: 11px;border-top: rgb(198, 172, 240);">TERM 1
+                                      </th>
+                                      <th colspan="5" scope="colgroup"
+                                        style="height: 25px;font-size: 11px;border-top: rgb(198, 172, 240);">
+                                        TERM 2
+                                      </th>
+                                      <th colspan="2" scope="colgroup"
+                                        style="height: 25px;font-size: 11px;border-top: rgb(198, 172, 240);border:transparent;">
+                                        OVERALL<br>T1(50) + T2(50)
+                                      </th>
+                                    </tr>
+                                    <tr>
+                                      <th scope="col"
+                                        style="text-align: left !important;padding-left: 25px;border:none;">
+                                      </th>
+                                      <th scope="col" style="padding-top:5px;padding-bottom: 5px;">PER.
+                                        TEST<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.periodicTestMaxMarks}}
+                                      </th>
+                                      <th scope="col">NOTE
+                                        BOOK<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.noteBookMaxMarks}}
+                                      </th>
+                                      <th scope="col">
+                                        &nbsp;&nbsp;&nbsp;SEA&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.subjectEnrichmentMaxMarks}}
+                                      </th>
+                                      <th scope="col">HALF YEARLY
+                                        <br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                      </th>
+                                      <th scope="col">
+                                        &nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.periodicTestMaxMarks
+                                        +
+                                        mappedResults[0].marksheetTemplateStructure.examStructure.term1.noteBookMaxMarks
+                                        +
+                                        mappedResults[0].marksheetTemplateStructure.examStructure.term1.subjectEnrichmentMaxMarks
+                                        +
+                                        mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                      </th>
+                                      <!-- <th scope="col">&nbsp;&nbsp;GRADE&nbsp;&nbsp;</th> -->
+                                      <th scope="col">PER.
+                                        TEST<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.periodicTestMaxMarks}}
+                                      </th>
+                                      <th scope="col">NOTE
+                                        BOOK<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.noteBookMaxMarks}}
+                                      </th>
+                                      <th scope="col">
+                                        &nbsp;&nbsp;&nbsp;SEA&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.subjectEnrichmentMaxMarks}}
+                                      </th>
+                                      <th scope="col">YEARLY
+                                        EXAM<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
+                                      </th>
+                                      <th scope="col">
+                                        &nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.periodicTestMaxMarks
+                                        +
+                                        mappedResults[0].marksheetTemplateStructure.examStructure.term1.noteBookMaxMarks
+                                        +
+                                        mappedResults[0].marksheetTemplateStructure.examStructure.term1.subjectEnrichmentMaxMarks
+                                        +
+                                        mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                      </th>
+                                      <th scope="col">GRAND TOTAL</th>
+                                      <th scope="col" style="border-right: 1px solid transparent; ">
+                                        &nbsp;&nbsp;GRADE&nbsp;&nbsp;</th>
+                                    </tr>
+                                    <tr *ngFor="let exam of result.resultDetail.term1.marks; let i = index">
+                                      <td
+                                        style="text-align: left !important;padding-left: 10px;border-left: 1px solid transparent;padding-right: 10px;">
+                                        {{ exam.subject |
+                                        uppercase }}</td>
+                                      <td>{{ exam.periodicTestMarks > 0 ? exam.periodicTestMarks : '' }}</td>
+                                      <td>{{ exam.noteBookMarks > 0 ? exam.noteBookMarks : '' }}</td>
+                                      <td>{{ exam.subjectEnrichmentMarks > 0 ? exam.subjectEnrichmentMarks : '' }}</td>
+                                      <td>{{ exam.theoryMarks }}</td>
+                                      <td>{{ exam.totalMarks }}</td>
+                                      <td>{{ result.resultDetail.term2.marks[i].periodicTestMarks > 0 ?
+                                        result.resultDetail.term2.marks[i].periodicTestMarks : '' }}</td>
+                                      <td>{{ result.resultDetail.term2.marks[i].noteBookMarks > 0 ?
+                                        result.resultDetail.term2.marks[i].noteBookMarks : '' }}</td>
+                                      <td>{{ result.resultDetail.term2.marks[i].subjectEnrichmentMarks > 0 ?
+                                        result.resultDetail.term2.marks[i].subjectEnrichmentMarks : '' }}</td>
+                                      <td>{{ result.resultDetail.term2.marks[i].theoryMarks }}</td>
+                                      <td>{{ result.resultDetail.term2.marks[i].totalMarks }}</td>
+                                      <td>{{result.resultDetail.overallMarksAndGrades[i].averageMarks | number:'1.1-1'}}</td>
+                                      <td
+                                        style="text-align: left;padding-left: 20px;border-right: 1px solid transparent;">
+                                        {{result.resultDetail.overallMarksAndGrades[i].grade}}</td>
+                                    </tr>
+                                    <!-- <tr style="height: 15px;">
+                                      <td colspan="1"
+                                        style="height: 15px;border-bottom: 1px solid transparent;border-left: 1px solid transparent;">
+                                      </td>
+                                      <td colspan="6"
+                                        style="padding-top:10px;padding-left: 25px;text-align: left;border-bottom: 1px solid transparent;">
+                                        <span class="text-bold">GRAND TOTAL</span> <span
+                                          style="margin-left: 79px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term1.grandTotalMarks
+                                          }} /
+                                          {{result.resultDetail.term1.totalMaxMarks }} </span>
+                                      </td>
+                                      <td colspan="6"
+                                        style="padding-top:10px;padding-left: 25px;text-align: left;border-bottom: 1px solid transparent;border-right: 1px solid transparent;">
+                                        <span class="text-bold">GRAND TOTAL</span> <span
+                                          style="margin-left: 79px;border-right: 1px solid transparent;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail?.term2?.grandTotalMarks}}
+                                          /
+                                          {{result.resultDetail.term2.totalMaxMarks }}</span>
+                                      </td>
+                                    </tr>
 
                                     <tr style="height: 15px;">
                                       <td colspan="1"
@@ -485,19 +656,60 @@
                                         style="height: 15px;border-top: transparent;border-bottom: transparent;border-left: 1px solid transparent;">
                                       </td>
                                       <td colspan="6"
-                                        style="padding-bottom:10px;border-bottom: transparent;padding-left: 25px;text-align: left;">
+                                        style="border-bottom: transparent;padding-left: 25px;text-align: left;">
                                         <span class="text-bold">GRADE</span> <span
                                           style="margin-left: 115px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term1.percentileGrade
                                           }}</span>
                                       </td>
                                       <td colspan="6"
-                                        style="padding-bottom:10px;border-bottom: transparent;padding-left: 25px;text-align: left;border-right: 1px solid transparent;">
+                                        style="border-bottom: transparent;padding-left: 25px;text-align: left;border-right: 1px solid transparent;">
                                         <span class="text-bold">GRADE</span> <span
                                           style="margin-left: 115px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term2.percentileGrade
                                           }}</span>
+                                      </td>
                                     </tr>
+
+                                    <tr style="height: 15px;">
+                                      <td colspan="1"
+                                        style="height: 15px;border-top:transparent;border-bottom: transparent;border-left: 1px solid transparent;">
+                                      </td>
+                                      <td colspan="6"
+                                        style="padding-bottom:10px;border-top:transparent;border-bottom: transparent;padding-left: 25px;text-align: left;">
+                                        <span class="text-bold">RESULT</span> <span
+                                          style="margin-left: 112px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term1.resultStatus}}</span>
+                                      </td>
+                                      <td colspan="6"
+                                        style="padding-bottom:10px;border-top:transparent;border-bottom: transparent;padding-left: 25px;text-align: left;border-right: 1px solid transparent;">
+                                        <span class="text-bold">RESULT</span> <span
+                                          style="margin-left: 112px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term2.resultStatus}}</span>
+                                      </td>
+                                    </tr> -->
                                   </table>
                                 </ng-container>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                                 <ng-container *ngIf='mappedResults.length>0'>
                                   <table class="custom-table" style="margin-bottom: 0;">
@@ -545,7 +757,7 @@
                                     <tr
                                       style="height: 22px !important;background-color: rgb(198, 172, 240);padding-bottom: 10px;">
                                       <th class="text-bold"
-                                        style="height: 22px !important;font-size:12px;padding-left: 15px;border: none;">
+                                        style="height: 22px !important;font-size:12px;padding-top: 2px;padding-left: 15px;border: none;">
                                         SUBJECT GRADE RANGE</th>
                                     </tr>
                                   </table>
@@ -553,7 +765,8 @@
                                     <tr style="height: 25px;">
                                       <td class="text-bold"
                                         *ngFor="let gradeMarks of mappedResults[0].gradeMinMarks; let i = index"
-                                        style="padding-top: 5px;border-top:1px solid transparent;border-left:1px solid transparent;">{{gradeMarks}}% - {{mappedResults[0].gradeMaxMarks[i]}}%</td>
+                                        style="padding-top: 5px;border-top:1px solid transparent;border-left:1px solid transparent;">
+                                        {{gradeMarks}}% - {{mappedResults[0].gradeMaxMarks[i]}}%</td>
                                     </tr>
                                     <tr style="height: 25px;">
                                       <ng-container
