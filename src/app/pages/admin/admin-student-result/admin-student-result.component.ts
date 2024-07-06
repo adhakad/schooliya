@@ -187,17 +187,14 @@ export class AdminStudentResultComponent implements OnInit {
         let marksheetTemplateStructure = res.marksheetTemplateStructure;
         const gradeMinMarks = marksheetTemplateStructure.examStructure.term1.gradeMinMarks.map((grade: any) => Object.values(grade)[0]);
         const gradeMaxMarks = marksheetTemplateStructure.examStructure.term1.gradeMaxMarks.map((grade: any) => Object.values(grade)[0]);
-
         const mapExamResultsToStudents = (examResults: any, studentInfo: any) => {
           const studentInfoMap = studentInfo.reduce((acc: any, student: any) => {
             acc[student._id] = student;
             return acc;
           }, {});
-
           return examResults.map((result: any) => {
             const student = studentInfoMap[result.studentId];
-            let overallMarksAndGrades = this.calculateAverageMarksAndGrades(result.resultDetail.term1.marks, result.resultDetail.term2.marks, marksheetTemplateStructure.examStructure.term1.gradeMinMarks, marksheetTemplateStructure.examStructure.term1.gradeMaxMarks);
-            console.log(overallMarksAndGrades)
+            let overallMarksAndGrades = this.calculateAverageMarksAndGrades(result.resultDetail.term1.marks, result.resultDetail.term2.marks, result.resultDetail.term1.totalMaxMarks, result.resultDetail.term1.totalMaxMarks, marksheetTemplateStructure.examStructure.term1.gradeMinMarks, marksheetTemplateStructure.examStructure.term1.gradeMaxMarks);
             result.resultDetail.overallMarksAndGrades = overallMarksAndGrades;
             return {
               session: student.session,
@@ -251,7 +248,7 @@ export class AdminStudentResultComponent implements OnInit {
     }
     return "Unknown";
   }
-  private calculateAverageMarksAndGrades(term1: any[], term2: any[], gradeMinMarks: any[], gradeMaxMarks: any[]) {
+  private calculateAverageMarksAndGrades(term1: any[], term2: any[], term1TotalMaxMarks: number, term2TotalMaxMarks: number, gradeMinMarks: any[], gradeMaxMarks: any[]) {
     const subjects: { [key: string]: number[] } = {};
 
     // Collect marks for all subjects from both terms in a single pass
@@ -278,18 +275,14 @@ export class AdminStudentResultComponent implements OnInit {
     // Calculate total marks for each term
     const term1TotalMarks = term1.reduce((acc: number, mark: any) => acc + mark.totalMarks, 0);
     const term2TotalMarks = term2.reduce((acc: number, mark: any) => acc + mark.totalMarks, 0);
-
-    // Calculate overall total marks and average total marks
     const totalMarks = term1TotalMarks + term2TotalMarks;
     const averageTotalMarks = totalMarks / 2;
-    const maxMarks = term1.length * 100; // Assuming each subject has a maximum of 100 marks
-
-    // Calculate percentile and grade
-    const averagePercentile = (averageTotalMarks / maxMarks) * 100;
+    const averageTotalMaxMarks = (term1TotalMaxMarks + term2TotalMaxMarks) / 2;
+    const averagePercentile = (averageTotalMarks / averageTotalMaxMarks) * 100;
     const averagePercentileGrade = this.getGrade(averagePercentile, gradeMinMarks, gradeMaxMarks);
-
     return {
       averageGradesAndMarks,
+      averageTotalMaxMarks,
       averageTotalMarks,
       averagePercentile,
       averagePercentileGrade

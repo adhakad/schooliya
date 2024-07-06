@@ -565,7 +565,6 @@
                                         +
                                         mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
                                       </th>
-                                      <!-- <th scope="col">&nbsp;&nbsp;GRADE&nbsp;&nbsp;</th> -->
                                       <th scope="col">PER.
                                         TEST<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.periodicTestMaxMarks}}
                                       </th>
@@ -614,76 +613,18 @@
                                         style="text-align: left;padding-left: 20px;border-right: 1px solid transparent;">
                                         {{result.resultDetail.overallMarksAndGrades.averageGradesAndMarks[i].grade}}</td>
                                     </tr>
-                                    <!-- <tr style="height: 15px;">
-                                      <td colspan="1"
-                                        style="height: 15px;border-bottom: 1px solid transparent;border-left: 1px solid transparent;">
-                                      </td>
-                                      <td colspan="6"
-                                        style="padding-top:10px;padding-left: 25px;text-align: left;border-bottom: 1px solid transparent;">
-                                        <span class="text-bold">GRAND TOTAL</span> <span
-                                          style="margin-left: 79px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term1.grandTotalMarks
-                                          }} /
-                                          {{result.resultDetail.term1.totalMaxMarks }} </span>
-                                      </td>
-                                      <td colspan="6"
-                                        style="padding-top:10px;padding-left: 25px;text-align: left;border-bottom: 1px solid transparent;border-right: 1px solid transparent;">
-                                        <span class="text-bold">GRAND TOTAL</span> <span
-                                          style="margin-left: 79px;border-right: 1px solid transparent;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail?.term2?.grandTotalMarks}}
-                                          /
-                                          {{result.resultDetail.term2.totalMaxMarks }}</span>
-                                      </td>
-                                    </tr>
-
-                                    <tr style="height: 15px;">
-                                      <td colspan="1"
-                                        style="height: 15px;border-top: transparent;border-bottom: transparent;border-left: 1px solid transparent;">
-                                      </td>
-                                      <td colspan="6"
-                                        style="padding-left: 25px;text-align: left;border-bottom: 1px solid transparent;">
-                                        <span class="text-bold">PERCENTAGE</span> <span
-                                          style="margin-left: 82px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term1.percentile
-                                          }}%</span>
-                                      </td>
-                                      <td colspan="6"
-                                        style="padding-left: 25px;text-align: left;border-bottom: 1px solid transparent;border-right: 1px solid transparent;">
-                                        <span class="text-bold">PERCENTAGE</span> <span
-                                          style="margin-left: 82px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term2.percentile
-                                          }}%</span>
-                                      </td>
-                                    </tr>
-                                    <tr style="height: 15px;">
-                                      <td colspan="1"
-                                        style="height: 15px;border-top: transparent;border-bottom: transparent;border-left: 1px solid transparent;">
-                                      </td>
-                                      <td colspan="6"
-                                        style="border-bottom: transparent;padding-left: 25px;text-align: left;">
-                                        <span class="text-bold">GRADE</span> <span
-                                          style="margin-left: 115px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term1.percentileGrade
-                                          }}</span>
-                                      </td>
-                                      <td colspan="6"
-                                        style="border-bottom: transparent;padding-left: 25px;text-align: left;border-right: 1px solid transparent;">
-                                        <span class="text-bold">GRADE</span> <span
-                                          style="margin-left: 115px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term2.percentileGrade
-                                          }}</span>
-                                      </td>
-                                    </tr>
-
-                                    <tr style="height: 15px;">
-                                      <td colspan="1"
-                                        style="height: 15px;border-top:transparent;border-bottom: transparent;border-left: 1px solid transparent;">
-                                      </td>
-                                      <td colspan="6"
-                                        style="padding-bottom:10px;border-top:transparent;border-bottom: transparent;padding-left: 25px;text-align: left;">
-                                        <span class="text-bold">RESULT</span> <span
-                                          style="margin-left: 112px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term1.resultStatus}}</span>
-                                      </td>
-                                      <td colspan="6"
-                                        style="padding-bottom:10px;border-top:transparent;border-bottom: transparent;padding-left: 25px;text-align: left;border-right: 1px solid transparent;">
-                                        <span class="text-bold">RESULT</span> <span
-                                          style="margin-left: 112px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term2.resultStatus}}</span>
-                                      </td>
-                                    </tr> -->
+                                    <table class="custom-table" style="width: 90%;margin-left: 5%;margin-top: 15px;margin-bottom: 15px;">
+                                      <tr>
+                                        <td><span class="text-bold">RESULT</span> :
+                                          PASS</td>
+                                        <td><span class="text-bold">OVERALL MARKS</span> :
+                                          {{result.resultDetail.overallMarksAndGrades.averageTotalMarks}} / {{result.resultDetail.overallMarksAndGrades.averageTotalMaxMarks}}</td>
+                                        <td><span class="text-bold">PERCENTAGE</span> : {{result.resultDetail.overallMarksAndGrades.averagePercentile}}%
+                                        </td>
+                                        <td><span class="text-bold">GRADE</span> :
+                                          {{result.resultDetail.overallMarksAndGrades.averagePercentileGrade}}</td>
+                                      </tr>
+                                    </table>
                                   </table>
                                 </ng-container>
 
@@ -738,6 +679,17 @@
                                         style="height: 25px;font-size: 11px;border-top: transparent;border-left: 1px solid transparent;border-right: 1px solid transparent;">
                                         <span>TERM 2</span>
                                       </th>
+                                    </tr>
+                                    <tr *ngFor="let exam of result.resultDetail.term1.coScholastic;let i = index ">
+                                      <td
+                                        style="padding-left: 10px;padding-right: 10px;border-left: 1px solid transparent;">
+                                        {{i+1}}</td>
+                                      <td
+                                        style="text-align: left !important;padding-left: 10px;border-left: 1px solid transparent;padding-right: 10px;">
+                                        {{exam.activity |uppercase}}</td>
+                                      <td>{{exam.grade | uppercase}}</td>
+                                      <td style="border-right: 1px solid transparent;">
+                                        {{result.resultDetail.term2.coScholastic[i].grade}}</td>
                                     </tr>
                                     <tr *ngFor="let exam of result.resultDetail.term1.coScholastic;let i = index ">
                                       <td
