@@ -188,8 +188,6 @@ export class AdminStudentResultComponent implements OnInit {
         const gradeMinMarks = marksheetTemplateStructure.examStructure.term1.gradeMinMarks.map((grade: any) => Object.values(grade)[0]);
         const gradeMaxMarks = marksheetTemplateStructure.examStructure.term1.gradeMaxMarks.map((grade: any) => Object.values(grade)[0]);
 
-        const overallMarksAndGrades = this.getAverageGrade(res.examResultInfo[0].resultDetail.term1.marks, res.examResultInfo[0].resultDetail.term2.marks, marksheetTemplateStructure.examStructure.term1.gradeMinMarks, marksheetTemplateStructure.examStructure.term1.gradeMaxMarks);
-        console.log(overallMarksAndGrades)
         const mapExamResultsToStudents = (examResults: any, studentInfo: any) => {
           const studentInfoMap = studentInfo.reduce((acc: any, student: any) => {
             acc[student._id] = student;
@@ -198,6 +196,8 @@ export class AdminStudentResultComponent implements OnInit {
 
           return examResults.map((result: any) => {
             const student = studentInfoMap[result.studentId];
+            let overallMarksAndGrades = this.calculateAverageMarksAndGrades(result.resultDetail.term1.marks, result.resultDetail.term2.marks, marksheetTemplateStructure.examStructure.term1.gradeMinMarks, marksheetTemplateStructure.examStructure.term1.gradeMaxMarks);
+            console.log(overallMarksAndGrades)
             result.resultDetail.overallMarksAndGrades = overallMarksAndGrades;
             return {
               session: student.session,
@@ -230,40 +230,70 @@ export class AdminStudentResultComponent implements OnInit {
     }, 1000);
   }
   private getGrade(averageMarks: any, gradeMinMarks: any, gradeMaxMarks: any) {
+    // const roundedMarks = Math.round(parseFloat(averageMarks));
+    // const grade = gradeMaxMarks.reduce((grade: string, gradeRange: any, i: number) => {
+    //   const maxMarks = parseFloat(String(Object.values(gradeRange)[0]));
+    //   const minMarks = parseFloat(String(Object.values(gradeMinMarks[i])[0]));
+    //   return roundedMarks >= minMarks && roundedMarks <= maxMarks ? Object.keys(gradeRange)[0] : grade;
+    // }, '');
+    // return grade;
     for (let i = 0; i < gradeMinMarks.length; i++) {
+      const roundedMarks = Math.round(parseFloat(averageMarks)); // Round to the nearest integer
       const grade = Object.keys(gradeMinMarks[i])[0];
-      const minMarks = gradeMinMarks[i][grade];
-      const maxMarks = gradeMaxMarks[i][grade];
+      const minMarks = parseFloat(String(Object.values(gradeMinMarks[i])[0]));
+      const maxMarks = parseFloat(String(Object.values(gradeMaxMarks[i])[0]));
 
-      if (averageMarks >= minMarks && averageMarks <= maxMarks) {
+      if (i === 0 && roundedMarks >= minMarks && roundedMarks <= maxMarks) {
+        return grade;
+      } else if (roundedMarks >= minMarks && roundedMarks < maxMarks) {
         return grade;
       }
     }
-    return "Unknown"; // Default value if no grade matches
+    return "Unknown";
   }
-  private getAverageGrade(term1: any, term2: any, gradeMinMarks: any, gradeMaxMarks: any) {
-    const subjects: any = {};
-    term1.forEach((mark: any) => {
-      subjects[mark.subject] = [mark.totalMarks];
-    });
-    term2.forEach((mark: any) => {
-      if (subjects[mark.subject]) {
-        subjects[mark.subject].push(mark.totalMarks);
-      } else {
-        subjects[mark.subject] = [mark.totalMarks];
+  private calculateAverageMarksAndGrades(term1: any[], term2: any[], gradeMinMarks: any[], gradeMaxMarks: any[]) {
+    const subjects: { [key: string]: number[] } = {};
+
+    // Collect marks for all subjects from both terms in a single pass
+    const allTerms = [...term1, ...term2];
+    allTerms.forEach((mark: any) => {
+      if (!subjects[mark.subject]) {
+        subjects[mark.subject] = [];
       }
+      subjects[mark.subject].push(mark.totalMarks);
     });
-    const averageGrades = Object.keys(subjects).map((subject: any) => {
-      const totalMarks = subjects[subject].reduce((acc: any, val: any) => acc + val, 0);
+    // Calculate average marks and grades for each subject
+    const averageGradesAndMarks = Object.keys(subjects).map(subject => {
+      const totalMarks = subjects[subject].reduce((acc, val) => acc + val, 0);
       const averageMarks = totalMarks / subjects[subject].length;
       const grade = this.getGrade(averageMarks, gradeMinMarks, gradeMaxMarks);
+
       return {
         subject,
         averageMarks,
         grade
       };
     });
-    return averageGrades;
+
+    // Calculate total marks for each term
+    const term1TotalMarks = term1.reduce((acc: number, mark: any) => acc + mark.totalMarks, 0);
+    const term2TotalMarks = term2.reduce((acc: number, mark: any) => acc + mark.totalMarks, 0);
+
+    // Calculate overall total marks and average total marks
+    const totalMarks = term1TotalMarks + term2TotalMarks;
+    const averageTotalMarks = totalMarks / 2;
+    const maxMarks = term1.length * 100; // Assuming each subject has a maximum of 100 marks
+
+    // Calculate percentile and grade
+    const averagePercentile = (averageTotalMarks / maxMarks) * 100;
+    const averagePercentileGrade = this.getGrade(averagePercentile, gradeMinMarks, gradeMaxMarks);
+
+    return {
+      averageGradesAndMarks,
+      averageTotalMarks,
+      averagePercentile,
+      averagePercentileGrade
+    };
   }
 
 

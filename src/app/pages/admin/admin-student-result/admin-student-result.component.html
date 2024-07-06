@@ -536,7 +536,7 @@
                                         TERM 2
                                       </th>
                                       <th colspan="2" scope="colgroup"
-                                        style="height: 25px;font-size: 11px;border-top: rgb(198, 172, 240);border:transparent;">
+                                        style="height: 25px;font-size: 11px;border-top: rgb(198, 172, 240);border:transparent;padding-bottom: 2px;">
                                         OVERALL<br>T1(50) + T2(50)
                                       </th>
                                     </tr>
@@ -609,10 +609,10 @@
                                         result.resultDetail.term2.marks[i].subjectEnrichmentMarks : '' }}</td>
                                       <td>{{ result.resultDetail.term2.marks[i].theoryMarks }}</td>
                                       <td>{{ result.resultDetail.term2.marks[i].totalMarks }}</td>
-                                      <td>{{result.resultDetail.overallMarksAndGrades[i].averageMarks | number:'1.1-1'}}</td>
+                                      <td>{{result.resultDetail.overallMarksAndGrades.averageGradesAndMarks[i].averageMarks | number:'1.1-1'}}</td>
                                       <td
                                         style="text-align: left;padding-left: 20px;border-right: 1px solid transparent;">
-                                        {{result.resultDetail.overallMarksAndGrades[i].grade}}</td>
+                                        {{result.resultDetail.overallMarksAndGrades.averageGradesAndMarks[i].grade}}</td>
                                     </tr>
                                     <!-- <tr style="height: 15px;">
                                       <td colspan="1"
