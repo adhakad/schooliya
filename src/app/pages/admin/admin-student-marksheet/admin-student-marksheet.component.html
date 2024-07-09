@@ -1,1 +1,1077 @@
-<p>admin-student-marksheet works!</p>
+<app-header-navbar></app-header-navbar>
+<div class="container-fluid dashboard-container">
+  <div class="row">
+    <div class="col-12 col-lg-2">
+      <app-side-navbar></app-side-navbar>
+    </div>
+    <div class="col-12 col-lg-10">
+      <div class="row">
+
+        <div class="col-4">
+          <mat-form-field appearance="outline">
+            <mat-label>Select class</mat-label>
+            <mat-select type="number" matInput>
+              <div *ngFor="let classInfo of classInfo">
+                <mat-option value="{{classInfo.class}}" (click)="chooseClass(classInfo.class)">{{classInfo.class |
+                  classSuffix}}</mat-option>
+              </div>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col-4">
+          <mat-form-field appearance="outline">
+            <mat-label>Stream</mat-label>
+            <mat-select type="text" matInput>
+              <ng-container *ngIf="cls==12 || cls==11">
+                <div *ngFor="let subject of streamMainSubject">
+                  <mat-option (click)="filterStream(subject)" value="{{subject}}">{{subject}}</mat-option>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202">
+                <mat-option value="{{notApplicable}}" (click)="filterStream(notApplicable)">N/A</mat-option>
+              </ng-container>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+
+
+
+        <div class="col-12 big-container">
+          <div class="col-lg-12 offset-lg-0">
+            <div class="main-card">
+              <div class="row">
+                <div class="col-12 col-lg-4 pt-2 pb-2">
+                  <div class="row">
+                    <div class="col-12">
+                      <h3>Exam Result ><span>
+                          {{cls | classSuffix}}</span></h3>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-2">
+                <div class="col-8 col-lg-6">
+                  <button class="submit-button " mat-raised-button (click)="bulkPrint()"><mat-icon
+                      style="font-size: 20px;">print</mat-icon> Bulk Print</button>
+                </div>
+                <div class="col-4 col-lg-2 offset-lg-4">
+                  <button *ngIf="selectedValue==0" class="submit-button" mat-raised-button
+                    (click)="addExamResultModel()"><mat-icon>add</mat-icon>Create</button>
+                  <button *ngIf="selectedValue==1" class="submit-button" mat-raised-button
+                    (click)="addBulkExamResultModel()"><mat-icon>add</mat-icon>Import</button>
+                </div>
+              </div>
+              <table class="table table-hover align-middle mt-2 mb-1 bg-white">
+                <thead class="bg-light">
+                  <tr class="text-muted">
+                    <th>No.</th>
+                    <th>Admission No.</th>
+                    <th>Name</th>
+                    <th>Roll Number</th>
+                    <th>Stream</th>
+                    <th>Exam</th>
+                    <th>Created By</th>
+                  </tr>
+                </thead>
+
+                <tbody *ngIf="mappedResults && mappedResults.length>0">
+                  <tr *ngFor="let result of mappedResults,let i=index">
+                    <td>
+                      <p class="mb-0">{{i+1}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{result.admissionNo}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{result.name | titlecase}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{result.rollNumber}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{result.stream}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{result.examType | titlecase}}</p>
+                    </td>
+                    <td>
+                      <p class="mb-0">{{result.createdBy}}</p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="modal fade show" [class.show]="showModal">
+                <div class="modal-dialog modal-lg" role="document">
+                  <div class="modal-content" *ngIf="successMsg">
+                    <div class="modal-header">
+                      <h5 class="modal-title" style="color: transparent;">&nbsp;</h5>
+                    </div>
+                    <div class="modal-body">
+                      <p class="success-message">{{successMsg}}</p>
+                    </div>
+                    <div class="modal-footer">
+                      <mat-icon></mat-icon>
+                    </div>
+                  </div>
+                  <div class="modal-content" *ngIf="!successMsg">
+                    <div class="modal-header">
+                      <h5 class="modal-title mt-2">{{updateMode?'Update': deleteMode ? 'Delete' :'CREATE'}} EXAM RESULT
+                        - {{cls | classSuffix}}
+                      </h5>
+                      <mat-icon matRipple (click)="closeModal()">close</mat-icon>
+                    </div>
+                    <form [formGroup]="examResultForm" (ngSubmit)="examResultAddUpdate()" *ngIf="!deleteMode">
+                      <div class="modal-body">
+                        <div *ngIf="errorCheck">
+                          <p class="error-message">{{errorMsg}}</p>
+                        </div>
+                        <div class="scroll-content">
+                          <div class="wide-content">
+                            <div class="container">
+                              <div class="row">
+                                <!-- <div class="col-6">
+                                  <mat-form-field appearance="outline">
+                                    <mat-label>Stream</mat-label>
+                                    <mat-select type="text" matInput>
+                                      <ng-container *ngIf="cls==12 || cls==11">
+                                        <div *ngFor="let subject of streamMainSubject">
+                                          <mat-option (click)="chooseStream(subject)"
+                                            value="{{subject}}">{{subject}}</mat-option>
+                                        </div>
+                                      </ng-container>
+                                      <ng-container *ngIf="cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202">
+                                        <div>
+                                          <mat-option value="notApplicable"
+                                            (click)='chooseStream(notApplicable)'>N/A</mat-option>
+                                        </div>
+                                      </ng-container>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </div> -->
+                                <div class="col-6">
+                                  <mat-form-field appearance="outline">
+                                    <mat-label>Exam Type</mat-label>
+                                    <mat-select #examSelect matInput>
+                                      <div *ngFor="let exam of examType">
+                                        <mat-option (click)="selectExam(examSelect.value)" value="{{exam}}">
+                                          {{exam | titlecase}} Exam
+                                        </mat-option>
+                                      </div>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </div>
+                                <div class="col-6">
+                                  <mat-form-field appearance="outline">
+                                    <mat-label>Roll Number</mat-label>
+                                    <input matInput type="number" formControlName="rollNumber">
+                                    <mat-hint
+                                      *ngIf="!examResultForm.get('rollNumber')?.valid && examResultForm.get('rollNumber')?.touched"
+                                      class="form-text text-danger">Roll number is required</mat-hint>
+                                  </mat-form-field>
+                                </div>
+                                <ng-container *ngIf="theorySubjects.length>0">
+                                  <h3>Theory marks</h3>
+                                  <ng-container formGroupName="type">
+                                    <ng-container formArrayName="theoryMarks">
+                                      <div class="col-6" *ngFor="let subjects of theorySubjects; let i = index">
+                                        <div [formGroupName]="i">
+                                          <mat-form-field appearance="outline">
+                                            <mat-label>{{subjects | titlecase}} Theory Marks</mat-label>
+                                            <input matInput type="text" [formControlName]="subjects">
+                                          </mat-form-field>
+                                        </div>
+                                      </div>
+                                    </ng-container>
+                                  </ng-container>
+                                </ng-container>
+                                <ng-container *ngIf="practicalSubjects.length>0">
+                                  <h3>Practical marks</h3>
+                                  <ng-container formGroupName="type">
+                                    <ng-container formArrayName="practicalMarks">
+                                      <div class="col-6" *ngFor="let subjects of practicalSubjects; let i = index">
+                                        <div [formGroupName]="i">
+                                          <mat-form-field appearance="outline">
+                                            <mat-label>{{subjects | titlecase}} Prac. Marks</mat-label>
+                                            <input matInput type="text" [formControlName]="subjects">
+                                          </mat-form-field>
+                                        </div>
+                                      </div>
+                                    </ng-container>
+                                  </ng-container>
+                                </ng-container>
+
+                                <ng-container *ngIf="periodicTestSubjects.length>0">
+                                  <h3>Perodic Test marks</h3>
+                                  <ng-container formGroupName="type">
+                                    <ng-container formArrayName="periodicTestMarks">
+                                      <div class="col-6" *ngFor="let subjects of periodicTestSubjects; let i = index">
+                                        <div [formGroupName]="i">
+                                          <mat-form-field appearance="outline">
+                                            <mat-label>{{subjects | titlecase}} Per. Test Marks</mat-label>
+                                            <input matInput type="text" [formControlName]="subjects">
+                                          </mat-form-field>
+                                        </div>
+                                      </div>
+                                    </ng-container>
+                                  </ng-container>
+                                </ng-container>
+                                <ng-container *ngIf="noteBookSubjects.length>0">
+                                  <h3>Note Book marks</h3>
+                                  <ng-container formGroupName="type">
+                                    <ng-container formArrayName="noteBookMarks">
+                                      <div class="col-6" *ngFor="let subjects of noteBookSubjects; let i = index">
+                                        <div [formGroupName]="i">
+                                          <mat-form-field appearance="outline">
+                                            <mat-label>{{subjects | titlecase}} Note Book Marks</mat-label>
+                                            <input matInput type="text" [formControlName]="subjects">
+                                          </mat-form-field>
+                                        </div>
+                                      </div>
+                                    </ng-container>
+                                  </ng-container>
+                                </ng-container>
+                                <ng-container *ngIf="subjectEnrichmentSubjects.length>0">
+                                  <h3>Subject Enrichment marks</h3>
+                                  <ng-container formGroupName="type">
+                                    <ng-container formArrayName="subjectEnrichmentMarks">
+                                      <div class="col-6"
+                                        *ngFor="let subjects of subjectEnrichmentSubjects; let i = index">
+                                        <div [formGroupName]="i">
+                                          <mat-form-field appearance="outline">
+                                            <mat-label>{{subjects | titlecase}} SEA Marks</mat-label>
+                                            <input matInput type="text" [formControlName]="subjects">
+                                          </mat-form-field>
+                                        </div>
+                                      </div>
+                                    </ng-container>
+                                  </ng-container>
+                                </ng-container>
+
+
+
+                                <ng-container *ngIf="coScholastic.length>0">
+                                  <h3>Co-Scholastic Activity</h3>
+                                  <ng-container formGroupName="type">
+                                    <ng-container formArrayName="coScholastic">
+                                      <div class="col-6" *ngFor="let coScholastic of coScholastic; let i = index">
+                                        <div [formGroupName]="i">
+                                          <mat-form-field appearance="outline">
+                                            <mat-label>{{coScholastic | titlecase}} Activity</mat-label>
+                                            <input matInput type="text" [formControlName]="coScholastic">
+                                          </mat-form-field>
+                                        </div>
+                                      </div>
+                                    </ng-container>
+                                  </ng-container>
+                                </ng-container>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button class="submit-button" [disabled]="!examResultForm.valid || !theorySubjects"
+                          mat-raised-button type="submit">Submit</button>
+                      </div>
+                    </form>
+                    <div *ngIf="deleteMode">
+                      <h4>To delete examResult detail, click ok to confirm.</h4>
+                      <div class="modal-footer">
+                        <button class="delete-button" mat-raised-button type="button"
+                          (click)="examResultDelete(deleteById)">Ok</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="modal fade show custom-modal" [class.show]="showBulkResultPrintModal">
+                <div class="modal-dialog print-model-dialog modal-dialog-scrollable">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">MARKSHEET'S PRINT/DOWNLOAD - {{cls | classSuffix}}</h5>
+                      <mat-icon matRipple (click)="closeModal()">close</mat-icon>
+                    </div>
+                    <div class="modal-body print-model-body">
+                      <ng-container>
+                        <ng-container *ngFor="let result of mappedResults,let i = index;">
+                          <p style="color: transparent;">{{i+1}}.</p>
+                          <div id="student-{{result.studentId}}">
+                            <div class="col-lg-10 offset-lg-1 custom-container">
+                              <div class="table-container">
+                                <div class="row">
+                                  <div class="col-2">
+                                    <img class="logo" src="../../../../assets/school-logo.png" alt="">
+                                  </div>
+                                  <div class="col-10" style="text-align: center;">
+                                    <div class="school-name">
+                                      <h3 class="text-bold">{{schoolInfo?.schoolName | uppercase}}</h3>
+                                    </div>
+                                    <div class="address" style="text-align: center;">
+                                      <p>Affiliated to {{schoolInfo?.board | uppercase}}, Affliation No. -
+                                        {{schoolInfo?.affiliationNumber}}</p>
+                                      <p><span>Contact - {{schoolInfo?.phoneOne}} &nbsp; Email -
+                                          {{schoolInfo?.email}}</span></p>
+                                      <p><span>{{schoolInfo?.street | titlecase}}, {{schoolInfo?.city | titlecase}},
+                                          Dist.-
+                                          {{schoolInfo?.district | titlecase}},
+                                          {{schoolInfo?.state | titlecase}} - {{schoolInfo?.pinCode}}</span></p>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-12 title-lable">
+                                    <p>REPORT CARD {{result?.session}}</p>
+                                  </div>
+                                </div>
+                                <table class="custom-table" style="margin-bottom: 0;">
+                                  <!-- rgb(240, 172, 178) -->
+                                  <tr
+                                    style="height: 22px !important;background-color: rgb(180, 172, 240);padding-bottom: 10px;">
+                                    <th class="text-bold"
+                                      style="height: 22px !important;font-size:12px;padding-left: 15px;border: none;">
+                                      STUDENT'S PROFILE</th>
+                                  </tr>
+                                </table>
+                                <table class="info-table">
+                                  <tr>
+                                    <td class="text-bold">STUDENT NAME</td>
+                                    <td colspan="2">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result?.name | uppercase}}</td>
+                                    <td class="text-bold">ROLL NUMBER</td>
+                                    <td colspan="2">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result?.rollNumber}}</td>
+                                  </tr>
+                                  <tr>
+                                    <td class="text-bold">CLASS</td>
+                                    <td colspan="2">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result?.class | classSuffix}}</td>
+                                    <td class="text-bold">DATE OF BIRTH</td>
+                                    <td colspan="2">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result?.dob}}</td>
+                                  </tr>
+                                  <tr>
+                                    <td class="text-bold">MOTHER NAME</td>
+                                    <td colspan="2">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result?.motherName | uppercase}}
+                                    </td>
+                                    <td class="text-bold">FATHER NAME</td>
+                                    <td colspan="2">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result?.fatherName | uppercase}}
+                                    </td>
+                                  </tr>
+                                </table>
+                                <table class="custom-table" style="margin-bottom: 0;">
+                                  <tr
+                                    style="height: 22px !important;background-color: rgb(180, 172, 240);padding-bottom: 10px;">
+                                    <th class="text-bold"
+                                      style="height: 22px !important;font-size: 12px;padding-left: 15px; border: none;">
+                                      ACADEMIC PERFORMANCE - SCHOLASTIC AREA</th>
+                                  </tr>
+                                </table>
+
+
+
+
+
+                                <ng-container *ngIf='mappedResults[0].marksheetTemplateStructure.templateName=="T1"'>
+                                  <table class="custom-table" style="margin-bottom: 0;">
+                                    <tr style="padding-bottom: 10px;height: 25px;">
+                                      <th colspan="1" scope="colgroup"
+                                        style="height: 25px;text-align: left !important;padding-left: 10px;position: absolute;border:none;">
+                                        <p style="position: relative;font-size: 11px;margin-top: 20px;">SUBJECT</p>
+                                      </th>
+                                      <th colspan="6" scope="colgroup"
+                                        style="height: 25px;font-size: 11px;border-top: rgb(180, 172, 240);">TERM 1
+                                      </th>
+                                      <th colspan="6" scope="colgroup"
+                                        style="height: 25px;font-size: 11px;border-top: rgb(180, 172, 240);border:transparent;">
+                                        TERM 2
+                                      </th>
+                                    </tr>
+                                    <tr>
+                                      <th scope="col"
+                                        style="text-align: left !important;padding-left: 25px;border:none;">
+                                      </th>
+                                      <th scope="col" style="padding-top:5px;padding-bottom: 5px;">PER.
+                                        TEST<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.periodicTestMaxMarks}}
+                                      </th>
+                                      <th scope="col">NOTE
+                                        BOOK<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.noteBookMaxMarks}}
+                                      </th>
+                                      <th scope="col">
+                                        &nbsp;&nbsp;&nbsp;SEA&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.subjectEnrichmentMaxMarks}}
+                                      </th>
+                                      <th scope="col">HALF YEARLY
+                                        <br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                      </th>
+                                      <th scope="col">
+                                        &nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.periodicTestMaxMarks
+                                        +
+                                        mappedResults[0].marksheetTemplateStructure.examStructure.term1.noteBookMaxMarks
+                                        +
+                                        mappedResults[0].marksheetTemplateStructure.examStructure.term1.subjectEnrichmentMaxMarks
+                                        +
+                                        mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                      </th>
+                                      <th scope="col">&nbsp;&nbsp;GRADE&nbsp;&nbsp;</th>
+                                      <th scope="col">PER.
+                                        TEST<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.periodicTestMaxMarks}}
+                                      </th>
+                                      <th scope="col">NOTE
+                                        BOOK<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.noteBookMaxMarks}}
+                                      </th>
+                                      <th scope="col">
+                                        &nbsp;&nbsp;&nbsp;SEA&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.subjectEnrichmentMaxMarks}}
+                                      </th>
+                                      <th scope="col">YEARLY
+                                        EXAM<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
+                                      </th>
+                                      <th scope="col">
+                                        &nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.periodicTestMaxMarks
+                                        +
+                                        mappedResults[0].marksheetTemplateStructure.examStructure.term1.noteBookMaxMarks
+                                        +
+                                        mappedResults[0].marksheetTemplateStructure.examStructure.term1.subjectEnrichmentMaxMarks
+                                        +
+                                        mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                      </th>
+                                      <th scope="col" style="border-right: 1px solid transparent; ">
+                                        &nbsp;&nbsp;GRADE&nbsp;&nbsp;</th>
+                                    </tr>
+                                    <tr *ngFor="let exam of result.resultDetail.term1.marks; let i = index">
+                                      <td
+                                        style="text-align: left !important;padding-left: 10px;border-left: 1px solid transparent;padding-right: 10px;">
+                                        {{ exam.subject |
+                                        uppercase }}</td>
+                                      <td>{{ exam.periodicTestMarks > 0 ? exam.periodicTestMarks : '' }}</td>
+                                      <td>{{ exam.noteBookMarks > 0 ? exam.noteBookMarks : '' }}</td>
+                                      <td>{{ exam.subjectEnrichmentMarks > 0 ? exam.subjectEnrichmentMarks : '' }}</td>
+                                      <td>{{ exam.theoryMarks }}</td>
+                                      <td>{{ exam.totalMarks }}</td>
+                                      <td style="text-align: left;padding-left: 20px;">{{ exam.grade
+                                        }}</td>
+                                      <td>{{ result.resultDetail.term2.marks[i].periodicTestMarks > 0 ?
+                                        result.resultDetail.term2.marks[i].periodicTestMarks : '' }}</td>
+                                      <td>{{ result.resultDetail.term2.marks[i].noteBookMarks > 0 ?
+                                        result.resultDetail.term2.marks[i].noteBookMarks : '' }}</td>
+                                      <td>{{ result.resultDetail.term2.marks[i].subjectEnrichmentMarks > 0 ?
+                                        result.resultDetail.term2.marks[i].subjectEnrichmentMarks : '' }}</td>
+                                      <td>{{ result.resultDetail.term2.marks[i].theoryMarks }}</td>
+                                      <td>{{ result.resultDetail.term2.marks[i].totalMarks }}</td>
+                                      <td
+                                        style="text-align: left;padding-left: 20px;border-right: 1px solid transparent;">
+                                        {{result.resultDetail.term2.marks[i].grade }}</td>
+                                    </tr>
+                                    <tr style="height: 15px;">
+                                      <td colspan="1"
+                                        style="height: 15px;border-bottom: 1px solid transparent;border-left: 1px solid transparent;">
+                                      </td>
+                                      <td colspan="6"
+                                        style="padding-top:10px;padding-left: 25px;text-align: left;border-bottom: 1px solid transparent;">
+                                        <span class="text-bold">GRAND TOTAL</span> <span
+                                          style="margin-left: 79px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term1.grandTotalMarks
+                                          }} /
+                                          {{result.resultDetail.term1.totalMaxMarks }} </span>
+                                      </td>
+                                      <td colspan="6"
+                                        style="padding-top:10px;padding-left: 25px;text-align: left;border-bottom: 1px solid transparent;border-right: 1px solid transparent;">
+                                        <span class="text-bold">GRAND TOTAL</span> <span
+                                          style="margin-left: 79px;border-right: 1px solid transparent;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail?.term2?.grandTotalMarks}}
+                                          /
+                                          {{result.resultDetail.term2.totalMaxMarks }}</span>
+                                      </td>
+                                    </tr>
+
+                                    <tr style="height: 15px;">
+                                      <td colspan="1"
+                                        style="height: 15px;border-top: transparent;border-bottom: transparent;border-left: 1px solid transparent;">
+                                      </td>
+                                      <td colspan="6"
+                                        style="padding-left: 25px;text-align: left;border-bottom: 1px solid transparent;">
+                                        <span class="text-bold">PERCENTAGE</span> <span
+                                          style="margin-left: 82px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term1.percentile
+                                          }}%</span>
+                                      </td>
+                                      <td colspan="6"
+                                        style="padding-left: 25px;text-align: left;border-bottom: 1px solid transparent;border-right: 1px solid transparent;">
+                                        <span class="text-bold">PERCENTAGE</span> <span
+                                          style="margin-left: 82px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term2.percentile
+                                          }}%</span>
+                                      </td>
+                                    </tr>
+                                    <tr style="height: 15px;">
+                                      <td colspan="1"
+                                        style="height: 15px;border-top: transparent;border-bottom: transparent;border-left: 1px solid transparent;">
+                                      </td>
+                                      <td colspan="6"
+                                        style="border-bottom: transparent;padding-left: 25px;text-align: left;">
+                                        <span class="text-bold">GRADE</span> <span
+                                          style="margin-left: 115px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term1.percentileGrade
+                                          }}</span>
+                                      </td>
+                                      <td colspan="6"
+                                        style="border-bottom: transparent;padding-left: 25px;text-align: left;border-right: 1px solid transparent;">
+                                        <span class="text-bold">GRADE</span> <span
+                                          style="margin-left: 115px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term2.percentileGrade
+                                          }}</span>
+                                      </td>
+                                    </tr>
+
+                                    <tr style="height: 15px;">
+                                      <td colspan="1"
+                                        style="height: 15px;border-top:transparent;border-bottom: transparent;border-left: 1px solid transparent;">
+                                      </td>
+                                      <td colspan="6"
+                                        style="padding-bottom:10px;border-top:transparent;border-bottom: transparent;padding-left: 25px;text-align: left;">
+                                        <span class="text-bold">RESULT</span> <span
+                                          style="margin-left: 112px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term1.resultStatus}}</span>
+                                      </td>
+                                      <td colspan="6"
+                                        style="padding-bottom:10px;border-top:transparent;border-bottom: transparent;padding-left: 25px;text-align: left;border-right: 1px solid transparent;">
+                                        <span class="text-bold">RESULT</span> <span
+                                          style="margin-left: 112px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term2.resultStatus}}</span>
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </ng-container>
+
+
+
+                                <ng-container *ngIf='mappedResults[0].marksheetTemplateStructure.templateName=="T2"'>
+                                  <table class="custom-table" style="margin-bottom: 0;">
+                                    <tr style="padding-bottom: 10px;height: 25px;">
+                                      <th colspan="1" scope="colgroup"
+                                        style="height: 25px;text-align: left !important;padding-left: 10px;position: absolute;border:none;">
+                                        <p style="position: relative;font-size: 11px;margin-top: 20px;">SUBJECT</p>
+                                      </th>
+                                      <th colspan="5" scope="colgroup"
+                                        style="height: 25px;font-size: 11px;border-top: rgb(180, 172, 240);">TERM 1
+                                      </th>
+                                      <th colspan="5" scope="colgroup"
+                                        style="height: 25px;font-size: 11px;border-top: rgb(180, 172, 240);">
+                                        TERM 2
+                                      </th>
+                                      <th colspan="2" scope="colgroup"
+                                        style="height: 25px;font-size: 11px;border-top: rgb(180, 172, 240);border:transparent;padding-bottom: 2px;">
+                                        OVERALL<br>T1(50) + T2(50)
+                                      </th>
+                                    </tr>
+                                    <tr>
+                                      <th scope="col"
+                                        style="text-align: left !important;padding-left: 25px;border:none;">
+                                      </th>
+                                      <th scope="col" style="padding-top:5px;padding-bottom: 5px;">PER.
+                                        TEST<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.periodicTestMaxMarks}}
+                                      </th>
+                                      <th scope="col">NOTE
+                                        BOOK<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.noteBookMaxMarks}}
+                                      </th>
+                                      <th scope="col">
+                                        &nbsp;&nbsp;&nbsp;SEA&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.subjectEnrichmentMaxMarks}}
+                                      </th>
+                                      <th scope="col">HALF YEARLY
+                                        <br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                      </th>
+                                      <th scope="col">
+                                        &nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.periodicTestMaxMarks
+                                        +
+                                        mappedResults[0].marksheetTemplateStructure.examStructure.term1.noteBookMaxMarks
+                                        +
+                                        mappedResults[0].marksheetTemplateStructure.examStructure.term1.subjectEnrichmentMaxMarks
+                                        +
+                                        mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                      </th>
+                                      <th scope="col">PER.
+                                        TEST<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.periodicTestMaxMarks}}
+                                      </th>
+                                      <th scope="col">NOTE
+                                        BOOK<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.noteBookMaxMarks}}
+                                      </th>
+                                      <th scope="col">
+                                        &nbsp;&nbsp;&nbsp;SEA&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.subjectEnrichmentMaxMarks}}
+                                      </th>
+                                      <th scope="col">YEARLY
+                                        EXAM<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
+                                      </th>
+                                      <th scope="col">
+                                        &nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.periodicTestMaxMarks
+                                        +
+                                        mappedResults[0].marksheetTemplateStructure.examStructure.term1.noteBookMaxMarks
+                                        +
+                                        mappedResults[0].marksheetTemplateStructure.examStructure.term1.subjectEnrichmentMaxMarks
+                                        +
+                                        mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                      </th>
+                                      <th scope="col">GRAND TOTAL</th>
+                                      <th scope="col" style="border-right: 1px solid transparent; ">
+                                        &nbsp;&nbsp;GRADE&nbsp;&nbsp;</th>
+                                    </tr>
+                                    <tr *ngFor="let exam of result.resultDetail.term1.marks; let i = index">
+                                      <td
+                                        style="text-align: left !important;padding-left: 10px;border-left: 1px solid transparent;padding-right: 10px;">
+                                        {{ exam.subject |
+                                        uppercase }}</td>
+                                      <td>{{ exam.periodicTestMarks > 0 ? exam.periodicTestMarks : '' }}</td>
+                                      <td>{{ exam.noteBookMarks > 0 ? exam.noteBookMarks : '' }}</td>
+                                      <td>{{ exam.subjectEnrichmentMarks > 0 ? exam.subjectEnrichmentMarks : '' }}</td>
+                                      <td>{{ exam.theoryMarks }}</td>
+                                      <td>{{ exam.totalMarks }}</td>
+                                      <td>{{ result.resultDetail.term2.marks[i].periodicTestMarks > 0 ?
+                                        result.resultDetail.term2.marks[i].periodicTestMarks : '' }}</td>
+                                      <td>{{ result.resultDetail.term2.marks[i].noteBookMarks > 0 ?
+                                        result.resultDetail.term2.marks[i].noteBookMarks : '' }}</td>
+                                      <td>{{ result.resultDetail.term2.marks[i].subjectEnrichmentMarks > 0 ?
+                                        result.resultDetail.term2.marks[i].subjectEnrichmentMarks : '' }}</td>
+                                      <td>{{ result.resultDetail.term2.marks[i].theoryMarks }}</td>
+                                      <td>{{ result.resultDetail.term2.marks[i].totalMarks }}</td>
+                                      <td>
+                                        {{result.resultDetail.overallMarksAndGrades.averageGradesAndMarks[i].averageMarks
+                                        | number:'1.1-1'}}</td>
+                                      <td
+                                        style="text-align: left;padding-left: 20px;border-right: 1px solid transparent;">
+                                        {{result.resultDetail.overallMarksAndGrades.averageGradesAndMarks[i].grade}}
+                                      </td>
+                                    </tr>
+                                    <table class="custom-table"
+                                      style="width: 90%;margin-left: 5%;margin-top: 15px;margin-bottom: 15px;">
+                                      <tr>
+                                        <td><span class="text-bold">RESULT</span> :
+                                          PASS</td>
+                                        <td><span class="text-bold">OVERALL MARKS</span> :
+                                          {{result.resultDetail.overallMarksAndGrades.averageTotalMarks}} /
+                                          {{result.resultDetail.overallMarksAndGrades.averageTotalMaxMarks}}</td>
+                                        <td><span class="text-bold">PERCENTAGE</span> :
+                                          {{result.resultDetail.overallMarksAndGrades.averagePercentile}}%
+                                        </td>
+                                        <td><span class="text-bold">GRADE</span> :
+                                          {{result.resultDetail.overallMarksAndGrades.averagePercentileGrade}}</td>
+                                      </tr>
+                                    </table>
+                                  </table>
+                                </ng-container>
+
+
+
+
+
+                                <ng-container *ngIf='mappedResults[0].marksheetTemplateStructure.templateName=="T3"'>
+                                  <table class="custom-table" style="margin-bottom: 0;">
+                                    <tr style="padding-bottom: 10px;height: 25px;">
+                                      <th colspan="1" scope="colgroup"
+                                        style="height: 25px;text-align: left !important;padding-left: 10px;position: absolute;border:none;">
+                                        <p style="position: relative;font-size: 11px;margin-top: 20px;">SUBJECT</p>
+                                      </th>
+                                      <th colspan="4" scope="colgroup"
+                                        style="height: 25px;font-size: 11px;border-top: rgb(180, 172, 240);">TERM 1
+                                      </th>
+                                      <th colspan="4" scope="colgroup"
+                                        style="height: 25px;font-size: 11px;border-top: rgb(180, 172, 240);border:transparent;">
+                                        TERM 2
+                                      </th>
+                                    </tr>
+                                    <tr>
+                                      <th scope="col"
+                                        style="text-align: left !important;padding-left: 25px;border:none;">
+                                      </th>
+                                      <th scope="col" style="padding-top:5px;padding-bottom: 5px;">
+                                        PRACTICAL<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.practicalMaxMarks}}
+                                      </th>
+                                      <th scope="col">HALF YEARLY
+                                        <br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                      </th>
+                                      <th scope="col">
+                                        &nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.practicalMaxMarks
+                                        +
+                                        mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                      </th>
+                                      <th scope="col">&nbsp;&nbsp;GRADE&nbsp;&nbsp;</th>
+                                      <th scope="col">PRACTICAL<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.practicalMaxMarks}}
+                                      </th>
+                                      <th scope="col">YEARLY
+                                        EXAM<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
+                                      </th>
+                                      <th scope="col">
+                                        &nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.practicalMaxMarks
+                                        +
+                                        mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                      </th>
+                                      <th scope="col" style="border-right: 1px solid transparent; ">
+                                        &nbsp;&nbsp;GRADE&nbsp;&nbsp;</th>
+                                    </tr>
+                                    <tr *ngFor="let exam of result.resultDetail.term1.marks; let i = index">
+                                      <td
+                                        style="text-align: left !important;padding-left: 10px;border-left: 1px solid transparent;padding-right: 10px;">
+                                        {{ exam.subject |
+                                        uppercase }}</td>
+                                      <td>{{ exam.practicalMarks > 0 ? exam.practicalMarks : '' }}</td>
+                                      <td>{{ exam.theoryMarks }}</td>
+                                      <td>{{ exam.totalMarks }}</td>
+                                      <td style="text-align: left;padding-left: 20px;">{{ exam.grade
+                                        }}</td>
+                                      <td>{{ result.resultDetail.term2.marks[i].practicalMarks > 0 ?
+                                        result.resultDetail.term2.marks[i].practicalMarks : '' }}</td>
+                                      <td>{{ result.resultDetail.term2.marks[i].theoryMarks }}</td>
+                                      <td>{{ result.resultDetail.term2.marks[i].totalMarks }}</td>
+                                      <td
+                                        style="text-align: left;padding-left: 20px;border-right: 1px solid transparent;">
+                                        {{result.resultDetail.term2.marks[i].grade }}</td>
+                                    </tr>
+                                    <tr style="height: 15px;">
+                                      <td colspan="1"
+                                        style="height: 15px;border-bottom: 1px solid transparent;border-left: 1px solid transparent;">
+                                      </td>
+                                      <td colspan="4"
+                                        style="padding-top:10px;padding-left: 25px;text-align: left;border-bottom: 1px solid transparent;">
+                                        <span class="text-bold">GRAND TOTAL</span> <span
+                                          style="margin-left: 79px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term1.grandTotalMarks
+                                          }} /
+                                          {{result.resultDetail.term1.totalMaxMarks }} </span>
+                                      </td>
+                                      <td colspan="4"
+                                        style="padding-top:10px;padding-left: 25px;text-align: left;border-bottom: 1px solid transparent;border-right: 1px solid transparent;">
+                                        <span class="text-bold">GRAND TOTAL</span> <span
+                                          style="margin-left: 79px;border-right: 1px solid transparent;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail?.term2?.grandTotalMarks}}
+                                          /
+                                          {{result.resultDetail.term2.totalMaxMarks }}</span>
+                                      </td>
+                                    </tr>
+
+                                    <tr style="height: 15px;">
+                                      <td colspan="1"
+                                        style="height: 15px;border-top: transparent;border-bottom: transparent;border-left: 1px solid transparent;">
+                                      </td>
+                                      <td colspan="4"
+                                        style="padding-left: 25px;text-align: left;border-bottom: 1px solid transparent;">
+                                        <span class="text-bold">PERCENTAGE</span> <span
+                                          style="margin-left: 82px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term1.percentile
+                                          }}%</span>
+                                      </td>
+                                      <td colspan="4"
+                                        style="padding-left: 25px;text-align: left;border-bottom: 1px solid transparent;border-right: 1px solid transparent;">
+                                        <span class="text-bold">PERCENTAGE</span> <span
+                                          style="margin-left: 82px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term2.percentile
+                                          }}%</span>
+                                      </td>
+                                    </tr>
+                                    <tr style="height: 15px;">
+                                      <td colspan="1"
+                                        style="height: 15px;border-top: transparent;border-bottom: transparent;border-left: 1px solid transparent;">
+                                      </td>
+                                      <td colspan="4"
+                                        style="border-bottom: transparent;padding-left: 25px;text-align: left;">
+                                        <span class="text-bold">GRADE</span> <span
+                                          style="margin-left: 115px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term1.percentileGrade
+                                          }}</span>
+                                      </td>
+                                      <td colspan="4"
+                                        style="border-bottom: transparent;padding-left: 25px;text-align: left;border-right: 1px solid transparent;">
+                                        <span class="text-bold">GRADE</span> <span
+                                          style="margin-left: 115px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term2.percentileGrade
+                                          }}</span>
+                                      </td>
+                                    </tr>
+
+                                    <tr style="height: 15px;">
+                                      <td colspan="1"
+                                        style="height: 15px;border-top:transparent;border-bottom: transparent;border-left: 1px solid transparent;">
+                                      </td>
+                                      <td colspan="4"
+                                        style="padding-bottom:10px;border-top:transparent;border-bottom: transparent;padding-left: 25px;text-align: left;">
+                                        <span class="text-bold">RESULT</span> <span
+                                          style="margin-left: 112px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term1.resultStatus}}</span>
+                                      </td>
+                                      <td colspan="4"
+                                        style="padding-bottom:10px;border-top:transparent;border-bottom: transparent;padding-left: 25px;text-align: left;border-right: 1px solid transparent;">
+                                        <span class="text-bold">RESULT</span> <span
+                                          style="margin-left: 112px;">:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result.resultDetail.term2.resultStatus}}</span>
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </ng-container>
+
+
+                                <ng-container *ngIf='mappedResults[0].marksheetTemplateStructure.templateName=="T4"'>
+                                  <table class="custom-table" style="margin-bottom: 0;">
+                                    <tr style="padding-bottom: 10px;height: 25px;">
+                                      <th colspan="1" scope="colgroup"
+                                        style="height: 25px;text-align: left !important;padding-left: 10px;position: absolute;border:none;">
+                                        <p style="position: relative;font-size: 11px;margin-top: 20px;">SUBJECT</p>
+                                      </th>
+                                      <th colspan="3" scope="colgroup"
+                                        style="height: 25px;font-size: 11px;border-top: rgb(180, 172, 240);">TERM 1
+                                      </th>
+                                      <th colspan="3" scope="colgroup"
+                                        style="height: 25px;font-size: 11px;border-top: rgb(180, 172, 240);">
+                                        TERM 2
+                                      </th>
+                                      <th colspan="2" scope="colgroup"
+                                        style="height: 25px;font-size: 11px;border-top: rgb(180, 172, 240);border:transparent;padding-bottom: 2px;">
+                                        OVERALL<br>T1(50) + T2(50)
+                                      </th>
+                                    </tr>
+                                    <tr>
+                                      <th scope="col"
+                                        style="text-align: left !important;padding-left: 25px;border:none;">
+                                      </th>
+                                      <th scope="col" style="padding-top:5px;padding-bottom: 5px;">PRACTICAL<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.practicalMaxMarks}}
+                                      </th>
+                                      <th scope="col">HALF YEARLY
+                                        <br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                      </th>
+                                      <th scope="col">
+                                        &nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term1.practicalMaxMarks
+                                        +
+                                        mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                      </th>
+                                      <th scope="col">PRACTICAL<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.practicalMaxMarks}}
+                                      </th>
+                                      <th scope="col">YEARLY
+                                        EXAM<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.theoryMaxMarks}}
+                                      </th>
+                                      <th scope="col">
+                                        &nbsp;&nbsp;&nbsp;TOTAL&nbsp;&nbsp;&nbsp;<br>{{mappedResults[0].marksheetTemplateStructure.examStructure.term2.practicalMaxMarks
+                                        +
+                                        mappedResults[0].marksheetTemplateStructure.examStructure.term1.theoryMaxMarks}}
+                                      </th>
+                                      <th scope="col">GRAND TOTAL</th>
+                                      <th scope="col" style="border-right: 1px solid transparent; ">
+                                        &nbsp;&nbsp;GRADE&nbsp;&nbsp;</th>
+                                    </tr>
+                                    <tr *ngFor="let exam of result.resultDetail.term1.marks; let i = index">
+                                      <td
+                                        style="text-align: left !important;padding-left: 10px;border-left: 1px solid transparent;padding-right: 10px;">
+                                        {{ exam.subject |
+                                        uppercase }}</td>
+                                      <td>{{ exam.practicalMarks > 0 ? exam.practicalMarks : '' }}</td>
+                                      <td>{{ exam.theoryMarks }}</td>
+                                      <td>{{ exam.totalMarks }}</td>
+                                      <td>{{ result.resultDetail.term2.marks[i].practicalMarks > 0 ?
+                                        result.resultDetail.term2.marks[i].practicalMarks : '' }}</td>
+                                      <td>{{ result.resultDetail.term2.marks[i].theoryMarks }}</td>
+                                      <td>{{ result.resultDetail.term2.marks[i].totalMarks }}</td>
+                                      <td>
+                                        {{result.resultDetail.overallMarksAndGrades.averageGradesAndMarks[i].averageMarks
+                                        | number:'1.1-1'}}</td>
+                                      <td
+                                        style="text-align: left;padding-left: 20px;border-right: 1px solid transparent;">
+                                        {{result.resultDetail.overallMarksAndGrades.averageGradesAndMarks[i].grade}}
+                                      </td>
+                                    </tr>
+                                    <table class="custom-table"
+                                      style="width: 90%;margin-left: 5%;margin-top: 15px;margin-bottom: 15px;">
+                                      <tr>
+                                        <td><span class="text-bold">RESULT</span> :
+                                          PASS</td>
+                                        <td><span class="text-bold">OVERALL MARKS</span> :
+                                          {{result.resultDetail.overallMarksAndGrades.averageTotalMarks}} /
+                                          {{result.resultDetail.overallMarksAndGrades.averageTotalMaxMarks}}</td>
+                                        <td><span class="text-bold">PERCENTAGE</span> :
+                                          {{result.resultDetail.overallMarksAndGrades.averagePercentile}}%
+                                        </td>
+                                        <td><span class="text-bold">GRADE</span> :
+                                          {{result.resultDetail.overallMarksAndGrades.averagePercentileGrade}}</td>
+                                      </tr>
+                                    </table>
+                                  </table>
+                                </ng-container>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                <ng-container *ngIf='mappedResults.length>0'>
+                                  <table class="custom-table" style="margin-bottom: 0;">
+                                    <tr
+                                      style="height: 22px !important;background-color: rgb(180, 172, 240);padding-bottom: 10px;">
+                                      <th class="text-bold"
+                                        style="height: 22px !important;font-size:12px;padding-left: 15px;border: none;">
+                                        CO-SCHOLASTIC & DISCIPLINE AREA (3 Point Grading Scale A,B,C)</th>
+                                    </tr>
+                                  </table>
+                                  <table class="custom-table" style="margin-bottom: 0;width: 100%;">
+                                    <tr style="padding-bottom: 11px;height: 25px;">
+                                      <th colspan="1" scope="colgroup"
+                                        style="height: 25px;font-size: 11px;border-top: transparent;border-left: 1px solid transparent;">
+                                        <span>S.NO.</span>
+                                      </th>
+                                      <th colspan="1" scope="colgroup"
+                                        style="height: 25px;font-size: 11px;text-align: left;border-top: transparent;border-left: 1px solid transparent;">
+                                        <span style="margin-left: 10px;">ACTIVTY</span>
+                                      </th>
+                                      <th colspan="1" scope="colgroup"
+                                        style="height: 25px;font-size: 11px;border-top: transparent;border-left: 1px solid transparent;">
+                                        <span>TERM 1</span>
+                                      </th>
+                                      <th colspan="1" scope="colgroup"
+                                        style="height: 25px;font-size: 11px;border-top: transparent;border-left: 1px solid transparent;border-right: 1px solid transparent;">
+                                        <span>TERM 2</span>
+                                      </th>
+                                    </tr>
+                                    <tr *ngFor="let exam of result.resultDetail.term1.coScholastic;let i = index ">
+                                      <td
+                                        style="padding-left: 10px;padding-right: 10px;border-left: 1px solid transparent;">
+                                        {{i+1}}</td>
+                                      <td
+                                        style="text-align: left !important;padding-left: 10px;border-left: 1px solid transparent;padding-right: 10px;">
+                                        {{exam.activity |uppercase}}</td>
+                                      <td>{{exam.grade | uppercase}}</td>
+                                      <td style="border-right: 1px solid transparent;">
+                                        {{result.resultDetail.term2.coScholastic[i].grade}}</td>
+                                    </tr>
+                                  </table>
+
+
+                                  <table class="custom-table" style="margin-top: -2px;margin-bottom: 0;">
+                                    <tr
+                                      style="height: 22px !important;background-color: rgb(180, 172, 240);padding-bottom: 10px;">
+                                      <th class="text-bold"
+                                        style="height: 22px !important;font-size:12px;padding-top: 2px;padding-left: 15px;border: none;">
+                                        SUBJECT GRADE RANGE</th>
+                                    </tr>
+                                  </table>
+                                  <table class="custom-table" style="margin-bottom: 0;width: 100%;">
+                                    <tr style="height: 25px;">
+                                      <td class="text-bold"
+                                        *ngFor="let gradeMarks of mappedResults[0].gradeMinMarks; let i = index"
+                                        style="padding-top: 5px;border-top:1px solid transparent;border-left:1px solid transparent;">
+                                        {{gradeMarks}}% - {{mappedResults[0].gradeMaxMarks[i]}}%</td>
+                                    </tr>
+                                    <tr style="height: 25px;">
+                                      <ng-container
+                                        *ngFor="let installmentObject of let grade of mappedResults[0].marksheetTemplateStructure.examStructure.term1.gradeMinMarks; let j = index">
+                                        <ng-container *ngFor="let entry of installmentObject | keyvalue">
+                                          <td style="padding-bottom: 5px;border-left:1px solid transparent;">
+                                            {{ entry.key }}
+                                          </td>
+                                        </ng-container>
+                                      </ng-container>
+                                    </tr>
+                                  </table>
+                                </ng-container>
+
+                                <table class="custom-table sign-table"
+                                  style="position: absolute;left: 0;bottom: 0;z-index: 2;">
+                                  <tr>
+                                    <td style="width:33.33%;font-size: 12px;text-align: left;border: none;">
+                                      <p style="margin-top: 30px;margin-left: 30px;">{{result?.isDate}}</p>
+                                    </td>
+                                    <td style="width:33.33%;border: none;"></td>
+                                    <td style="width:33.33%;border: none"></td>
+                                  </tr>
+                                  <tr>
+                                    <td class="text-bold"
+                                      style="width:33.33%;font-size: 12px;text-align: left;border: none;">
+                                      <p style="margin-left: 30px;">Issued Date</p>
+                                    </td>
+                                    <td class="text-bold"
+                                      style="width:33.33%;font-size: 12px;text-align: center;border: none;">Signature of
+                                      Class Teacher</td>
+                                    <td class="text-bold"
+                                      style="width:33.33%;font-size: 12px;text-align: right;border: none;">
+                                      <p style="margin-right: 30px;">Signature of Principal</p>
+                                    </td>
+                                  </tr>
+                                </table>
+
+                              </div>
+                            </div>
+                          </div>
+                        </ng-container>
+                      </ng-container>
+                    </div>
+                    <div class="modal-footer">
+
+                      <button class="submit-button print-pdf" mat-raised-button (click)="printStudentData()"><mat-icon
+                          style="font-size: 20px;">print</mat-icon> Print</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal fade show" [class.show]="showBulkImportModal">
+              <div class="modal-dialog modal-dialog-top" role="document">
+                <div class="modal-content" *ngIf="successMsg">
+                  <div class="modal-header">
+                    <h5 class="modal-title" style="color: transparent;">&nbsp;</h5>
+                  </div>
+                  <div class="modal-body">
+                    <p class="success-message">{{successMsg}}</p>
+                  </div>
+                  <div class="modal-footer">
+                    <mat-icon></mat-icon>
+                  </div>
+                </div>
+                <div class="modal-content" *ngIf="!successMsg">
+                  <div class="modal-header">
+                    <h6 class="modal-title">File Choose xlsx/csv
+                    </h6>
+                    <mat-icon matRipple (click)="closeModal()" style="cursor: pointer;">close</mat-icon>
+                  </div>
+                  <div class="modal-body">
+                    <div *ngIf="errorCheck">
+                      <p class="error-message">{{errorMsg}}</p>
+                    </div>
+                    <main>
+                      <div class="row mb-2 mt-5">
+                        <mat-form-field appearance="outline">
+                          <mat-label>Exam Type</mat-label>
+                          <mat-select #examSelect matInput>
+                            <div *ngFor="let exam of examType">
+                              <mat-option (click)="selectExam(examSelect.value)" value="{{exam}}">
+                                {{exam | titlecase}} Exam
+                              </mat-option>
+                            </div>
+                          </mat-select>
+                        </mat-form-field>
+                        <!-- <mat-form-field appearance="outline">
+                          <mat-label>Stream</mat-label>
+                          <mat-select type="text" matInput>
+                            <ng-container *ngIf="cls==12 || cls==11">
+                              <div *ngFor="let subject of streamMainSubject">
+                                <mat-option (click)="chooseStream(subject)" value="{{subject}}">{{subject}}</mat-option>
+                              </div>
+                            </ng-container>
+                            <ng-container *ngIf="cls<11 && cls!==0 || cls == 200 || cls==201 || cls==202">
+                              <div>
+                                <mat-option value="notApplicable" (click)='chooseStream(notApplicable)'>N/A</mat-option>
+                              </div>
+                            </ng-container>
+                          </mat-select>
+                        </mat-form-field> -->
+                        <div class="custom-file">
+                          <input type="file" name="file" class="form-control file-input" id="inputGroupFile" required
+                            (change)="handleImport($event)"
+                            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                        </div>
+                      </div>
+                    </main>
+                  </div>
+                  <div class="modal-footer">
+                    <button [disabled]="!fileChoose || !selectedExam || !stream" (click)="addBulkExamResult()"
+                      class="submit-button" mat-raised-button>
+                      Import
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="spinner-container" *ngIf="loader">
+  <div class="spinner-overlay" *ngIf="loader">
+    <mat-progress-spinner *ngIf="loader" diameter="65" mode="indeterminate" strokeWidth="3"></mat-progress-spinner>
+  </div>
+</div>

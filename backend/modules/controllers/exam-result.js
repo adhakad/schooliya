@@ -85,24 +85,35 @@ let GetAllStudentExamResultByClass = async (req, res, next) => {
     let isDate = currentDateIst.toFormat('dd-MM-yyyy');
     let adminId = req.params.id;
     let className = req.params.class;
+    let stream = req.params.stream;
+    if (stream === "stream") {
+        stream = "N/A";
+    }
+    let streamMsg = `${stream} stream`;
     try {
-        const student = await StudentModel.find({ adminId: adminId, class: className, stream: "Mathematics(Science)" }, 'adminId session admissionNo name dob rollNumber class fatherName motherName stream');
+        const student = await StudentModel.find({ adminId: adminId, class: className, stream:stream }, 'adminId session admissionNo name dob rollNumber class fatherName motherName stream');
         if (student.length <= 0) {
             return res.status(404).json({ errorMsg: 'This class any student not found !' });
         }
 
-        const examResult = await ExamResultModel.find({ adminId: adminId, class: className, stream: "Mathematics(Science)" });
+        const examResult = await ExamResultModel.find({ adminId: adminId, class: className, stream });
         if (examResult.length <= 0) {
             return res.status(404).json({ errorMsg: 'This class exam result not found !' });
         }
-        let marksheetTemplate = await MarksheetTemplateModel.findOne({ adminId: adminId, class: className, stream: "Mathematics(Science)" });
+        let marksheetTemplate = await MarksheetTemplateModel.findOne({ adminId: adminId, class: className, stream: stream });
         if (!marksheetTemplate) {
-            return res.status(404).json({ errorMsg: 'This class any marksheet template not found !' });
+            if (stream === "N/A") {
+                streamMsg = ``;
+            }
+            return res.status(404).json({errorMsg:`This class ${streamMsg} marksheet template not found !`});
         }
         let templateName = marksheetTemplate.templateName;
         let marksheetTemplateStructure = await MarksheetTemplateStructureModel.findOne({ templateName: templateName });
         if (!marksheetTemplateStructure) {
-            return res.status(404).json({ errorMsg: 'This class any marksheet template not found !' });
+            if (stream === "N/A") {
+                streamMsg = ``;
+            }
+            return res.status(404).json({errorMsg:`This class ${streamMsg} marksheet template not found !`});
         }
         return res.status(200).json({ examResultInfo: examResult, studentInfo: student, marksheetTemplateStructure: marksheetTemplateStructure,isDate:isDate });
     } catch (error) {

@@ -23,7 +23,7 @@ export class ExamResultService {
     return this.http.get(`${this.url}/student/${studentId}`);
   }
   getAllStudentExamResultByClass(params:any){
-    return this.http.get(`${this.url}/admin/${params.adminId}/class/${params.class}`);
+    return this.http.get(`${this.url}/admin/${params.adminId}/class/${params.class}/stream/${params.stream}`);
   }
   updateExamResult(examForm:any){
     return this.http.put(`${this.url}`,examForm);

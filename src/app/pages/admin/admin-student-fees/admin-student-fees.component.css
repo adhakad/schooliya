@@ -75,9 +75,9 @@ img{
 .text-bold{
   font-weight: bold;
 }
-.print-pdf {
+/* .print-pdf {
   display: none;
-}
+} */
 @media (min-width: 576px) and (max-width:991.98px) {
   .table-container {
     margin-top: 1vh;

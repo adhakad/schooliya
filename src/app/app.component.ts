@@ -6,5 +6,5 @@ import { Component} from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'angular-slider';
+  title = 'Schooliya Online ERP Software For Schools';
 }

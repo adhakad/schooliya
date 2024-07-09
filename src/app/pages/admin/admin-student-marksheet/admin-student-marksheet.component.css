@@ -1,0 +1,79 @@
+@import'../../../../styles.css';
+@import'../admin-student-fees/admin-student-fees.component.css'; 
+ .file-input {
+    height: 50px;
+    color: #4e4caacd;
+    border: 1px solid #4e4caacd;
+    border-radius: 5px;
+  }
+/* .logo{
+    height: 60px;display: inline;
+ }
+ .school-name h3{
+    color:#4e4caacd !important;font-size: 16px !important;display: inline;margin-bottom: 0 !important;
+ }
+ .school-name p{
+    color: #4e4caacd !important;
+    display: block !important;margin-bottom:30px !important;font-size: 12px !important;
+ }
+ .address{
+    margin-top: 10px !important;
+    color: #2e2d6aa1;
+ }
+ .address p{
+    color: #4e4caacd !important;
+    display: block !important;margin-top: -15px !important;font-size: 12px !important;
+ }
+ .title-lable{
+    text-align: center;border: 1px solid #4e4caacd;border-radius: 5px;margin-top: 10px;margin-bottom: 15px;padding-top: 5px;
+ }
+ .table-container {
+    border: 1px solid #4e4caacd;border-radius: 5px;
+ }
+ .table-container .title{
+    color:#4e4caacd;text-align: center;padding-top:5px;margin-bottom: 15px;border: 1px solid #4e4caacd;border-radius: 5px;
+ }
+ .table-container .title p{
+    color: #4e4caacd !important;
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 1px;
+ }
+ .table-container .codes{
+    margin-top: 8px;
+    margin-bottom: 40px;
+ }
+ .table-container .codes p{
+    margin-top: -10px !important;
+ } */
+ .text-bold{
+    font-weight:bold;
+ }
+ /* .table-container p{
+    color:#4e4caacd !important;
+    font-size: 12px !important;
+ }
+ .table-container .container p{
+    color:#4e4caacd !important;
+    font-size: 12px !important;
+    margin: 5px !important;
+ }
+ .custom-container{
+    font-size: 12px;
+ } */
+  .sign-table{
+   border: 1px solid transparent;
+  }
+
+ .custom-modal .modal-dialog {
+   margin-top: 200px;
+ }
+
+ .print-model-dialog {
+   /* height: 80vh; */
+ }
+ .print-model-body {
+   max-height: calc(0vh - 2.3 * 3.5rem);
+   overflow-x: hidden;
+   overflow-y: hidden;
+ }

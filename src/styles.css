@@ -268,22 +268,25 @@ table mat-icon {
   display: block;
   z-index: 10 !important;
   background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
 }
 
 .modal-header {
-  background-color: #8C52FF;
+  background-color: #fff;
   top: 0;
   position: sticky;
   z-index: 1;
 }
 
 .modal-header .modal-title {
-  color: #fff;
+  color: #252525;
+  font-size: 16px;
 }
 
 .modal-header .mat-icon {
   cursor: pointer;
-  color: #fff;
+  color: #252525;
+  margin-top: -10px;
 }
 
 .modal-footer {
@@ -292,15 +295,14 @@ table mat-icon {
   z-index: 1;
   background-color: #ffffff;
 }
-
+.modal-dialog {
+  height: 80vh;
+  margin-top: 75px;
+  /* overflow-x: auto; */
+}
 .modal-body {
   overflow-y: auto;
   max-height: calc(80vh - 2.3 * 3.5rem);
-}
-
-.modal-dialog {
-  height: 80vh;
-  /* overflow-x: auto; */
 }
 
 .scroll-content {

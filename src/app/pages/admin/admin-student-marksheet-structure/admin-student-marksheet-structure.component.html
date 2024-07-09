@@ -51,7 +51,8 @@
                                             <p class="mb-0">{{examResultStr.stream}}</p>
                                         </td>
                                         <td class="mb-0">
-                                            <mat-icon (click)="openExamResultStructureModal(examResultStr)">launch</mat-icon>
+                                            <mat-icon
+                                                (click)="openExamResultStructureModal(examResultStr)">launch</mat-icon>
                                         </td>
                                         <td>
                                             <mat-slide-toggle [(ngModel)]="examResultStr.resultPublishStatus"
@@ -118,10 +119,68 @@
                                                                 </mat-form-field>
                                                                 <mat-form-field appearance="outline">
                                                                     <mat-label>Template Name</mat-label>
-                                                                    <input matInput type="text" formControlName="templateName">
-                                                                    <mat-hint *ngIf="!examResultForm.get('templateName')?.valid && examResultForm.get('templateName')?.touched"
-                                                                      class="form-text text-danger">Price is required</mat-hint>
-                                                                  </mat-form-field>
+                                                                    <input matInput type="text"
+                                                                        formControlName="templateName">
+                                                                    <mat-hint
+                                                                        *ngIf="!examResultForm.get('templateName')?.valid && examResultForm.get('templateName')?.touched"
+                                                                        class="form-text text-danger">Price is
+                                                                        required</mat-hint>
+                                                                </mat-form-field>
+                                                                <mat-form-field appearance="outline">
+                                                                    <mat-label>Template Name</mat-label>
+                                                                    <input matInput type="text"
+                                                                        formControlName="templateName">
+                                                                    <mat-hint
+                                                                        *ngIf="!examResultForm.get('templateName')?.valid && examResultForm.get('templateName')?.touched"
+                                                                        class="form-text text-danger">Price is
+                                                                        required</mat-hint>
+                                                                </mat-form-field>
+                                                                <mat-form-field appearance="outline">
+                                                                    <mat-label>Template Name</mat-label>
+                                                                    <input matInput type="text"
+                                                                        formControlName="templateName">
+                                                                    <mat-hint
+                                                                        *ngIf="!examResultForm.get('templateName')?.valid && examResultForm.get('templateName')?.touched"
+                                                                        class="form-text text-danger">Price is
+                                                                        required</mat-hint>
+                                                                </mat-form-field>
+                                                                <mat-form-field appearance="outline">
+                                                                    <mat-label>Template Name</mat-label>
+                                                                    <input matInput type="text"
+                                                                        formControlName="templateName">
+                                                                    <mat-hint
+                                                                        *ngIf="!examResultForm.get('templateName')?.valid && examResultForm.get('templateName')?.touched"
+                                                                        class="form-text text-danger">Price is
+                                                                        required</mat-hint>
+                                                                </mat-form-field>
+                                                                <mat-form-field appearance="outline">
+                                                                    <mat-label>Template Name</mat-label>
+                                                                    <input matInput type="text"
+                                                                        formControlName="templateName">
+                                                                    <mat-hint
+                                                                        *ngIf="!examResultForm.get('templateName')?.valid && examResultForm.get('templateName')?.touched"
+                                                                        class="form-text text-danger">Price is
+                                                                        required</mat-hint>
+                                                                </mat-form-field>
+                                                                <mat-form-field appearance="outline">
+                                                                    <mat-label>Template Name</mat-label>
+                                                                    <input matInput type="text"
+                                                                        formControlName="templateName">
+                                                                    <mat-hint
+                                                                        *ngIf="!examResultForm.get('templateName')?.valid && examResultForm.get('templateName')?.touched"
+                                                                        class="form-text text-danger">Price is
+                                                                        required</mat-hint>
+                                                                </mat-form-field>
+                                                                <mat-form-field appearance="outline">
+                                                                    <mat-label>Template Name</mat-label>
+                                                                    <input matInput type="text"
+                                                                        formControlName="templateName">
+                                                                    <mat-hint
+                                                                        *ngIf="!examResultForm.get('templateName')?.valid && examResultForm.get('templateName')?.touched"
+                                                                        class="form-text text-danger">Price is
+                                                                        required</mat-hint>
+                                                                </mat-form-field>
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -164,7 +223,9 @@
                                                 <div class="custom-container">
                                                     <div class="table-container">
                                                         <ng-container>
-                                                            <h3>{{examResultInfo?.examType | titlecase}} Exam Result <span *ngIf="examResultInfo?.stream!=='N/A'">- {{examResultInfo?.stream}}</span></h3>
+                                                            <h3>{{examResultInfo?.examType | titlecase}} Exam Result
+                                                                <span *ngIf="examResultInfo?.stream!=='N/A'">-
+                                                                    {{examResultInfo?.stream}}</span></h3>
                                                         </ng-container>
                                                         <table class="custom-table">
                                                             <tr>
@@ -175,7 +236,8 @@
                                                             </tr>
                                                             <ng-container
                                                                 *ngIf="processedTheoryData && processedTheoryData.length > 0">
-                                                                <tr *ngFor="let exam of processedTheoryData; let i = index">
+                                                                <tr
+                                                                    *ngFor="let exam of processedTheoryData; let i = index">
                                                                     <td>
                                                                         {{ i + 1 }}
                                                                     </td>
@@ -192,7 +254,8 @@
                                                             </ng-container>
                                                         </table>
 
-                                                        <table class="custom-table" *ngIf="processedPracticalData && processedPracticalData.length > 0">
+                                                        <table class="custom-table"
+                                                            *ngIf="processedPracticalData && processedPracticalData.length > 0">
                                                             <tr>
                                                                 <th>S.No.</th>
                                                                 <th>Subject</th>
@@ -200,7 +263,8 @@
                                                                 <th>Practical Passing Marks</th>
                                                             </tr>
                                                             <ng-container>
-                                                                <tr *ngFor="let exam of processedPracticalData; let i = index">
+                                                                <tr
+                                                                    *ngFor="let exam of processedPracticalData; let i = index">
                                                                     <td>
                                                                         {{ i + 1 }}
                                                                     </td>
@@ -216,7 +280,8 @@
                                                                 </tr>
                                                             </ng-container>
                                                         </table>
-                                                        <table class="custom-table" *ngIf="processedPracticalData && processedPracticalData.length == 0">
+                                                        <table class="custom-table"
+                                                            *ngIf="processedPracticalData && processedPracticalData.length == 0">
                                                             <tr>
                                                                 <th>Practical Marks</th>
                                                             </tr>

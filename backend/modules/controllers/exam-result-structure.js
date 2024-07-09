@@ -43,7 +43,6 @@ let GetSingleClassExamResultStructureByStream = async (req, res, next) => {
         const marksheetTemplateStructure = await MarksheetTemplateStructureModel.findOne({ templateName: templateName });
         if (!marksheetTemplateStructure) {
             if (stream === "N/A") {
-
                 streamMsg = ``;
             }
             return res.status(404).json(`Class ${className} ${streamMsg} marksheet template not found !`);
@@ -80,40 +79,34 @@ let CreateExamResultStructure = async (req, res, next) => {
 }
 
 // let CreateExamResultStructure = async (req, res, next) => {
+    
 //     const gradeMinMarks = [
-//         { "A+": 91 }, { "A": 81 }, { "B+": 71 }, { "B": 61 },
-//         { "C+": 51 }, { "C": 41 }, { "D": 33 }, { "F": 0 }
+//         { "A1": 91 }, { "A2": 81 }, { "B1": 71 }, { "B2": 61 },
+//         { "C1": 51 }, { "C2": 41 }, { "D": 33 }, { "F": 0 }
 //     ];
 //     const gradeMaxMarks = [
-//         { "A+": 100 }, { "A": 90 }, { "B+": 80 }, { "B": 70 },
-//         { "C+": 60 }, { "C": 50 }, { "D": 40 }, { "F": 32 }
+//         { "A1": 100 }, { "A2": 90 }, { "B1": 80 }, { "B2": 70 },
+//         { "C1": 60 }, { "C2": 50 }, { "D": 40 }, { "F": 32 }
 //     ];
-//     const coScholastic = ['work education', 'arts education'];
-//     const discipline = ['discipline'];
+//     const coScholastic = ['work education', 'arts education','discipline'];
 //     const templateData = {
-//         templateName: "T1",
+//         templateName: "T4",
 //         examStructure: {
 //             term1: {
 //                 theoryMaxMarks: 80,
 //                 theoryPassMarks: 27,
-//                 periodicTestMaxMarks: 10,
-//                 noteBookMaxMarks: 5,
-//                 subjectEnrichmentMaxMarks: 5,
+//                 practicalMaxMarks: 20,
 //                 gradeMinMarks: gradeMinMarks,
 //                 gradeMaxMarks: gradeMaxMarks,
 //                 coScholastic: coScholastic,
-//                 discipline: discipline,
 //             },
 //             term2: {
 //                 theoryMaxMarks: 80,
 //                 theoryPassMarks: 27,
-//                 periodicTestMaxMarks: 10,
-//                 noteBookMaxMarks: 5,
-//                 subjectEnrichmentMaxMarks: 5,
+//                 practicalMaxMarks: 20,
 //                 gradeMinMarks: gradeMinMarks,
 //                 gradeMaxMarks: gradeMaxMarks,
 //                 coScholastic: coScholastic,
-//                 discipline: discipline,
 //             }
 //         }
 //     };
@@ -125,6 +118,77 @@ let CreateExamResultStructure = async (req, res, next) => {
 //     } catch (error) {
 //         return res.status(500).json('Internal Server Error !');;
 //     }
+
+//     // TEMPLATE T1 OR T2 SECTION
+
+//     // const gradeMinMarks = [
+//     //     { "A1": 91 }, { "A2": 81 }, { "B1": 71 }, { "B2": 61 },
+//     //     { "C1": 51 }, { "C2": 41 }, { "D": 33 }, { "F": 0 }
+//     // ];
+//     // const gradeMaxMarks = [
+//     //     { "A1": 100 }, { "A2": 90 }, { "B1": 80 }, { "B2": 70 },
+//     //     { "C1": 60 }, { "C2": 50 }, { "D": 40 }, { "F": 32 }
+//     // ];
+//     // const coScholastic = ['work education', 'arts education','discipline'];
+//     // const templateData = {
+//     //     templateName: "T1",
+//     //     examStructure: {
+//     //         term1: {
+//     //             theoryMaxMarks: 80,
+//     //             theoryPassMarks: 27,
+//     //             periodicTestMaxMarks: 10,
+//     //             noteBookMaxMarks: 5,
+//     //             subjectEnrichmentMaxMarks: 5,
+//     //             gradeMinMarks: gradeMinMarks,
+//     //             gradeMaxMarks: gradeMaxMarks,
+//     //             coScholastic: coScholastic,
+//     //         },
+//     //         term2: {
+//     //             theoryMaxMarks: 80,
+//     //             theoryPassMarks: 27,
+//     //             periodicTestMaxMarks: 10,
+//     //             noteBookMaxMarks: 5,
+//     //             subjectEnrichmentMaxMarks: 5,
+//     //             gradeMinMarks: gradeMinMarks,
+//     //             gradeMaxMarks: gradeMaxMarks,
+//     //             coScholastic: coScholastic,
+//     //         }
+//     //     }
+
+
+// // TEMPLATE T3 OR T4 SECTION
+
+// // const gradeMinMarks = [
+// //     { "A1": 91 }, { "A2": 81 }, { "B1": 71 }, { "B2": 61 },
+// //     { "C1": 51 }, { "C2": 41 }, { "D": 33 }, { "F": 0 }
+// // ];
+// // const gradeMaxMarks = [
+// //     { "A1": 100 }, { "A2": 90 }, { "B1": 80 }, { "B2": 70 },
+// //     { "C1": 60 }, { "C2": 50 }, { "D": 40 }, { "F": 32 }
+// // ];
+// // const coScholastic = ['work education', 'arts education','discipline'];
+// // const templateData = {
+// //     templateName: "T3",
+// //     examStructure: {
+// //         term1: {
+// //             theoryMaxMarks: 80,
+// //             theoryPassMarks: 27,
+// //             practicalMaxMarks: 20,
+// //             gradeMinMarks: gradeMinMarks,
+// //             gradeMaxMarks: gradeMaxMarks,
+// //             coScholastic: coScholastic,
+// //         },
+// //         term2: {
+// //             theoryMaxMarks: 80,
+// //             theoryPassMarks: 27,
+// //             practicalMaxMarks: 20,
+// //             gradeMinMarks: gradeMinMarks,
+// //             gradeMaxMarks: gradeMaxMarks,
+// //             coScholastic: coScholastic,
+// //         }
+// //     }
+
+
 // }
 
 let DeleteResultStructure = async (req, res, next) => {
@@ -169,19 +233,19 @@ let ChangeResultPublishStatus = async (req, res, next) => {
         if (findResultPublishStatus == false) {
             let className;
             if (cls == 1) {
-                className = `${cls}st`
+                className = `${cls}ST`
             }
             if (cls == 2) {
-                className = `${cls}nd`
+                className = `${cls}ND`
             }
             if (cls == 3) {
-                className = `${cls}rd`
+                className = `${cls}RD`
             }
             if (cls >= 4 && cls <= 12) {
-                className = `${cls}th`
+                className = `${cls}TH`
             }
             if (cls == 200) {
-                className = `Nursery`;
+                className = `NURSERY`;
             }
             if (cls == 201) {
                 className = `LKG`;

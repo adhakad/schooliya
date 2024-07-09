@@ -4,7 +4,7 @@
     align-items: center;
     height: 100vh;
     /* background: rgb(240, 240, 255, .5); */
-    background: rgb(245, 245, 255);
+    background: rgba(0, 0, 0, 0.5);
     position: fixed;
     top: 0;
     left: 0;
@@ -25,7 +25,7 @@
   
   :host ::ng-deep .spinner-container .spinner-overlay .mat-progress-spinner circle,
   :host ::ng-deep .mat-spinner circle {
-    stroke: #8d6dff;
+    stroke: #fff;
     stroke-opacity: 1 !important;
     animation-duration: 5s;
   }
